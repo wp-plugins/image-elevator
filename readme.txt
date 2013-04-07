@@ -63,7 +63,8 @@ The section is empty at the moment.
 
 == Screenshots ==
 
-The section is empty at the moment.
+Please view the demo video below to learn how the plugin can make your posting more easy.
+http://www.youtube.com/watch?v=ApcCCcsUoeo
 
 == Changelog ==
 
