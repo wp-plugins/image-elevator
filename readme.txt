@@ -22,8 +22,15 @@ You should understand it if you write tutorials, reviews, news or just articles 
 Image Elevator for Wordpress allows you to paste images into the post editor directly from clipboard (or by dragging & dropping files)! 
 In other words, you can paste images directly from your favorite graphical editors or from any screen capture programs. 
 
-<i>Check out a <a href="http://codecanyon.net/item/image-elevator-for-wordpress/4311188?ref=OnePress">premium version of Image Elevator</a> to get more features such as renaming images after pasting, 
-compressing images on the fly and saving images into Media Library after adding.</i>
+<i>Check out a <a href="http://codecanyon.net/item/image-elevator-for-wordpress/4311188?ref=OnePress">premium version</a> of Image Elevator to get more features such as renaming images after pasting, 
+compressing images on the fly, saving images into Media Library after adding and dragging & dropping local files.</i>
+
+= How it works =
+
+Please view the demo video below to learn how the plugin can make your posting more easy.
+The latest two features that are demonstrated in the video are available only in premium version.
+
+http://www.youtube.com/watch?v=ApcCCcsUoeo
 
 = Compatible Browsers =
 
