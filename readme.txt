@@ -31,9 +31,11 @@ You can activate premium features for a trial period inside the plugin.*
 = How it works =
 
 Please view the demo video below to learn how the plugin can make your posting more easy.
-The latest two features that are demonstrated in the video are available only in premium version.
 
 http://www.youtube.com/watch?v=ApcCCcsUoeo
+
+*The latest two features that are demonstrated in the video are available only in 
+the <a href="http://codecanyon.net/item/image-elevator-for-wordpress/4311188?ref=OnePress">premium version</a>.*
 
 = Compatible Browsers =
 
