@@ -35,6 +35,7 @@ class FactoryFR105UpdateFR105Manager {
         $this->license = $this->plugin->license;
 
         $this->lastCheck = get_option('fy_version_check_' . $this->plugin->pluginName, null);
+
         $this->secret = $this->siteSecret = get_option('fy_license_site_secret', null);
         $this->site = site_url();
         $this->api = $this->plugin->options['api'];
@@ -74,7 +75,8 @@ class FactoryFR105UpdateFR105Manager {
      * @return bool
      */
     public function needCheckUpdates() {
-        return $this->plugin->license || $this->plugin->license->hasKey();
+        if ( !$this->plugin->license ) return false;
+        return $this->plugin->license->hasKey();
     }
     
     /**

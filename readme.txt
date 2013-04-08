@@ -71,6 +71,9 @@ http://www.youtube.com/watch?v=ApcCCcsUoeo
 
 == Changelog ==
 
+= 1.7.8 - 8 Apr 2013 =
+FIXED: A bit bug of auto updates.
+
 = 1.7.7 - 7 Apr 2013 =
 Initial commit.  
 We starts with the 1.7.7 version because this is a free edition of an already existing 
