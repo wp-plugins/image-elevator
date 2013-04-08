@@ -24,7 +24,7 @@ In other words, you can paste images directly from your favorite graphical edito
 
 *The plugin is a free edition of the premium 
 <a href="http://codecanyon.net/item/image-elevator-for-wordpress/4311188?ref=OnePress">Image Elevator</a> plugin 
-that provides more features such as renaming images after pasting, 
+that provides more features: renaming images after pasting, 
 compressing images on the fly and saving images into Media Library after adding.*
 
 = How it works =
