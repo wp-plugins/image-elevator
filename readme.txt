@@ -29,7 +29,7 @@ compressing images on the fly and saving images into Media Library after adding.
 
 = How it works =
 
-Please view the demo video below to learn how the plugin can make your posting more easy.
+View the demo video below to learn how the plugin can make your posting more easy.
 
 http://www.youtube.com/watch?v=ApcCCcsUoeo
 
@@ -63,7 +63,10 @@ The section is empty at the moment.
 
 == Screenshots ==
 
-Please view the demo video below to learn how the plugin can make your posting more easy.
+1. Paste snapshot of your screen or its parts
+2. Paste selection from Photoshop
+
+Also view the demo video below to learn how the plugin can make your posting more easy.
 http://www.youtube.com/watch?v=ApcCCcsUoeo
 
 == Changelog ==
