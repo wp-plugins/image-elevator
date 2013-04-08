@@ -64,7 +64,7 @@ The section is empty at the moment.
 == Screenshots ==
 
 1. Paste snapshot of your screen or its parts
-2. Paste selection from Photoshop
+2. Paste selection from Photoshop 
 
 Also view the demo video below to learn how the plugin can make your posting more easy.
 http://www.youtube.com/watch?v=ApcCCcsUoeo
