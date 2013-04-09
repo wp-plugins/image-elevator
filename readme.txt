@@ -71,6 +71,9 @@ http://www.youtube.com/watch?v=ApcCCcsUoeo
 
 == Changelog ==
 
+= 1.7.9 - 9 Apr 2013 =
+FIXED: Some minor bugs of the plugin appearance.
+
 = 1.7.8 - 8 Apr 2013 =
 FIXED: A bit bug of auto updates.
 

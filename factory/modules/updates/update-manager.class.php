@@ -47,23 +47,24 @@ class FactoryFR105UpdateFR105Manager {
             add_action('fy_check_upadates_' . $this->plugin->pluginName, array($this, 'checkUpdates')); 
         }
         
-        // if the license build and the plugin build are not equal
-        if ( $this->needChangeAssembly() ) {
-
-            $this->updatePluginTransient();
-            add_filter('factory_fr105_plugin_row-' . $this->plugin->pluginName, array($this, 'showChangeAssemblyPluginRow' ), 10, 3); 
-        }
-        
-        if ( $this->needCheckUpdates() || $this->needChangeAssembly() ) {
-            
-            // the method that responses for changin plugin transient when it's saved
-            add_filter('pre_set_site_transient_update_plugins', array($this, 'changePluginTransient')); 
-            // filter that returns info about available updates
-            add_filter('plugins_api', array($this, 'getUpdateInfo'), 10, 3);
-        }
-
         if ( is_admin() ) {
-            
+        
+            // if the license build and the plugin build are not equal
+            if ( $this->needChangeAssembly() ) {
+
+                $this->updatePluginTransient();
+                add_filter('factory_fr105_plugin_row-' . $this->plugin->pluginName, array($this, 'showChangeAssemblyPluginRow' ), 10, 3); 
+                add_filter('factory_fr105_admin_notices-' . $this->plugin->pluginName, array( $this, 'showAssemblyMessages'), 10, 2);    
+            }
+
+            if ( $this->needCheckUpdates() || $this->needChangeAssembly() ) {
+
+                // the method that responses for changin plugin transient when it's saved
+                add_filter('pre_set_site_transient_update_plugins', array($this, 'changePluginTransient')); 
+                // filter that returns info about available updates
+                add_filter('plugins_api', array($this, 'getUpdateInfo'), 10, 3);
+            }
+
             // activation and deactivation hooks
             add_action('factory_fr105_activation_or_update-' . $plugin->pluginName, array($this, 'activationOrUpdateHook'));
             add_action('factory_fr105_deactivation-' . $plugin->pluginName, array($this, 'deactivationHook')); 
@@ -318,16 +319,14 @@ class FactoryFR105UpdateFR105Manager {
         if ( ! current_user_can('update_plugins') ) {
 
             $message = sprintf( 
-                __('You changed the license type. Please download the "%1$s" assembly of the plugin to 
-                    complete the license activation or submit another licence key.'), 
+                __('You changed the license type. Please download "%1$s" assembly'), 
                 $this->license->build
             );
 
         } else if ( empty($r->package) ) {
 
             $message = sprintf( 
-                __('You changed the license type. Please download the "%1$s" assembly to complete 
-                    the license activation or submit another licence key. <em>Automatic update 
+                __('You changed the license type. Please download "%1$s" assembly. <em>Automatic update 
                     is unavailable for this plugin.</em>'), 
                 $this->license->build
             );
@@ -335,15 +334,42 @@ class FactoryFR105UpdateFR105Manager {
         } else {
 
             $message = sprintf( 
-                __('You changed the license type. Please download the "%1$s" assembly to complete 
-                    the license activation or submit another licence key. <a href="%2$s">Download and 
-                    install automatically</a>.'), 
+                __('You successfully changed the license type. Please install another plugin assembly (%1$s). <a href="%2$s">Update it now</a>.'), 
                 $this->license->build,
                 wp_nonce_url( self_admin_url('update.php?action=upgrade-plugin&plugin=') . $file, 'upgrade-plugin_' . $file)     
             );
         }
         
         return array($message);
+    }
+    
+    public function showAssemblyMessages( $notices, $plugin ) {
+        
+        if ( $this->needChangeAssembly() ) {
+            
+            $notices[] = array(
+                'id'        => $this->plugin->pluginName . '-change-assembly',
+                'where'     => array('dashboard', 'edit', 'post'),
+                
+                // content and color
+                'type'      => 'alert-danger',
+                'header'    => 'One small step...',
+                'message'   => 'You changed a license type for <strong>' . $this->plugin->pluginTitle . '</strong>. 
+                                But the license you use now requries another plugin assembly.<br />
+                                The plugin will not work fully until you download the proper assembly. 
+                                Don\'t worry it takes only 5 seconds and all your data will be saved.',   
+
+                // buttons and links
+                'buttons'   => array(
+                    array(
+                        'title'     => 'Visit Plugins page',
+                        'action'    => "plugins.php"
+                    )
+                )
+            );
+        }
+        
+        return $notices;
     }
     
     // -------------------------------------------------------------------------------------

@@ -3,10 +3,10 @@
 add_filter('factory_fr105_admin_notices-clipboard-images', 'imgevr_admin_notices', 10, 2);
 
 function imgevr_admin_notices( $notices, $plugin ) {
+    if ( !$plugin->license || $plugin->build !== "free" ) return $notices;
     $closed = get_option('fy_closed_notices', array());
     if ( get_option('fy_trial_activated_' . $plugin->pluginName, false) ) return $notices;
-    if ( !$plugin->license || $plugin->build !== "free" ) return $notices;
-
+    
     // offer to try premium version after installation, it's shown once
     if ( !isset( $closed['imgevr-trial-1'] ) ) {
         

@@ -804,8 +804,7 @@ div.onp-alert-info button.close:hover {
     position: relative;
     background: url("../img/notice-offer-bg.png") center center;
     background-size: cover;
-
-    background-color: #f9f9f9;
+    background-color: #314860;
     border-radius: 4px;
     box-shadow: inset 0 0 5px rgba(0,0,0,0.15);
     padding: 0px;
