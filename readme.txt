@@ -71,6 +71,9 @@ http://www.youtube.com/watch?v=ApcCCcsUoeo
 
 == Changelog ==
 
+= 1.8.0 - 10 Apr 2013 =
+FIXED: A bug when the message offering to change the plugin assembly appears even if the assemble is correct.
+
 = 1.7.9 - 9 Apr 2013 =
 FIXED: Some minor bugs of the plugin appearance.
 

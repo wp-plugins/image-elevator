@@ -47,13 +47,13 @@ include(FACTORY_FORM_FR105_DIR. '/controls/service-controls/form-tab-item.class.
 include(FACTORY_FORM_FR105_DIR. '/controls/service-controls/form-tab.class.php');
 
 // register form controls
-FactoryForm::register('textbox', 'FactoryFormFR105TextboxFormControl');
-FactoryForm::register('url', 'FactoryFormFR105UrlFormControl');
-FactoryForm::register('textarea', 'FactoryFormFR105TextareaFormControl');
-FactoryForm::register('list', 'factoryFormFR105ListFormControl');
-FactoryForm::register('integer', 'FactoryFormFR105IntegerFormControl');
-FactoryForm::register('hidden', 'FactoryFormFR105HiddenFormControl');
-FactoryForm::register('editor', 'FactoryFormFR105EditorFormControl');
+FactoryFormFR105::register('textbox', 'FactoryFormFR105TextboxFormControl');
+FactoryFormFR105::register('url', 'FactoryFormFR105UrlFormControl');
+FactoryFormFR105::register('textarea', 'FactoryFormFR105TextareaFormControl');
+FactoryFormFR105::register('list', 'factoryFormFR105ListFormControl');
+FactoryFormFR105::register('integer', 'FactoryFormFR105IntegerFormControl');
+FactoryFormFR105::register('hidden', 'FactoryFormFR105HiddenFormControl');
+FactoryFormFR105::register('editor', 'FactoryFormFR105EditorFormControl');
 
-FactoryForm::register('mv-radio', 'FactoryFormFR105PiRadioFormControl');
-FactoryForm::register('mv-checkbox', 'FactoryFormFR105CheckboxFormControl');
+FactoryFormFR105::register('mv-radio', 'FactoryFormFR105PiRadioFormControl');
+FactoryFormFR105::register('mv-checkbox', 'FactoryFormFR105CheckboxFormControl');

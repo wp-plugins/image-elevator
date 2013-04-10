@@ -1,6 +1,6 @@
 <?php
 
-class FactoryForm {
+class FactoryFormFR105 {
     
     public static $controls = array();
 

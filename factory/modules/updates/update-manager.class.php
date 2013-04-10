@@ -56,6 +56,9 @@ class FactoryFR105UpdateFR105Manager {
                 add_filter('factory_fr105_plugin_row-' . $this->plugin->pluginName, array($this, 'showChangeAssemblyPluginRow' ), 10, 3); 
                 add_filter('factory_fr105_admin_notices-' . $this->plugin->pluginName, array( $this, 'showAssemblyMessages'), 10, 2);    
             }
+            
+            
+            add_action('admin_notices', array($this, 'clearTransient'));
 
             if ( $this->needCheckUpdates() || $this->needChangeAssembly() ) {
 
@@ -189,6 +192,19 @@ class FactoryFR105UpdateFR105Manager {
     }
     
     /**
+     * Fix a bug when the message offering to change assembly appears even if the assemble is correct.
+     * @return type
+     */
+    public function clearTransient() {
+        $screen = get_current_screen();
+        if ( empty($screen) ) return;
+        
+        if ( in_array( $screen->base, array('plugins', 'update-core') ) ) {
+            $this->updatePluginTransient();
+        } 
+    }
+    
+    /**
      * Calls a basic method to get info about updates and saves it into updates transient.
      */
     public function updatePluginTransient() {
@@ -207,7 +223,7 @@ class FactoryFR105UpdateFR105Manager {
             
             $obj = new stdClass();  
             $obj->slug = $this->plugin->pluginSlug;  
-            $obj->new_version = '[ migrate-to-' . $this->data['Build'] . ' ]';  
+            $obj->new_version = '[ migrate-to-' . $this->license->build . ' ]';  
             
             $obj->package = $this->api . 'GetPackage?' . http_build_query(array(
                 'plugin'   => $this->plugin->pluginName,
@@ -216,8 +232,20 @@ class FactoryFR105UpdateFR105Manager {
                 'secret'   => $this->secret
             ));
             
+            $obj->changeAssembly = true;
+            
             $transient->response[$this->plugin->relativePath] = $obj; 
             return $transient;
+            
+        } else {
+            
+            if ( isset($transient->response[$this->plugin->relativePath]) ) {
+                $r = $transient->response[$this->plugin->relativePath];
+                if ( property_exists($r, 'changeAssembly') ) {
+                    unset($transient->response[$this->plugin->relativePath]);
+                    return $transient;
+                }
+            }
         }
         
         // if we don't need to check update, return original transient data,
