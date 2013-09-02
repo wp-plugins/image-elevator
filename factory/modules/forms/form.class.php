@@ -1,6 +1,6 @@
 <?php
 
-class FactoryFormFR105 {
+class FactoryFormFR109 {
     
     public static $controls = array();
 
@@ -50,10 +50,10 @@ class FactoryFormFR105 {
      */
     private $formControls = array();
     
-    public function __construct( FactoryFR105Plugin $plugin, $valueProvider = null ) {
+    public function __construct( FactoryFR109Plugin $plugin, $valueProvider = null ) {
         
         $this->plugin = $plugin;
-        $this->valueProvider = $valueProvider ? $valueProvider : new FactoryFR105FakeValueProvider();     
+        $this->valueProvider = $valueProvider ? $valueProvider : new FactoryFR109FakeValueProvider();     
     }
     
     /**
@@ -83,8 +83,8 @@ class FactoryFormFR105 {
         $controlsStack = self::$controls;
 
         // applies filters to the form params before building
-        $this->items = apply_filters('factory_fr105_form', $this->items, $this->scope, $this->name);    
-        $this->items = apply_filters('factory_form_fr105_' . $this->name, $this->items, $this->scope);
+        $this->items = apply_filters('factory_fr109_form', $this->items, $this->scope, $this->name);    
+        $this->items = apply_filters('factory_form_fr109_' . $this->name, $this->items, $this->scope);
                 
         foreach($this->items as $index => $item) {
             if ( !$this->isControl($item) ) continue;
@@ -135,7 +135,7 @@ class FactoryFormFR105 {
         echo '<div class="pi-metabox wpbootstrap">';
         echo '<div class="form-horizontal">';
         
-        $root = new FactoryFormFR105Item(array(), null);
+        $root = new FactoryFormFR109Item(array(), null);
         $currentLevel = $root;
         
         $currentTab = null;
@@ -153,7 +153,7 @@ class FactoryFormFR105 {
                    case 'tab':
 
                        $levelToUse = $currentTab == null ? $root : $currentTab->parent;
-                       $tab = new FactoryFormFR105Tab( $item, $levelToUse );
+                       $tab = new FactoryFormFR109Tab( $item, $levelToUse );
 
                        $currentLevel = $tab;
                        $currentTab = $tab;
@@ -163,7 +163,7 @@ class FactoryFormFR105 {
                    // tab item
                    case 'tab-item':
 
-                       $tabItem = new FactoryFormFR105TabItem( $item, $currentTab );
+                       $tabItem = new FactoryFormFR109TabItem( $item, $currentTab );
                        $currentLevel = $tabItem;
 
                    break;
@@ -171,11 +171,17 @@ class FactoryFormFR105 {
                    // group
                    case 'group':
 
-                       if ($currentLevel->isGroup) $currentLevel = $currentLevel->parent;
-
-                       $group = new FactoryFormFR105Group( $item, $currentLevel );
+                       $group = new FactoryFormFR109Group( $item, $currentLevel );
                        $currentLevel = $group;
+                       
+                    break;
+                
+                   // group
+                   case 'collapsed':
 
+                       $collapsed = new FactoryFormFR109Collapsed( $item, $currentLevel );
+                       $currentLevel = $collapsed;
+                       
                    break;  
                } 
     
@@ -224,6 +230,11 @@ class FactoryFormFR105 {
             case 'group':
                 $this->renderGroup($item);
                 break;
+            
+             case 'collapsed':
+                 
+                $this->renderCollapsed($item);
+                break;           
             
             case 'control':
                 $this->renderControl($item);
@@ -308,15 +319,20 @@ class FactoryFormFR105 {
      * Renders a group of items
      * @param FactoryFormGroup $groupItem
      */
-    private function renderGroup( $groupItem ) {
+    private function renderGroup( $item ) {
         ?>
-        <fieldset class='pi-content-group' id='group-<?php echo $groupItem->name ?>'>
-            <?php if ( $groupItem->hasLegend ) { ?>
-            <legend><?php echo $groupItem->title ?></legend>
+        <fieldset class='fy-group' id='group-<?php echo $item->name ?>'>
+            <?php if ( $item->title ) { ?>
+            <legend class='fy-group-legend'>
+                <p class='fy-group-title'><?php echo $item->title ?></p>
+                <?php if ( $item->hint ) { ?>
+                <p class='fy-group-hint'><?php echo $item->hint ?></p>
+                <?php } ?>
+            </legend>
             <?php } ?>
             <?php
-                foreach($groupItem->items as $item) {
-                    $this->renderItem($item);  
+                foreach($item->items as $sub) {
+                    $this->renderItem($sub);  
                 } 
             ?>
         </fieldset>
@@ -324,6 +340,31 @@ class FactoryFormFR105 {
     }
     
     /**
+     * Renders a collapsed group.
+     * @param FactoryFormCollapsed $groupItem
+     */
+    private function renderCollapsed( $item ) {
+        $id = rand(100000, 999999);
+        ?>
+        <div class="fy-collapsed-group">
+            <?php if ( $item->count ) { ?>
+            <a href="#collapsed-<?php echo $id ?>" class="fy-collapsed-show"><?php echo $item->title ?> (<?php echo $item->count ?>)</a>
+            <?php } else { ?>
+            <a href="#collapsed-<?php echo $id ?>" class="fy-collapsed-show"><?php echo $item->title ?></a>
+            <?php } ?>
+            <div class='fy-collapsed-content' id="collapsed-<?php echo $id ?>" style="display: none;">
+                <a href="#collapsed-<?php echo $id ?>" class='fy-collapsed-hide'>hide extra options</a>
+                <?php
+                    foreach($item->items as $sub) {
+                        $this->renderItem($sub);  
+                    } 
+                ?>
+            </div>
+        </div>
+        <?php 
+    }
+
+     /**
      * Render control item
      * @param FactoryFormTabControl $controlItem
      */
@@ -338,7 +379,14 @@ class FactoryFormFR105 {
     private function isControl($item) {
         
         if (gettype($item) === 'string' ) return false;
-        if ( in_array( $item['type'], array( 'tab', 'tab-item', 'group' ) ) ) return false;
+        if ( in_array( $item['type'], array( 'tab', 'tab-item', 'group', 'collapsed' ) ) ) return false;
         return true;
     }
+}
+
+add_action('admin_enqueue_scripts', 'factory_form_fr109_admin_scripts2');
+function factory_form_fr109_admin_scripts2() {
+    wp_enqueue_style('forms-style', FACTORY_FORM_FR109_URL . '/assets/css/forms.css'); 
+    wp_enqueue_style('forms-controls', FACTORY_FORM_FR109_URL . '/assets/css/controls.css'); 
+    wp_enqueue_script('forms-controls', FACTORY_FORM_FR109_URL . '/assets/js/controls.js'); 
 }

@@ -832,9 +832,6 @@ div.onp-alert-info button.close:hover {
     color: #fff;
     text-decoration: underline;
 }
-.onp-notice.onp-offer + .onp-notice {
-    display: none;
-}
 .onp-notice.onp-offer .onp-notice-buttons {
     position: absolute;
     bottom: 5px;

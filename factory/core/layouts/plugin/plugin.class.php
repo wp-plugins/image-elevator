@@ -5,7 +5,7 @@
  * It's a main class for building the plugin.
  * The class allows to isolate a several plugins that use the same version of the Factory.
  */
-class FactoryFR105Plugin {
+class FactoryFR109Plugin {
     
     /**
      * Main file of the plugin.
@@ -71,8 +71,7 @@ class FactoryFR105Plugin {
         $this->pluginRoot = dirname( $pluginPath );
         $this->pluginSlug = basename($pluginPath);
         $this->relativePath = plugin_basename( $pluginPath );
-        $this->itemRoot = $this->pluginRoot . '/' . ( isset( $data['bricks'] ) ? $data['bricks'] : 'bricks' );  
-        $this->templateRoot = $this->pluginRoot . '/' . isset( $data['templates'] ) ? $data['templates'] : 'templates';   
+        $this->templateRoot = $this->pluginRoot . '/' . ( ( array_key_exists( 'templates', $data ) ) ? $data['templates'] : 'templates' );   
         $this->pluginUrl = plugins_url( null, $pluginPath );
         $this->pluginName = $data['name'];
         $this->pluginTitle = $data['title'];
@@ -85,9 +84,6 @@ class FactoryFR105Plugin {
         // init actions
         $this->setupActions();
         
-        // finds all factory items (caching is used)
-        $this->findItems();
-
         // register activation hooks
         if ( $this->isAdmin ) { 
             register_activation_hook( $this->mainFile, array($this, 'forceActivationHook') );
@@ -109,7 +105,8 @@ class FactoryFR105Plugin {
     }
     
     public function actionPluginLoadded() {
-        
+        // load_plugin_textdomain('factory', false, basename( dirname( $this->relativePath ) ) . '/factory/core/langs'); 
+         
         // checks whether the plugin needs to run updates.
         if ( $this->isAdmin ) {
             
@@ -119,7 +116,7 @@ class FactoryFR105Plugin {
             }  
         }
         
-        do_action('factory_fr105_init', $this);
+        do_action('factory_fr109_init', $this);
     }
     
     /**
@@ -128,13 +125,13 @@ class FactoryFR105Plugin {
      */
     public function actionInit() {
         
-        $this->shortcodes = new FactoryFR105ShortcodeManager( $this );   
-        $this->metaboxes = new FactoryFR105MetaboxManager( $this );   
+        $this->shortcodes = new FactoryFR109ShortcodeManager( $this );   
+        $this->metaboxes = new FactoryFR109MetaboxManager( $this );   
         
         if ( $this->isAdmin ) {
             
-            $this->notices = new FactoryFR105NoticeManager( $this );
-            $this->pages = new FactoryFR105AdminPageManager( $this ); 
+            $this->notices = new FactoryFR109NoticeManager( $this );
+            $this->pages = new FactoryFR109AdminPageManager( $this ); 
         
             // metaboxes
             // just includes class definition
@@ -180,12 +177,7 @@ class FactoryFR105Plugin {
     }
     
     public function activationOrUpdateHook( $forceActivation = false ) {
-        
-         // clears cache that is used to store path and classes of Factory Items.
-        $this->clearCache();
-        $this->findItems();
-        
-        do_action('factory_fr105_activation_or_update-' . $this->pluginName);
+        do_action('factory_fr109_activation_or_update-' . $this->pluginName);
         
         $dbBuildVersion = get_option('fy_plugin_version_' . $this->pluginName, false);
 
@@ -197,7 +189,7 @@ class FactoryFR105Plugin {
             return;
         }
 
-        $parts = split('-', $dbBuildVersion);
+        $parts = explode('-', $dbBuildVersion);
         $prevousBuild = $parts[0];
         $prevousVersion = $parts[1];
 
@@ -263,10 +255,7 @@ class FactoryFR105Plugin {
      * Don't excite it directly.
      */
     public function deactivationHook() {
-        $this->clearCache();
-        $this->findItems();
-        
-        do_action('factory_fr105_deactivation-' . $this->pluginName);;
+        do_action('factory_fr109_deactivation-' . $this->pluginName);;
         
         $item = $this->loadItem( 'activation', true );
         if ( !empty($item) ) {
@@ -297,9 +286,6 @@ class FactoryFR105Plugin {
                 } 
             }
         }
-
-        // clears cache that is used to store path and classes of Factory Items.
-        $this->clearCache();
     }
     
     /**
@@ -307,7 +293,7 @@ class FactoryFR105Plugin {
      */
     public function migrationHook($previosBuild, $currentBuild) {
         
-        $migrationFile = $this->itemRoot + '/updates/' . $previosBuild . '-' . $currentBuild . '.php';
+        $migrationFile = $this->options['updates'] . $previosBuild . '-' . $currentBuild . '.php';
         if ( !file_exists($migrationFile) ) return;
         
         $classes = $this->getClasses($migrationFile);
@@ -329,7 +315,7 @@ class FactoryFR105Plugin {
         $oldNumber = $this->getVersionNumber($old);
         $newNumber = $this->getVersionNumber($new);
 
-        $updateFiles = $this->itemRoot . '/updates';
+        $updateFiles = $this->options['updates'];
         $files = $this->findFiles( $updateFiles );
         if ( empty($files) ) return;
 
@@ -374,23 +360,27 @@ class FactoryFR105Plugin {
     public function actionAdminScripts( $hook ) {
 	global $post;
         
-        wp_enqueue_style('factory-admin-global', FACTORY_FR105_URL . '/assets/css/admin-global.css');
-        wp_enqueue_script('factory-admin-global', FACTORY_FR105_URL . '/assets/js/admin-global.js'); 
+        wp_enqueue_style('factory-admin-global', FACTORY_FR109_URL . '/assets/css/admin-global.css');
+        wp_enqueue_script('factory-admin-global', FACTORY_FR109_URL . '/assets/js/admin-global.js'); 
                         
 	if ( in_array( $hook, array('post.php', 'post-new.php')) && $post )
         {
             if ( !empty( $this->types[$post->post_type] ) ) {
                 
-		wp_enqueue_style('factory-bootstrap', FACTORY_FR105_URL . '/assets/css/bootstrap.css');	
-		wp_enqueue_script('factory-bootstrap', FACTORY_FR105_URL . '/assets/js/bootstrap.js', array('jquery'));
+		wp_enqueue_style('factory-bootstrap', FACTORY_FR109_URL . '/assets/css/bootstrap.css');	
+		wp_enqueue_script('factory-bootstrap', FACTORY_FR109_URL . '/assets/js/bootstrap.js', array('jquery'));
             }
             
         } elseif ( isset($_GET['page']) && in_array($_GET['page'], $this->pages->getIds())) {
             
-            wp_enqueue_style('factory-bootstrap', FACTORY_FR105_URL . '/assets/css/bootstrap.css');	
-            wp_enqueue_script('factory-bootstrap', FACTORY_FR105_URL . '/assets/js/bootstrap.js', array('jquery'));
+            wp_enqueue_style('factory-bootstrap', FACTORY_FR109_URL . '/assets/css/bootstrap.css');	
+            wp_enqueue_script('factory-bootstrap', FACTORY_FR109_URL . '/assets/js/bootstrap.js', array('jquery'));
         }
     }
+    
+    // ----------------------------------------------------------------------
+    // Loading modules and registering items
+    // ----------------------------------------------------------------------
     
     /**
      * Loads a module by its name.
@@ -398,39 +388,134 @@ class FactoryFR105Plugin {
      */
     public function load( $path, $name ) {
         include($this->pluginRoot . '/' . $path . '/start.php');
-        do_action('factory_fr105_load_' . $name, $this);
+        do_action('factory_fr109_load_' . $name, $this);
+    }
+    
+    private $itemMapping = array();
+    
+    /**
+     * Register a plugin item.
+     * @param type $scope
+     * @param type $className
+     */
+    public function registerItem( $scope, $className ) {
+        if ( !isset( $this->itemMapping[$scope] ) ) $this->itemMapping[$scope] = array();
+        $this->itemMapping[$scope][] = $className;
     }
     
     /**
-     * Finds plugin items and creates mapping that is saved into the cache.
+     * Register a plugin page.
+     * @param type $className
      */
-    private function findItems() {
-        
-        // clears the cache after activation
-        if ( defined('FACTORY_FR105_DEBUG') ) $this->clearCache();
-        
-        $cached = $this->getCache('items');
-
-        if ( $cached ) {
-            $this->itemMapping = $cached;
-            return;
-        }
-
-        $files = $this->findFiles( $this->itemRoot );
-        $folders = $this->findFolders( $this->itemRoot );  
-
-        $this->itemMapping = array();
-        foreach($files as $file) {
-            $this->itemMapping[$file['name']] = $this->extractMapping( $file, false );
-        }
-
-        foreach($folders as $folder) {
-            $files = $this->findFiles( $folder['path'] );
-            $this->itemMapping[$folder['name']] = $this->extractMapping( $files );
-        }
-
-        $this->setCache('items', $this->itemMapping);
+    public function registerPage( $className ) {
+        $this->registerItem('pages', $className);
     }
+    
+    /**
+     * Register a set of plugin pages.
+     * @param type $classes
+     */
+    public function registerPages( $classes ) {
+        foreach($classes as $className) $this->registerItem('pages', $className);
+    }
+    
+    /**
+     * Register a plugin shortcode.
+     * @param type $className
+     */
+    public function registerShortcode( $className ) {
+        $this->registerItem('shortcodes', $className);
+    }
+    
+    /**
+     * Register a set of plugin shortcodes.
+     * @param type $classes
+     */
+    public function registerShortcodes( $classes ) {
+        foreach($classes as $className) $this->registerItem('shortcodes', $className);
+    }
+    
+     /**
+     * Register a plugin metabox.
+     * @param type $className
+     */
+    public function registerMetabox( $className ) {
+        $this->registerItem('metaboxes', $className);
+    }
+    
+    /**
+     * Register a set of plugin metaboxes.
+     * @param type $classes
+     */
+    public function registerMetaboxes( $classes ) {
+        foreach($classes as $className) $this->registerItem('metaboxes', $className);
+    }
+    
+     /**
+     * Register a plugin viewtable.
+     * @param type $className
+     */
+    public function registerViewtable( $className ) {
+        $this->registerItem('viewtables', $className);
+    }
+    
+    /**
+     * Register a set of plugin viewtables.
+     * @param type $classes
+     */
+    public function registerViewtables( $classes ) {
+        foreach($classes as $className) $this->registerItem('viewtables', $className);
+    } 
+    
+     /**
+     * Register a plugin type.
+     * @param type $className
+     */
+    public function registerType( $className ) {
+        $this->registerItem('types', $className);
+    }
+    
+    /**
+     * Register a set of plugin types.
+     * @param type $classes
+     */
+    public function registerTypes( $classes ) {
+        foreach($classes as $className) $this->registerItem('types', $className);
+    } 
+    
+     /**
+     * Register a plugin activation action.
+     * @param type $className
+     */
+    public function registerActivation( $className ) {
+        $this->itemMapping['activation'] = $className;
+    }
+
+    /**
+     * Loads and returns plugin items specified by its name.
+     */
+    private function loadItem( $itemName, $create = false ) {
+
+        if ( isset( $this->itemMapping[$itemName] ) ) {
+            $mapping = $this->itemMapping[$itemName];
+            if ( !$create ) return $mapping;
+            
+            if ( is_array($mapping) ) {
+                $items = array();
+                foreach($mapping as $map) $items[] = new $map( $this );
+                return $items;
+                
+            } else {
+                return new $mapping( $this );
+            }
+        }
+        
+        return null;
+    }
+    
+    // ----------------------------------------------------------------------
+    // Finding files
+    // ----------------------------------------------------------------------
     
     /**
      * Returns a list of files at a given path.
@@ -472,34 +557,6 @@ class FactoryFR105Plugin {
             }
         }
         return $files;  
-    }
-    
-    /**
-     * Returns mapping information about classes and paths where the classes are.
-     * @param array $files      a set of files to extract
-     * @return mixed
-     */
-    private function extractMapping( $files, $isArray = true ) {
-
-        if ( $isArray ) {
-
-            $classes = array();  
-            foreach( $files as $file ) {
-                $classes = array_merge($classes, $this->getClasses( $file['path'] ));
-            }
-            return $this->sortClasses($classes);
-            
-        } else {
-            
-            $file = $files;
-            $classes = $this->getClasses( $file['path'] );
-            $class = current($classes);
-            
-            return array(
-                'class' => $class['name'],
-                'path' => $file['path'],
-            );
-        }
     }
     
     /**
@@ -545,120 +602,6 @@ class FactoryFR105Plugin {
         return $classes;   
     }
     
-    /**
-     * Sort classes in order to have ability to includes the ones without any problems 
-     * according their dependencies. The method getClasses is a source of the argument.
-     * 
-     * @param mixed $classes    clasess to sort
-     * @return mixed
-     */
-    private function sortClasses( $classes ) {
-        $resultClasses = array();
-        $securityCounter = 0;
-        
-        while($securityCounter <= 10) {
-
-            $workClass = $classes;
-            if (empty($workClass)) break;
-
-            foreach($workClass as $classPath => $checkClass) {
-
-                $hasExtender = !empty($checkClass['extends']);
-                $isFound = false;
-                
-                // if a class has an extender, trying to find the one in other files
-                if ( $hasExtender ) {
-                    foreach($classes as $item) {
-                        if ($item['name'] == $checkClass['extends']) {
-                            $isFound = true;
-                            break;
-                        }
-                    }
-                }
-
-                // if a class doesn't have an extender or the one was not found in other files,
-                // then adding a current to the result
-                if (!$hasExtender || !$isFound) {
-                    unset($classes[$classPath]);
-                    $resultClasses[] = array(
-                        'class' => $checkClass['name'],
-                        'path' => $classPath,
-                    );
-                }
-            }
-            $securityCounter++;
-        }
-        return $resultClasses;
-    }
-    
-    /**
-     * Loads and returns plugin items specified by its name.
-     * 
-     * @param string $itemName      an item name to register 
-     * @param bool $create          create items or not?
-     * @return mixed
-     */
-    private function loadItem( $itemName, $create = false ) {
-
-        if ( isset( $this->itemMapping[$itemName] ) ) {
-            $mapping = $this->itemMapping[$itemName];
-
-            if ( !isset( $mapping['path'] ) ) {
-                
-                $items = array();
-                foreach($mapping as $map) {
-                    include_once( $map['path'] );
-                    $items[] = ( $create ) ? new $map['class']( $this ) : $map['class'];
-                }
-                return $items;
-                
-            } else {
-
-                include_once( $mapping['path'] );
-                return ( $create ) ? new $mapping['class']( $this ) : $map['class'];
-            }
-        }
-        return null;
-    }
-    
-    // ----------------------------------------------------------------------
-    // Caching for plugin items
-    // ----------------------------------------------------------------------
-    
-    /**
-     * Get cached data. 
-     * The data is stored in database as a wordpress site option.
-     * 
-     * @param type $name    Cache item name.
-     * @return mixed          
-     */
-    private function getCache( $name ) {
-        $optionName = 'fy_' . $this->pluginName . '_' . $name;
-        return get_option($optionName);
-    }
-    
-    /**
-     * Set cached data. 
-     * The data is stored in database as a wordpress site option.
-     * 
-     * @param type $name    Cache item name.
-     * @param type $value   Value to save into the cache.
-     * @return mixed          
-     */
-    private function setCache( $name, $value ) {
-        $optionName = 'fy_' . $this->pluginName . '_' . $name;
-        update_option($optionName, $value );
-        return true;
-    }
-    
-    /**
-     * Delete all cached data that was stored by the Factory plugin.
-     */
-    public function clearCache() {
-        $optionName = 'fy_' . $this->pluginName . '_items';
-        delete_option($optionName);
-    }
-    
     // ----------------------------------------------------------------------
     // Plugin row on plugins.php page
     // ----------------------------------------------------------------------
@@ -666,7 +609,7 @@ class FactoryFR105Plugin {
     public function showCustomPluginRow($file, $plugin_data) {
         if ( !is_network_admin() && is_multisite() ) return;
         
-        $messages = apply_filters('factory_fr105_plugin_row-' . $this->pluginName, array(), $file, $plugin_data);
+        $messages = apply_filters('factory_fr109_plugin_row-' . $this->pluginName, array(), $file, $plugin_data);
 
         // if nothign to show then, use default handle
         if ( count($messages) == 0 ) {

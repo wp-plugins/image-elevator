@@ -1,6 +1,6 @@
 <?php
 
-class FactoryFormFR105CheckboxFormControl extends FactoryFormFR105StandartFormControl 
+class FactoryFormFR109CheckboxFormControl extends FactoryFormFR109StandartFormControl 
 {
     public $type = 'mv-checkbox';
     

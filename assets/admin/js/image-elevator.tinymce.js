@@ -31,7 +31,7 @@
                 if ( !clipboardContext.isClipboardActive() ) return;
 
                 // if a browser supports clipboard data
-                if ( e.clipboardData ) {
+                if ( e.clipboardData && e.clipboardData.items ) {
 
                     clipboardContext.uploadFromClipboard(e, {
                         before: function(){

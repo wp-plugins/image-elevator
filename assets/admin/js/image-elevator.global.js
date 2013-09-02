@@ -107,7 +107,7 @@ jQuery(document).ready(function($){
          */
         initClipboardEvents: function(){
             if ( $(".wp-editor-area").length == 0 ) return;
-            
+
             var self = this;
  
             // - creates a capture to insert images from clipboards
@@ -176,7 +176,7 @@ jQuery(document).ready(function($){
                         }
                     };
                 
-                    if ( e.clipboardData )  {
+                    if ( e.clipboardData && e.clipboardData.items )  {
                         self.uploadFromClipboard(e, options);
                     } else {
                         self.uploadFromCapture(options);   

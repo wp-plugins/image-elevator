@@ -1,6 +1,6 @@
 <?php
 
-class FactoryFR105Page {
+class FactoryFR109Page {
     
     /**
      * Current Factory Plugin.
@@ -14,21 +14,25 @@ class FactoryFR105Page {
      */
     public $id;
     
-    public function __construct( FactoryFR105Plugin $plugin = null ) {
+    public function __construct( FactoryFR109Plugin $plugin = null ) {
         $this->plugin = $plugin;
-        $this->scripts = new FactoryFR105ScriptList( $plugin );
-        $this->styles = new FactoryFR105StyleList( $plugin ); 
+        $this->scripts = new FactoryFR109ScriptList( $plugin );
+        $this->styles = new FactoryFR109StyleList( $plugin ); 
     }
 
-    public function assets(FactoryFR105ScriptList $scripts, FactoryFR105StyleList $styles) {}
+    public function assets(FactoryFR109ScriptList $scripts, FactoryFR109StyleList $styles) {}
         
     /**
      * Shows page.
      */
     public function show() {
         
-        $action = isset( $_GET['action'] ) ? $_GET['action'] : 'index';
-        $this->executeByName( $action );
+        if ( $this->result ) {
+            echo $this->result;
+        } else {
+            $action = isset( $_GET['action'] ) ? $_GET['action'] : 'index';
+            $this->executeByName( $action );  
+        }
     }
     
     public function executeByName( $action ) {
@@ -47,5 +51,30 @@ class FactoryFR105Page {
     
     protected function script( $path ) {
         wp_enqueue_script( $path, $path, array('jquery'), false, true );
+    }
+    
+    /**
+     * Renders a template.
+     * @param string $path
+     * @param mixed $model
+     */
+    protected function template($path, $model, $bodyContent = null) {
+        $layout = null;
+        $file = $this->plugin->templateRoot . '/' . $path . '.tpl.php';
+        
+        ob_start();
+        include($file);
+        $content = ob_get_contents();
+        ob_end_clean();
+        
+        if ( !empty($content) ) {
+            $content = str_replace('{pagebody}', $bodyContent, $content);
+        }
+        
+        if ( !empty($layout) ) {
+            $this->template($layout, $model, $content);
+        } else {
+            echo $content;
+        }
     }
 }

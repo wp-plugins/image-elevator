@@ -249,3 +249,12 @@
 .imgevr-error-dialog-wrap p {
     margin: 10px 0;
 }
+
+#imgelv-settings .btn.active {
+    background: #278ab7 !important;
+    color: #fff !important;
+    
+    -webkit-text-shadow: none !important; 
+    -moz-text-shadow: none !important; 
+    text-shadow: none !important;
+}

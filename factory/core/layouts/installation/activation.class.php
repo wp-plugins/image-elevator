@@ -1,6 +1,6 @@
 <?php
 
-abstract class FactoryFR105Activation {
+abstract class FactoryFR109Activation {
     
     /**
      * Curent plugin.
@@ -8,7 +8,7 @@ abstract class FactoryFR105Activation {
      */
     public $plugin;
     
-    public function __construct(FactoryFR105Plugin $plugin) {
+    public function __construct(FactoryFR109Plugin $plugin) {
         $this->plugin = $plugin;
     }
     
@@ -27,7 +27,11 @@ abstract class FactoryFR105Activation {
     protected function license($data) {
         $data['Activated'] = 0; 
         $data['Expired'] = 0; 
-        add_option('fy_default_license_' . $this->plugin->pluginName, $data);
+        
+        $defaultLicense = get_option('fy_default_license_' . $this->plugin->pluginName, null);
+        if ( empty($defaultLicense) ) {
+            update_option('fy_default_license_' . $this->plugin->pluginName, $data);    
+        }
     }
     
     // --------------------------------------------------------------------------------

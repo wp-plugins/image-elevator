@@ -1,6 +1,6 @@
 <?php
 
-class FactoryFR105FakeValueProvider implements IFactoryFR105ValueProvider 
+class FactoryFR109FakeValueProvider implements IFactoryFR109ValueProvider 
 {
     public function init( $scope, $postId = false ) {
         return;

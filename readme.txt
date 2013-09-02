@@ -24,8 +24,8 @@ In other words, you can paste images directly from your favorite graphical edito
 
 *The plugin is a free edition of the premium 
 <a href="http://codecanyon.net/item/image-elevator-for-wordpress/4311188?ref=OnePress">Image Elevator</a> plugin 
-that provides more features: renaming images after pasting, 
-compressing images on the fly and saving images into Media Library after adding.*
+that provides more features: renaming images after pasting,
+compressing images on the fly, dragging and dropping local files.*
 
 = How it works =
 
@@ -70,6 +70,10 @@ Also view the demo video below to learn how the plugin can make your posting mor
 http://www.youtube.com/watch?v=ApcCCcsUoeo
 
 == Changelog ==
+
+= 1.8.5 - 3 Sep 2013 =
+NEW: Saving images in Media Library after pasting!  
+FIXED: A bug when it's not possible to paste images in FireFox v22+  
 
 = 1.8.0 - 10 Apr 2013 =
 FIXED: A bug when the message offering to change the plugin assembly appears even if the assemble is correct.

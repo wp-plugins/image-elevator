@@ -1,5 +1,8 @@
 <?php
 
+include(IMGEVR_PLUGIN_ROOT . '/admin/activation.php');
+include(IMGEVR_PLUGIN_ROOT . '/admin/pages/license-manager.php');
+
 /**
  * Adds scripts and styles in the admin area.
  */
@@ -20,7 +23,7 @@ function imgevr_admin_assets() {
     
     ?>
     <style>
-        .onp-notice.image-elevator .onp-notice-inner-wrap {
+        .onp-notice.clipboard-images .onp-notice-inner-wrap {
             padding-left: 60px !important;
             background: url("<?php echo IMGEVR_PLUGIN_URL . '/assets/admin/img/notice-background.png' ?>") 2px 0px no-repeat;
         }
