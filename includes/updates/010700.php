@@ -3,7 +3,7 @@
 /**
  * Adds new options.
  */
-class ImgevrUpdate010700 extends FactoryFR109Update {
+class ImgevrUpdate010700 extends FactoryFR110Update {
 
     public function install() {
 

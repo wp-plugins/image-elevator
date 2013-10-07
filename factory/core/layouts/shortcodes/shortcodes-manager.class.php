@@ -6,7 +6,7 @@
  * - creating aninstance of Factory Shortcode per every call of the shortcode.
  * - tracking shortcodes in post content.
  */
-class FactoryFR109ShortcodeManager {
+class FactoryFR110ShortcodeManager {
     
     public $plugin;
     public $blanks;
@@ -19,7 +19,7 @@ class FactoryFR109ShortcodeManager {
      */
     private $firstContentSave = true;
 
-    public function __construct(FactoryFR109Plugin $plugin) {
+    public function __construct(FactoryFR110Plugin $plugin) {
         $this->plugin = $plugin;
     }
     
@@ -70,7 +70,7 @@ class FactoryFR109ShortcodeManager {
                 if ($blank->tracking) {
                     
                     foreach($blank->shortcode as $shortcode) {
-                        factory_fr109_tr_register_shortcode(
+                        factory_fr110_tr_register_shortcode(
                             $shortcode, array($blank, 'trackingCallback')
                         ); 
                     }
@@ -99,7 +99,7 @@ class FactoryFR109ShortcodeManager {
         }  
         
         // runs the shortcode tracking 
-        factory_fr109_tr_check_content($post->post_content, $postid);
+        factory_fr110_tr_check_content($post->post_content, $postid);
     }
     
     /**
@@ -112,7 +112,7 @@ class FactoryFR109ShortcodeManager {
 
         $content = $post->post_content;
         foreach($blank->shortcode as $shortcode) {
-            $metaName = 'factory_fr109_' . $shortcode . '_include_assets';
+            $metaName = 'factory_fr110_' . $shortcode . '_include_assets';
 
             delete_post_meta($postid, $metaName);
 
@@ -156,7 +156,7 @@ class FactoryFR109ShortcodeManager {
        
        foreach( $this->blanks as $blank ) {
             foreach($blank->shortcode as $shortcode) {
-                $metaName = 'factory_fr109_' . $shortcode . '_include_assets';
+                $metaName = 'factory_fr110_' . $shortcode . '_include_assets';
                 $metaValue = get_post_meta($post->ID, $metaName);
 
                 if ( empty($metaValue) ) continue;

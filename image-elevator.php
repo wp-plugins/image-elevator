@@ -4,7 +4,7 @@ Plugin Name: OnePress Image Elevator
 Plugin URI: http://onepress-media.com/portfolio
 Description: Save tons of time, when adding images into your posts! Paste images from clipboard directly into the post editor! Write articles, tutorials, reviews, news with pleasure by using Image Elevator!
 Author: OnePress
-Version: 1.8.5
+Version: 1.8.6
 Author URI: http://onepress-media.com/portfolio
 */
 
@@ -15,13 +15,14 @@ Author URI: http://onepress-media.com/portfolio
 require('factory/core/start.php');
 
 global $clipImages;
-$clipImages = factory_fr109_create_plugin(__FILE__, array(
+$clipImages = factory_fr110_create_plugin(__FILE__, array(
     'name'      => 'clipboard-images',
     'title'     => 'Image Elevator',
-    'version'   => '1.8.5',
+    'version'   => '1.8.6',
     'assembly'  => 'free',
     'api'       => 'http://api.byonepress.com/1.0/',
-    'premium'   => 'http://codecanyon.net/item/clipboard-images-by-onepress/4311188?ref=OnePress'
+    'premium'   => 'http://codecanyon.net/item/clipboard-images-by-onepress/4311188?ref=OnePress',
+    'tracker'   => /*@var:tracker*/'0ec2f14c9e007ba464c230b3ddd98384'/*@*/,
 ));
 
 $clipImages->load('factory/modules/licensing', 'licensing');

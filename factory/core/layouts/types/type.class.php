@@ -4,7 +4,7 @@
  * 
  * The class provides abstraction for custom post type.
  */
-abstract class FactoryFR109Type {
+abstract class FactoryFR110Type {
     
     /**
      * Internal type name.
@@ -99,18 +99,18 @@ abstract class FactoryFR109Type {
      */
     public $plugin = null;
     
-    public function __construct( FactoryFR109Plugin $plugin ) {
+    public function __construct( FactoryFR110Plugin $plugin ) {
         
         $this->plugin = $plugin;
-        $this->menu = new FactoryFR109TypeMenu( $this );
-        $this->adminScripts = new FactoryFR109ScriptList( $plugin );
-        $this->adminStyles = new FactoryFR109StyleList( $plugin ); 
+        $this->menu = new FactoryFR110TypeMenu( $this );
+        $this->adminScripts = new FactoryFR110ScriptList( $plugin );
+        $this->adminStyles = new FactoryFR110StyleList( $plugin ); 
     }
     
     public abstract function configure (
-            FactoryFR109Type $type, 
-            FactoryFR109TypeMenu $menu, 
-            FactoryFR109MetaboxCollection $metaboxes);
+            FactoryFR110Type $type, 
+            FactoryFR110TypeMenu $menu, 
+            FactoryFR110MetaboxCollection $metaboxes);
 
     public function useit() { return true; }
     
@@ -152,7 +152,7 @@ abstract class FactoryFR109Type {
         $this->buildLables();
         $this->buildMessages();
 
-        $metaboxes = new FactoryFR109MetaboxCollection( $this->plugin );
+        $metaboxes = new FactoryFR110MetaboxCollection( $this->plugin );
         $this->configure($this, $this->menu, $metaboxes);
 
         // adds metaboxes that needed to load
@@ -170,7 +170,7 @@ abstract class FactoryFR109Type {
         
         // redefines the Publish metabox for non-public types
         if ( $this->template !== 'public') {
-            $saveMetabox = new FactoryFR109SaveMetabox( $this->plugin );
+            $saveMetabox = new FactoryFR110SaveMetabox( $this->plugin );
             $this->plugin->metaboxes->registerFor( $saveMetabox, $this->name );
             add_action('add_meta_boxes', array($this, 'actionAddMetaboxs'));
         }

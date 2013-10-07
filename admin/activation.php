@@ -1,6 +1,6 @@
 <?php
 
-class ImageElevatorActivate extends OnePressFR109Activation {
+class ImageElevatorActivate extends OnePressFR110Activation {
     
     public function activate() {
         parent::activate();

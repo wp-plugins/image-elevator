@@ -1,6 +1,6 @@
 <?php
 
-abstract class FactoryFormFR109StandartFormControl extends FactoryFormFR109Control {
+abstract class FactoryFormFR110StandartFormControl extends FactoryFormFR110Control {
     
     public function render()
     {

@@ -1,6 +1,6 @@
 <?php
 
-class FactoryFR109AdminPage extends FactoryFR109Page {
+class FactoryFR110AdminPage extends FactoryFR110Page {
     
     /**
      * Visible page title.
@@ -65,7 +65,7 @@ class FactoryFR109AdminPage extends FactoryFR109Page {
     public $internal = false;
     
 
-    public function __construct(FactoryFR109Plugin $plugin) {
+    public function __construct(FactoryFR110Plugin $plugin) {
         parent::__construct($plugin);
         $this->configure();
         

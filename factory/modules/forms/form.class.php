@@ -1,6 +1,6 @@
 <?php
 
-class FactoryFormFR109 {
+class FactoryFormFR110 {
     
     public static $controls = array();
 
@@ -50,10 +50,10 @@ class FactoryFormFR109 {
      */
     private $formControls = array();
     
-    public function __construct( FactoryFR109Plugin $plugin, $valueProvider = null ) {
+    public function __construct( FactoryFR110Plugin $plugin, $valueProvider = null ) {
         
         $this->plugin = $plugin;
-        $this->valueProvider = $valueProvider ? $valueProvider : new FactoryFR109FakeValueProvider();     
+        $this->valueProvider = $valueProvider ? $valueProvider : new FactoryFR110FakeValueProvider();     
     }
     
     /**
@@ -83,8 +83,8 @@ class FactoryFormFR109 {
         $controlsStack = self::$controls;
 
         // applies filters to the form params before building
-        $this->items = apply_filters('factory_fr109_form', $this->items, $this->scope, $this->name);    
-        $this->items = apply_filters('factory_form_fr109_' . $this->name, $this->items, $this->scope);
+        $this->items = apply_filters('factory_fr110_form', $this->items, $this->scope, $this->name);    
+        $this->items = apply_filters('factory_form_fr110_' . $this->name, $this->items, $this->scope);
                 
         foreach($this->items as $index => $item) {
             if ( !$this->isControl($item) ) continue;
@@ -135,7 +135,7 @@ class FactoryFormFR109 {
         echo '<div class="pi-metabox wpbootstrap">';
         echo '<div class="form-horizontal">';
         
-        $root = new FactoryFormFR109Item(array(), null);
+        $root = new FactoryFormFR110Item(array(), null);
         $currentLevel = $root;
         
         $currentTab = null;
@@ -153,7 +153,7 @@ class FactoryFormFR109 {
                    case 'tab':
 
                        $levelToUse = $currentTab == null ? $root : $currentTab->parent;
-                       $tab = new FactoryFormFR109Tab( $item, $levelToUse );
+                       $tab = new FactoryFormFR110Tab( $item, $levelToUse );
 
                        $currentLevel = $tab;
                        $currentTab = $tab;
@@ -163,7 +163,7 @@ class FactoryFormFR109 {
                    // tab item
                    case 'tab-item':
 
-                       $tabItem = new FactoryFormFR109TabItem( $item, $currentTab );
+                       $tabItem = new FactoryFormFR110TabItem( $item, $currentTab );
                        $currentLevel = $tabItem;
 
                    break;
@@ -171,7 +171,7 @@ class FactoryFormFR109 {
                    // group
                    case 'group':
 
-                       $group = new FactoryFormFR109Group( $item, $currentLevel );
+                       $group = new FactoryFormFR110Group( $item, $currentLevel );
                        $currentLevel = $group;
                        
                     break;
@@ -179,7 +179,7 @@ class FactoryFormFR109 {
                    // group
                    case 'collapsed':
 
-                       $collapsed = new FactoryFormFR109Collapsed( $item, $currentLevel );
+                       $collapsed = new FactoryFormFR110Collapsed( $item, $currentLevel );
                        $currentLevel = $collapsed;
                        
                    break;  
@@ -384,9 +384,9 @@ class FactoryFormFR109 {
     }
 }
 
-add_action('admin_enqueue_scripts', 'factory_form_fr109_admin_scripts2');
-function factory_form_fr109_admin_scripts2() {
-    wp_enqueue_style('forms-style', FACTORY_FORM_FR109_URL . '/assets/css/forms.css'); 
-    wp_enqueue_style('forms-controls', FACTORY_FORM_FR109_URL . '/assets/css/controls.css'); 
-    wp_enqueue_script('forms-controls', FACTORY_FORM_FR109_URL . '/assets/js/controls.js'); 
+add_action('admin_enqueue_scripts', 'factory_form_fr110_admin_scripts2');
+function factory_form_fr110_admin_scripts2() {
+    wp_enqueue_style('forms-style', FACTORY_FORM_FR110_URL . '/assets/css/forms.css'); 
+    wp_enqueue_style('forms-controls', FACTORY_FORM_FR110_URL . '/assets/css/controls.css'); 
+    wp_enqueue_script('forms-controls', FACTORY_FORM_FR110_URL . '/assets/js/controls.js'); 
 }

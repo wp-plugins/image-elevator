@@ -175,7 +175,7 @@ jQuery(document).ready(function($){
                             self.clearLoadingStateForTextarea();    
                         }
                     };
-                
+
                     if ( e.clipboardData && e.clipboardData.items )  {
                         self.uploadFromClipboard(e, options);
                     } else {
@@ -828,8 +828,8 @@ jQuery(document).ready(function($){
             if ( !this.selection ) return;
             
             $(this.selection.editor).focus();
-            this.selection.editor.selectionStart =  this.selection.end;
-            this.selection.editor.selectionEnd = this.selection.editor.selectionStart;     
+            this.selection.editor.selectionStart =  this.selection.start;
+            this.selection.editor.selectionEnd = this.selection.end;     
         },
         
         insertHtmlForTextarea: function(html) {

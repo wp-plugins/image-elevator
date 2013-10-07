@@ -5,7 +5,7 @@
  * This provide works with meta value like a lazy key value storage and 
  * provides methods to commit changes on demand. It increases perfomance on form saving.
  */
-class FactoryFR109MetaValueProvider implements IFactoryFR109ValueProvider 
+class FactoryFR110MetaValueProvider implements IFactoryFR110ValueProvider 
 {
     /**
      * Values to save $metaName => $metaValue

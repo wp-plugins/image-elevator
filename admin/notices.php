@@ -1,6 +1,6 @@
 <?php
 
-add_filter('factory_fr109_admin_notices-clipboard-images', 'imgevr_admin_notices', 10, 2);
+add_filter('factory_fr110_admin_notices-clipboard-images', 'imgevr_admin_notices', 10, 2);
 
 function imgevr_admin_notices( $notices, $plugin ) {
     if ( !$plugin->license || $plugin->build !== "free" ) return $notices;
@@ -31,7 +31,7 @@ function imgevr_admin_notices( $notices, $plugin ) {
                 array(
                     'title'     => 'Yes, activate it now!',
                     'class'     => 'primary',
-                    'action'    => onepress_fr109_get_link_license_manager('clipboard-images', 'activateTrial')
+                    'action'    => onepress_fr110_get_link_license_manager('clipboard-images', 'activateTrial')
                 )
             )
         );
@@ -63,7 +63,7 @@ function imgevr_admin_notices( $notices, $plugin ) {
                     array(
                         'title'     => 'Activate trial for 7 days',
                         'class'     => 'primary',
-                        'action'    => onepress_fr109_get_link_license_manager('clipboard-images', 'activateTrial')
+                        'action'    => onepress_fr110_get_link_license_manager('clipboard-images', 'activateTrial')
                     )
                 )
             );
@@ -105,7 +105,7 @@ function imgevr_admin_notices( $notices, $plugin ) {
                     array(
                         'title'     => 'Activate trial now!',
                         'class'     => 'primary',
-                        'action'    => onepress_fr109_get_link_license_manager('clipboard-images', 'activateTrial')
+                        'action'    => onepress_fr110_get_link_license_manager('clipboard-images', 'activateTrial')
                     )
                 )
             );

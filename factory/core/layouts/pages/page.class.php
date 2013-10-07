@@ -1,6 +1,6 @@
 <?php
 
-class FactoryFR109Page {
+class FactoryFR110Page {
     
     /**
      * Current Factory Plugin.
@@ -14,13 +14,13 @@ class FactoryFR109Page {
      */
     public $id;
     
-    public function __construct( FactoryFR109Plugin $plugin = null ) {
+    public function __construct( FactoryFR110Plugin $plugin = null ) {
         $this->plugin = $plugin;
-        $this->scripts = new FactoryFR109ScriptList( $plugin );
-        $this->styles = new FactoryFR109StyleList( $plugin ); 
+        $this->scripts = new FactoryFR110ScriptList( $plugin );
+        $this->styles = new FactoryFR110StyleList( $plugin ); 
     }
 
-    public function assets(FactoryFR109ScriptList $scripts, FactoryFR109StyleList $styles) {}
+    public function assets(FactoryFR110ScriptList $scripts, FactoryFR110StyleList $styles) {}
         
     /**
      * Shows page.
