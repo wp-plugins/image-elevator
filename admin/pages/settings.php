@@ -113,8 +113,8 @@ function imgevr_settings() {
 </script>
 
 <style>
-    .factory-control-compression_max_size .col-sm-10 .input-group,
-    .factory-control-compression_quality .col-sm-10 .input-group {
+    .factory-control-compression_max_size .input-group,
+    .factory-control-compression_quality .input-group {
         width: 100px;
     }
 </style>

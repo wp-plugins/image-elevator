@@ -18,6 +18,7 @@ define('IMGEVR_PLUGIN_URL', plugins_url( null, __FILE__ ));
 
 require('libs/factory/core/boot.php');
 require('libs/factory/bootstrap/boot.php');
+require('libs/factory/font-awesome/boot.php');
 require('libs/factory/notices/boot.php');
 require('libs/factory/pages/boot.php');
 require('libs/factory/forms/boot.php');

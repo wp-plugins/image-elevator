@@ -71,7 +71,7 @@ class OnpLicensing300_LicenseManagerPage extends FactoryPages300_AdminPage  {
         $isInfinity = empty( $licenseData['Expired']);
         
         ?>
-        <div class="factory-bootstrap-300 factory-fontawesome-000 license-manager-content <?php echo $licenseData['Category'] ?>-license-manager-content" id="license-manager">
+        <div class="factory-bootstrap-300 factory-fontawesome-300 license-manager-content <?php echo $licenseData['Category'] ?>-license-manager-content" id="license-manager">
             <div class="license-message <?php echo $licenseData['Category'] ?>-license-message">
                 <?php if (is_wp_error($error)) { 
                     $code = $error->get_error_code(); ?>
