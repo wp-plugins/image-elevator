@@ -998,7 +998,7 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
     if (this.isShown && this.options.backdrop) {
       var doAnimate = $.support.transition && animate
 
-      this.$backdrop = $('<div class="factory-bootstrap-300-modal-backdrop ' + animate + '" />')
+      this.$backdrop = $('<div class="factory-bootstrap-301-modal-backdrop ' + animate + '" />')
         .appendTo(document.body)
 
       this.$element.on('click.dismiss.modal', $.proxy(function (e) {
@@ -1038,9 +1038,9 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
   // MODAL PLUGIN DEFINITION
   // =======================
 
-  var old = $.fn.factoryBootstrap300_modal
+  var old = $.fn.factoryBootstrap301_modal
 
-  $.fn.factoryBootstrap300_modal = function (option, _relatedTarget) {
+  $.fn.factoryBootstrap301_modal = function (option, _relatedTarget) {
     return this.each(function () {
       var $this   = $(this)
       var data    = $this.data('bs.modal')
@@ -1052,14 +1052,14 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
     })
   }
 
-  $.fn.factoryBootstrap300_modal.Constructor = Modal
+  $.fn.factoryBootstrap301_modal.Constructor = Modal
 
 
   // MODAL NO CONFLICT
   // =================
 
-  $.fn.factoryBootstrap300_modal.noConflict = function () {
-    $.fn.factoryBootstrap300_modal = old
+  $.fn.factoryBootstrap301_modal.noConflict = function () {
+    $.fn.factoryBootstrap301_modal = old
     return this
   }
 
@@ -1076,7 +1076,7 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
     e.preventDefault()
 
     $target
-      .factoryBootstrap300_modal(option, this)
+      .factoryBootstrap301_modal(option, this)
       .one('hide', function () {
         $this.is(':visible') && $this.focus()
       })
@@ -2022,7 +2022,7 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
 ;(function ( $, window, document, undefined ) {
     "use strict"; // jshint ;_;
   
-    var pluginName = 'factoryBootstrap300_moreLink';
+    var pluginName = 'factoryBootstrap301_moreLink';
 
     $.fn[pluginName] = function ( param1, param2 ) {
         
@@ -2048,7 +2048,7 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
     // auto init
  
     $(function(){
-        $('.factory-bootstrap-300 .factory-more-link').factoryBootstrap300_moreLink();  
+        $('.factory-bootstrap-301 .factory-more-link').factoryBootstrap301_moreLink();  
     });
     
 })( jQuery, window, document );

@@ -16,11 +16,11 @@
 // module provides function only for the admin area
 if ( !is_admin() ) return;
 
-if (defined('FACTORY_PAGES_300_LOADED')) return;
-define('FACTORY_PAGES_LOADED', true);
+if (defined('FACTORY_PAGES_301_LOADED')) return;
+define('FACTORY_PAGES_301_LOADED', true);
 
-define('FACTORY_PAGES_300_DIR', dirname(__FILE__));
-define('FACTORY_PAGES_300_URL', plugins_url(null,  __FILE__ ));
+define('FACTORY_PAGES_301_DIR', dirname(__FILE__));
+define('FACTORY_PAGES_301_URL', plugins_url(null,  __FILE__ ));
 
 if ( is_admin() ) {
     global $wp_version;
@@ -29,6 +29,6 @@ if ( is_admin() ) {
     }
 }
 
-require(FACTORY_PAGES_300_DIR . '/pages.php');
-require(FACTORY_PAGES_300_DIR . '/includes/page.class.php');
-require(FACTORY_PAGES_300_DIR . '/includes/admin-page.class.php');
+require(FACTORY_PAGES_301_DIR . '/pages.php');
+require(FACTORY_PAGES_301_DIR . '/includes/page.class.php');
+require(FACTORY_PAGES_301_DIR . '/includes/admin-page.class.php');

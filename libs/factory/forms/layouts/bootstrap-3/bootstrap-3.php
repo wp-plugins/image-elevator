@@ -25,7 +25,7 @@ class FactoryForms300_Bootstrap3FormLayout extends FactoryForms300_FormLayout {
      */
     public function __construct($options, $form) {
         parent::__construct($options, $form);
-        $this->addCssClass('factory-bootstrap-300');
+        $this->addCssClass('factory-bootstrap-301');
     }
     
     /**

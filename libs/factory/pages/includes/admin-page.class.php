@@ -1,6 +1,6 @@
 <?php
 
-class FactoryPages300_AdminPage extends FactoryPages300_Page {
+class FactoryPages301_AdminPage extends FactoryPages301_Page {
     
     /**
      * Visible page title.

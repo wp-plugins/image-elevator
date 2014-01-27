@@ -1,6 +1,6 @@
 <?php
 
-class FactoryPages300_Page {
+class FactoryPages301_Page {
     
     /**
      * Current Factory Plugin.

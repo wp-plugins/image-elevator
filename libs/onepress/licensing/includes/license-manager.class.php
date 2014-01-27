@@ -15,7 +15,7 @@
  * 
  * @since 1.0.0
  */
-class OnpLicensing300_LicenseManagerPage extends FactoryPages300_AdminPage  {
+class OnpLicensing300_LicenseManagerPage extends FactoryPages301_AdminPage  {
     
     public $id = 'license-manager';
     public $purchasePrice = '$';
@@ -71,7 +71,7 @@ class OnpLicensing300_LicenseManagerPage extends FactoryPages300_AdminPage  {
         $isInfinity = empty( $licenseData['Expired']);
         
         ?>
-        <div class="factory-bootstrap-300 factory-fontawesome-300 license-manager-content <?php echo $licenseData['Category'] ?>-license-manager-content" id="license-manager">
+        <div class="factory-bootstrap-301 factory-fontawesome-301 license-manager-content <?php echo $licenseData['Category'] ?>-license-manager-content" id="license-manager">
             <div class="license-message <?php echo $licenseData['Category'] ?>-license-message">
                 <?php if (is_wp_error($error)) { 
                     $code = $error->get_error_code(); ?>
@@ -459,7 +459,7 @@ class OnpLicensing300_LicenseManagerPage extends FactoryPages300_AdminPage  {
         }
         
         ?>
-        <div class="factory-bootstrap-300 license-manager-content" id="activate-key-manual">
+        <div class="factory-bootstrap-301 license-manager-content" id="activate-key-manual">
             <form action="<?php $this->actionUrl('activateKeyManualy') ?>" method="post">
             <div class="license-manager-box">
                 <h2 style="margin-bottom: 10px;"><?php _e('Key Activation', 'onepress') ?></h2>
@@ -502,7 +502,7 @@ class OnpLicensing300_LicenseManagerPage extends FactoryPages300_AdminPage  {
         }
         
         ?>
-        <div class="factory-bootstrap-300 license-manager-content" id="activate-key-manual">
+        <div class="factory-bootstrap-301 license-manager-content" id="activate-key-manual">
             <form action="<?php $this->actionUrl('deleteKeyManualy') ?>" method="post">
             <div class="license-manager-box">
                 <h2 style="margin-bottom: 10px;"><?php _e('Key Deactivation', 'onepress') ?></h2>
@@ -543,7 +543,7 @@ class OnpLicensing300_LicenseManagerPage extends FactoryPages300_AdminPage  {
         }
         
         ?>
-        <div class="factory-bootstrap-300 license-manager-content" id="activate-key-manual">
+        <div class="factory-bootstrap-301 license-manager-content" id="activate-key-manual">
             <form action="<?php $this->actionUrl('activateTrialManualy') ?>" method="post">
             <div class="license-manager-box">
                 <h2 style="margin-bottom: 10px;">Trial Activation</h2>
@@ -599,7 +599,7 @@ class OnpLicensing300_LicenseManagerPage extends FactoryPages300_AdminPage  {
             <h2>License Manager Internal Keys</h2>
             <p style="margin-top: 0px; margin-bottom: 30px;">You actually don't need to change something here. Please change the values below only if OnePress supports ask you to do it.</p>
             
-            <div class="factory-bootstrap-300" style="max-width: 800px;">
+            <div class="factory-bootstrap-301" style="max-width: 800px;">
                 <form method="post" class="form-horizontal" action="<?php echo $this->actionUrl('internalKeys') ?>">
 
                 <div>

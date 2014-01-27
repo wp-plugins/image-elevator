@@ -123,7 +123,7 @@ function imgevr_settings() {
     <h2>Image Elevator Settings</h2>
     <p style="margin-top: 0px;">Set here image parameters that are added via Copy & Paste and Drag & Drop.</p>
     
-    <div class="factory-bootstrap-300" id="imgelv-settings">
+    <div class="factory-bootstrap-301" id="imgelv-settings">
     <form method="post" class="form-horizontal">
     
         <?php if ( isset( $_POST['save-action'] ) ) { ?>

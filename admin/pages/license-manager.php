@@ -14,4 +14,4 @@ class ClipImagePluginManagerAdminPage extends OnpLicensing300_LicenseManagerPage
     }
 }
 
-FactoryPages300::register($clipImages, 'ClipImagePluginManagerAdminPage');
+FactoryPages301::register($clipImages, 'ClipImagePluginManagerAdminPage');

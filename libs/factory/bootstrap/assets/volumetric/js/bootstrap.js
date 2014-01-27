@@ -998,7 +998,7 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
     if (this.isShown && this.options.backdrop) {
       var doAnimate = $.support.transition && animate
 
-      this.$backdrop = $('<div class="factory-bootstrap-300-modal-backdrop ' + animate + '" />')
+      this.$backdrop = $('<div class="factory-bootstrap-301-modal-backdrop ' + animate + '" />')
         .appendTo(document.body)
 
       this.$element.on('click.dismiss.modal', $.proxy(function (e) {
@@ -2022,7 +2022,7 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
 ;(function ( $, window, document, undefined ) {
     "use strict"; // jshint ;_;
   
-    var pluginName = 'factoryBootstrap300_moreLink';
+    var pluginName = 'factoryBootstrap301_moreLink';
 
     $.fn[pluginName] = function ( param1, param2 ) {
         
@@ -2048,7 +2048,7 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
     // auto init
  
     $(function(){
-        $('.factory-bootstrap-300 .factory-more-link').factoryBootstrap300_moreLink();  
+        $('.factory-bootstrap-301 .factory-more-link').factoryBootstrap301_moreLink();  
     });
     
 })( jQuery, window, document );
