@@ -4,7 +4,7 @@
 /**
  * License page is a place where a user can check updated and manage the license.
  */
-class ClipImagePluginManagerAdminPage extends OnePressFR110LicenseManagerAdminPage  {
+class ClipImagePluginManagerAdminPage extends OnpLicensing300_LicenseManagerPage  {
  
     public $purchaseUrl = 'http://codecanyon.net/item/image-elevator-for-wordpress/4311188/?ref=OnePress';
     public $purchasePrice = '$18';
@@ -14,4 +14,4 @@ class ClipImagePluginManagerAdminPage extends OnePressFR110LicenseManagerAdminPa
     }
 }
 
-$clipImages->registerPage('ClipImagePluginManagerAdminPage');
+FactoryPages300::register($clipImages, 'ClipImagePluginManagerAdminPage');

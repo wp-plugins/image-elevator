@@ -57,7 +57,7 @@
     position: relative;
     margin-left: -3px;
 }
-.qtip.clipboad-images-error-state {
+.qtip2.clipboad-images-error-state {
     line-height: 145%;
     max-width: 600px;
     background-color: #ffebe8;
@@ -114,7 +114,7 @@
 * Renaming dialog
 */
 
-#qtip-clipimage-renaming-dialog {  
+#qtip2-clipimage-renaming-dialog {  
     max-width: 700px;
     z-index: 159000 !important;
 }
@@ -144,7 +144,7 @@
     margin: 0px;
     margin-bottom: 8px;
 }
-#qtip-overlay {
+#qtip2-overlay {
     z-index: 158000 !important;
 }
 
@@ -211,7 +211,7 @@
 * Confirmation dialog
 */
 
-#qtip-imgevr-confirmation-dialog {
+#qtip2-imgevr-confirmation-dialog {
     max-width: 700px;
     z-index: 159000 !important;
 }
@@ -236,7 +236,7 @@
 * Error dialog
 */
 
-#qtip-imgevr-error-dialog {
+#qtip2-imgevr-error-dialog {
     max-width: 700px;
     z-index: 159000 !important;
 }

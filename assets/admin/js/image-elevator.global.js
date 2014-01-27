@@ -283,52 +283,52 @@ jQuery(document).ready(function($){
                     event: 'unfocus'
                 },
                 style: {
-                    classes: 'qtip-light qtip-shadow qtip-rounded ' + extraClasses
+                    classes: 'qtip2-light qtip2-shadow qtip2-rounded ' + extraClasses
                 }
             };
             return options;
         },
         
         showActiveState: function( message ) {
-            var tooltip = $("#qtip-active-state");
+            var tooltip = $("#qtip2-active-state");
             
             if ( tooltip.length == 0 ) {
-                tooltip = $("<div id='qtip-active-state'></div>").appendTo("body");
+                tooltip = $("<div id='qtip2-active-state'></div>").appendTo("body");
                 var options = this.getTooltipOptions( "clipboad-images-active-state" );
-                tooltip.qtip(options);
+                tooltip.qtip2(options);
             }
             
-            var api = tooltip.qtip("api");
+            var api = tooltip.qtip2("api");
             api.set("content.text", message);
           
             api.show();
         },
         
         showDeactiveState: function( message ) {
-            var tooltip = $("#qtip-deactive-state");
+            var tooltip = $("#qtip2-deactive-state");
             
             if ( tooltip.length == 0 ) {
-                tooltip = $("<div id='qtip-deactive-state'></div>").appendTo("body");
+                tooltip = $("<div id='qtip2-deactive-state'></div>").appendTo("body");
                 var options = this.getTooltipOptions( "clipboad-images-deactive-state" );
-                tooltip.qtip(options);
+                tooltip.qtip2(options);
             }
             
-            var api = tooltip.qtip("api");
+            var api = tooltip.qtip2("api");
             api.set("content.text", message);
             
             api.show();
         },
         
         showErrorState: function( message ) {
-            var tooltip = $("#qtip-error-state");
+            var tooltip = $("#qtip2-error-state");
             
             if ( tooltip.length == 0 ) {
-                tooltip = $("<div id='qtip-error-state'></div>").appendTo("body");
-                var options = this.getTooltipOptions("qtip-red clipboad-images-error-state", true);
-                tooltip.qtip(options);
+                tooltip = $("<div id='qtip2-error-state'></div>").appendTo("body");
+                var options = this.getTooltipOptions("qtip2-red clipboad-images-error-state", true);
+                tooltip.qtip2(options);
             }
             
-            var api = tooltip.qtip("api");
+            var api = tooltip.qtip2("api");
             api.set("content.text", message);
             
             api.show();
@@ -350,7 +350,7 @@ jQuery(document).ready(function($){
         createControllerTooltip: function() {
             if ( !window['clipboard-images-build'] || window['clipboard-images-build'] == 'free' ) return;
                         
-            this.controllerTooltip = $("<div>").appendTo("body").qtip({
+            this.controllerTooltip = $("<div>").appendTo("body").qtip2({
                 content: {
                     text: '<p>Click to activate/deactivate.</p><p>Also visit the <a href="options-general.php?page=imgevr_settings">settings page</a></p>'
                 },
@@ -369,7 +369,7 @@ jQuery(document).ready(function($){
                     inactive: 2000 
                 },
                 style: {
-                    classes: 'qtip-light qtip-shadow qtip-rounded clipboad-images-hint-state'
+                    classes: 'qtip2-light qtip2-shadow qtip2-rounded clipboad-images-hint-state'
                 }
             });
         },

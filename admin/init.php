@@ -1,7 +1,9 @@
 <?php
 
 include(IMGEVR_PLUGIN_ROOT . '/admin/activation.php');
-include(IMGEVR_PLUGIN_ROOT . '/admin/pages/license-manager.php');
+    include(IMGEVR_PLUGIN_ROOT . '/admin/pages/license-manager.php');
+
+
 
 /**
  * Adds scripts and styles in the admin area.
@@ -10,8 +12,8 @@ function imgevr_admin_assets() {
     wp_enqueue_script('clipboard-images', IMGEVR_PLUGIN_URL . '/assets/admin/js/image-elevator.global.js', array('jquery'));
     wp_enqueue_style('clipboard-images', IMGEVR_PLUGIN_URL . '/assets/admin/css/image-elevator.global.css');
     
-    wp_enqueue_style('qtip', IMGEVR_PLUGIN_URL . '/assets/admin/css/jquery.qtip.min.css');
-    wp_enqueue_script('qtip', IMGEVR_PLUGIN_URL . '/assets/admin/js/jquery.qtip.min.js', array('jquery'));
+    wp_enqueue_style('jquery-qtip-2', IMGEVR_PLUGIN_URL . '/assets/admin/css/jquery.qtip.min.css');
+    wp_enqueue_script('jquery-qtip-2', IMGEVR_PLUGIN_URL . '/assets/admin/js/jquery.qtip.min.js', array('jquery'));
     ?>
     <script>
         window.imgevr_clipboard_active = true;
@@ -23,14 +25,15 @@ function imgevr_admin_assets() {
     
     ?>
     <style>
-        .onp-notice.clipboard-images .onp-notice-inner-wrap {
+        .factory-notices-300-notice.clipboard-images .factory-inner-wrap {
             padding-left: 60px !important;
             background: url("<?php echo IMGEVR_PLUGIN_URL . '/assets/admin/img/notice-background.png' ?>") 2px 0px no-repeat;
         }
     </style>
     <?php
 }
-add_action('admin_enqueue_scripts', 'imgevr_admin_assets');
+
+add_action( 'admin_print_styles', 'imgevr_admin_assets' );
 
 include(IMGEVR_PLUGIN_ROOT . '/admin/notices.php');
 include(IMGEVR_PLUGIN_ROOT . '/admin/ajax/image-uploading.php');

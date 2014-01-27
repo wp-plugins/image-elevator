@@ -71,6 +71,9 @@ http://www.youtube.com/watch?v=ApcCCcsUoeo
 
 == Changelog ==
 
+= 1.8.8 - 27 Jan 2014 =
+FIXED: The conflict of the Image Elevator plugin and the WordPress SEO Plugin by Yoast plugin.
+
 = 1.8.6 - 7 Oct 2013 =
 FIXED: A bug of pasting plain text in Chrome.  
 FIXED: A bug of not being able to activate a license key manually.  
