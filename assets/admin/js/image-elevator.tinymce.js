@@ -25,13 +25,13 @@
          * Inits Copy & Paste for the editor.
          */
         initCopyPaste: function(editor) {
-            
+
             editor.getDoc().onpaste = function (e) {
 
                 if ( !clipboardContext.isClipboardActive() ) return;
-
+                
                 // if a browser supports clipboard data
-                if ( e.clipboardData && e.clipboardData.items ) {
+                if ( e.clipboardData && ( e.clipboardData.items || e.clipboardData.files.length > 0 ) ) {
 
                     clipboardContext.uploadFromClipboard(e, {
                         before: function(){

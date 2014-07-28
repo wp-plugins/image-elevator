@@ -9,14 +9,14 @@
  * @since 1.0.0
  */
 
-add_action('admin_menu', 'FactoryPages301::actionAdminMenu');
+add_action('admin_menu', 'FactoryPages320::actionAdminMenu');
 
 /**
  * A base class to manage pages. 
  * 
  * @since 1.0.0
  */
-class FactoryPages301 {
+class FactoryPages320 {
 
     private static $pages = array();
 
@@ -27,7 +27,7 @@ class FactoryPages301 {
         
     public static function actionAdminMenu() {
         if ( empty(self::$pages) ) return;
-        
+
         foreach(self::$pages as $pluginPages) {
             foreach($pluginPages as $page) {
                 $page->connect();
@@ -43,4 +43,7 @@ class FactoryPages301 {
         return $result;
     }
 }
-?>
+
+function factory_pages_320_get_page_id( $plugin, $pureId ) {
+    return $pureId . '-' . $plugin->pluginName;
+}

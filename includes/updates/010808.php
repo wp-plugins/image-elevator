@@ -5,7 +5,7 @@
  * 
  * @since 3.0.0
  */
-class ImageElevatorUpdate010808 extends Factory300_Update {
+class ImageElevatorUpdate010808 extends Factory321_Update {
 
     public function install() {
         global $wpdb;

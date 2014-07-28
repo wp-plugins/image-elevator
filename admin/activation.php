@@ -1,9 +1,21 @@
 <?php
 
-class ImageElevatorActivate extends OnpLicensing300_Activator {
+class ImageElevatorActivate extends Factory321_Activator {
     
     public function activate() {
-        parent::activate();
+
+            $this->plugin->license->setDefaultLicense( array(
+                'Category'      => 'free',
+                'Build'         => 'free',
+                'Title'         => __('OnePress Public License', 'sociallocker'),
+                'Description'   => __('Public License is a GPLv2 compatible license. 
+                                    It allows you to change this version of the plugin and to
+                                    use the plugin free. Please remember this license 
+                                    covers only free edition of the plugin. Premium versions are 
+                                    distributed with other type of a license.', 'sociallocker')
+            ));
+        
+
         
         add_option('imgelv_clipboard_enable', true);
         add_option('imgelv_dragdrop_enable', true);

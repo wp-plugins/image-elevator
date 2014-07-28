@@ -12,7 +12,7 @@
 /**
  * A form layout based on Twitter Bootstrap 3
  */
-class FactoryForms300_Bootstrap3FormLayout extends FactoryForms300_FormLayout {
+class FactoryForms323_Bootstrap3FormLayout extends FactoryForms323_FormLayout {
     
     public $name = 'default';
     
@@ -21,11 +21,12 @@ class FactoryForms300_Bootstrap3FormLayout extends FactoryForms300_FormLayout {
      * 
      * @since 1.0.0
      * @param mixed[] $options A holder options.
-     * @param FactoryForms300_Form $form A parent form.
+     * @param FactoryForms323_Form $form A parent form.
      */
     public function __construct($options, $form) {
         parent::__construct($options, $form);
-        $this->addCssClass('factory-bootstrap-301');
+        $this->addCssClass('factory-bootstrap');
+        if ( isset( $options['cssClass'] ) ) $this->addCssClass( $options['cssClass'] );
     }
     
     /**
@@ -34,7 +35,7 @@ class FactoryForms300_Bootstrap3FormLayout extends FactoryForms300_FormLayout {
      * @since 1.0.0
      * @return void
      */
-    protected function beforeRendering() {
+    public function beforeRendering() {
     ?>
         <div <?php $this->attrs() ?>>
             <div class="form-horizontal">
@@ -47,7 +48,7 @@ class FactoryForms300_Bootstrap3FormLayout extends FactoryForms300_FormLayout {
      * @since 1.0.0
      * @return void
      */
-    protected function afterRendering() {
+    public function afterRendering() {
     ?>
             </div>
         </div>
@@ -60,7 +61,7 @@ class FactoryForms300_Bootstrap3FormLayout extends FactoryForms300_FormLayout {
         $themeClass = '';
         if ( isset($control->options['theme']) ) $themeClass = $control->options['theme'];
         
-        $controlName = $control->getName();
+        $controlName = $control->getOption('name');
         $controlNameClass = $controlName ? 'factory-control-' . $controlName : '';
     ?>
     <div class="form-group <?php echo $themeClass ?> <?php echo $controlNameClass ?>">

@@ -16,10 +16,18 @@
  * 
  * @since 1.0.0
  */
-interface IFactoryForms300_ValueProvider {
+interface IFactoryForms323_ValueProvider {
     
     /**
-     * Commit all changes.
+     * Inits a form a provider to get data from a storage.
+     * 
+     * @since 1.0.0
+     * @return void
+     */
+    public function init();
+    
+    /**
+     * Commits all changes.
      * 
      * @since 1.0.0
      * @return void

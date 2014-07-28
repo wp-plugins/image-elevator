@@ -14,7 +14,7 @@
  * 
  * @since 1.0.0
  */
-class FactoryForms300_TabItemHolder extends FactoryForms300_ControlHolder {
+class FactoryForms323_TabItemHolder extends FactoryForms323_Holder {
     
     /**
      * A holder type.

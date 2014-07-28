@@ -72,9 +72,9 @@
 })();
 
 /**
-* Clipboad API to insert images into the post content
+* Image Elevator
 * 
-* Copyright 2013, OnePress, http://onepress-media.com/portfolio
+* Copyright 2014, OnePress, http://onepress-media.com/portfolio
 * Help Desk: http://support.onepress-media.com/
 */
 
@@ -141,11 +141,11 @@ jQuery(document).ready(function($){
                 if ( !self.isClipboardActive() ) return;
                 if ( (ctrlDown || metaDown ) && e.keyCode == vKey) {
                     if ( $.browser.msie ) {
-                        self.setState("error", "Sorry, IE doesn't support yet inserting images from clipboard.");
+                        self.setState("error", "Sorry, IE doesn't support inserting images from clipboard.");
                         return;
                     }
                     if ( $.browser.opera ) {
-                        self.setState("error", "Sorry, Opera doesn't support yet inserting images from clipboard.");
+                        self.setState("error", "Sorry, Opera doesn't support inserting images from clipboard.");
                         return;
                     }
                     self.preventPaste();
@@ -182,10 +182,58 @@ jQuery(document).ready(function($){
                         self.uploadFromCapture(options);   
                     }
             };
+        },
+        
+        /**
+         * This method is called from 'paste_preprocess' of the Paste plugin of TinyMCE
+         */
+        processPastedContent: function( content ) {
+            if ( !content ) return content;
+
+            var editor = tinyMCE.activeEditor;
+            var self = this;
             
-            // catch drag & drop evetns
+            var $container = $("<div></div>").append( content );
+            var images = $container.find('img');
+             
+            if ( images.length > 0 ) {
+                var count = images.length;
+
+                images.each(function(){
+                    var image = $(this);
+                    
+                    var src = image.attr('src');
+                    if ( src.indexOf('data:image') !== 0 ) return true;
+  
+                    var preloader = $(self.getPreloaderHtml());
+                    var preloaderId = preloader.attr('id');
+                    
+                    image.before( preloader );
+                    image.remove();
+
+                    self.uploadImage(
+                        {
+                            image: image.attr('src'),
+                            type: null
+                        }, 
+                        {
+                            success: function(html){
+                                var preloader = $(editor.getDoc()).find("#" + preloaderId);
+                                preloader.after(html);
+                                preloader.remove();
+                                count--;
+                            }, 
+                            error: function() {
+                                var preloader = $(editor.getDoc()).find("#" + preloaderId);
+                                preloader.remove();
+                                count--;
+                            }
+                        }
+                    ); 
+                });
+            }
             
-            this.initDragAndDropEvents();
+            return $container.html();
         },
         
         // --------------------------------------------------------------------------
@@ -375,214 +423,6 @@ jQuery(document).ready(function($){
         },
         
         // --------------------------------------------------------------------------
-        // Drag & Drop
-        // --------------------------------------------------------------------------
-        
-        initDragAndDropEvents: function() {
-            if ( window['clipboard-images-build'] == 'free' ) return;
-            var self = this;
-            
-            var dragAndDropHolder = this.editorHolder;
-            if ( dragAndDropHolder.length == 0) return;
-            
-            var dragAndDropOverlay = self.createDragAndDropOverlay( dragAndDropHolder );
-
-            $(document).bind("dragleave drop", function(e){
-                if ( !self.isDropAndDragActive() ) return false;
-                e.preventDefault();
-                return false;
-            });
-            
-            $(document).bind("dragover", function(e){
-                if ( !self.isDropAndDragActive() ) return false;
-                e.preventDefault();
-                self.showDragAndDropOverlay( dragAndDropHolder );
-                return false;
-            });
-            
-            // current drop & down element
-            this._dropDownElement = null;
-            // allows or now to hide drop down overlay
-            this._allowToHideDropDownOverlay = true;
-            // delay that is used to check if mouse pointer leave the drop & down overlay
-            this._dropDownOverlayDalay = 1000;
-            // checks state of user activities during the delay
-            this._hasAnyActivitiesOnDropDownOverlay = false;
-            
-            self._availableToHideOverlay = true;
-            
-            // the couple of events that is used to check if the mouse pointer 
-            // is really above the drop & drag overlay or not, it's hard yeeah...
-            
-            dragAndDropOverlay.add(dragAndDropOverlay.find("*"))
-                .bind('dragover', function(e){
-                    if ( !self.isDropAndDragActive() ) return false;
-                    e.preventDefault();
-                        
-                    self._hasAnyActivitiesOnDropDownOverlay = true;
-                    self._allowToHideOverlay = ( self._dropDownElement == this && dragAndDropOverlay[0] == this );
-                    self._dropDownElement = this;
-                    
-                    self.higlightDragAndDropOverlay( dragAndDropHolder );
-                    
-                    return false;
-                })
-                .bind('dragleave', function(e){
-                    if ( !self.isDropAndDragActive() ) return false;
-                    e.preventDefault();
-                    
-                    self._dragDropAutoHideDelay = 3000;
-                    self._hasAnyActivitiesOnDropDownOverlay = false;
-                    if ( !self._allowToHideDropDownOverlay ) return false;
-  
-                    self._dropDownOverlayDalay = 300;
-
-                    var timer = setInterval(function(){
-                       self._dropDownOverlayDalay -= 150;
-
-                       if ( 
-                           self._dropDownOverlayDalay <= 0 && 
-                           self._allowToHideDropDownOverlay && 
-                           !self._hasAnyActivitiesOnDropDownOverlay ) 
-                       {
-                           self.unhiglightDragAndDropOverlay( dragAndDropHolder );
-                           clearInterval(timer);
-                       }
-                    }, 150);
-                    
-                    return false;
-                });
-
-            dragAndDropHolder[0].ondrop = function(e) {
-                if ( !self.isDropAndDragActive() ) return false;
-                e.preventDefault();
-                
-                self.hideDragAndDropOverlay( dragAndDropHolder );
-                
-                // if a browser doesn't support it
-                if ( !e.dataTransfer || !e.dataTransfer.files || e.dataTransfer.files.length == 0 ) return false;
-                
-                if ( e.dataTransfer.files.length > 1 ) {
-                    self.showErrorState("Please, paste only one image per time.");
-                    return false;
-                }
-
-                var file = e.dataTransfer.files[0];
-                var type = file.type || file.mediaType;
-   
-                if ( type ) {
-                    
-                    if ( 
-                        type.indexOf("png") == -1 && 
-                        type.indexOf("jpeg") == -1 && 
-                        type.indexOf("gif") == -1 && 
-                        type.indexOf("jpg") == -1 ) {
-                            self.showErrorState("Please, make sure that you paste one of the following files: png, jpg, gif.");
-                            return false;
-                        }
-                }
-   
-                var options = ( self._currentEditorTab == "html" ) 
-                    ? { 
-                        before: function() {
-                            self.saveCurrentSelection();
-                            self.setLoadingStateForTextarea();    
-                        },
-                        success: function(html) {
-                            self.insertHtmlForTextarea(html);
-                        },
-                        error: function() {
-                            self.clearLoadingStateForTextarea();    
-                        }
-                    } 
-                    : {
-                        before: function(){
-                            var editor = tinyMCE.activeEditor;
-                            editor.selection.setContent(self.getPreloaderHtml());
-                        },
-                        success: function(html){
-                            var editor = tinyMCE.activeEditor;
-                            self.insertImageHtml(editor, html);
-                        },
-                        error: function() {
-                            var editor = tinyMCE.activeEditor;
-                            self.removePlaceholder(editor);
-                        }
-                    };
-                    
-                if ( options.before ) options.before();
-
-                self.uploadImage({
-                   image: file,
-                   type: type,
-                   name: file.name || file.fileName
-               }, options);
-               
-                return false;
-            }
-        },
-        
-        createDragAndDropOverlay: function( holder ) {
-            
-            var overlay = $("<div class='onp-drag-and-drop-overlay'></div>");
-            var text = $("<span class='onp-drag-and-drop-text'><strong class='onp-drag-and-drop-strong'>Drag & Drop Here</strong><em class='onp-drag-and-drop-em'>Please remember only images allowed.</em></span>");
-            
-            overlay.append(text);
-            holder.prepend( overlay );
-            return overlay;
-        },
-        
-        showDragAndDropOverlay: function( holder ) {
-            this._dragDropAutoHideDelay = 3000;
-            
-            if ( this._dragAndDropOverlayCreated ) return;
-            var self = this;
-            
-            this._currentEditorTab = this.contentWrap.is(".tmce-active") ? "visual" : "html";
-            
-            var overlay = holder.find(".onp-drag-and-drop-overlay");
-            var parent = overlay.parent();
-            overlay.css({
-                width: parent.innerWidth(),
-                height: parent.innerHeight()
-            });
-            overlay.fadeIn();
-            
-            
-            self._dragDropAutoHideDelayTimer = setInterval(function(){
-                self._dragDropAutoHideDelay -= 500;
-                if ( self._dragDropAutoHideDelay <= 0 ) {
-                    self.hideDragAndDropOverlay(holder);
-                    if ( self._dragDropAutoHideDelayTimer ) clearInterval( self._dragDropAutoHideDelayTimer );
-                    self._dragDropAutoHideDelayTimer = null;
-                }
-            }, 500);
-            
-            this._dragAndDropOverlayCreated = true;
-        },
-        
-        hideDragAndDropOverlay: function( holder ) {
-            
-            var overlay = holder.find(".onp-drag-and-drop-overlay");
-            overlay.fadeOut();
-            
-            if ( this._dragDropAutoHideDelayTimer ) clearInterval( this._dragDropAutoHideDelayTimer );
-            this._dragDropAutoHideDelayTimer = null;
-                    
-            this._dragAndDropOverlayCreated = false;
-        },
-        
-        higlightDragAndDropOverlay: function( holder ) {
-            var overlay = holder.find(".onp-drag-and-drop-overlay");
-            overlay.addClass('onp-hover');
-        },
-        
-        unhiglightDragAndDropOverlay: function( holder ) {
-            var overlay = holder.find(".onp-drag-and-drop-overlay");
-            overlay.removeClass('onp-hover');
-        },
-        
-        // --------------------------------------------------------------------------
         // Methods for uploading
         // --------------------------------------------------------------------------
         
@@ -596,23 +436,48 @@ jQuery(document).ready(function($){
             self.returnFocusForTextArea();
             
             // read data from the clipborad and upload the first file
-            var items = e.clipboardData.items;
-            for (var i = 0; i < items.length; ++i) {
-                if (items[i].kind == 'file' && items[i].type.indexOf('image/') !== -1) {
 
-                    if ( options.before ) options.before();
+            if ( e.clipboardData.items ) {
+                var items = e.clipboardData.items;
+                for (var i = 0; i < items.length; ++i) {
+                    if (items[i].kind === 'file' && items[i].type.indexOf('image/') !== -1) {
 
-                    // only paste 1 image at a time
-                    e.preventDefault();
+                        if ( options.before ) options.before();
 
-                    // uploads image on a server
-                    this.uploadImage({
-                        image: items[i].getAsFile(),
-                        type: items[i].type,
-                        ref: 'clipboard'
-                    }, options);
+                        // only paste 1 image at a time
+                        e.preventDefault();
 
-                    return;
+                        // uploads image on a server
+                        this.uploadImage({
+                            image: items[i].getAsFile(),
+                            type: items[i].type,
+                            ref: 'clipboard'
+                        }, options);
+
+                        return;
+                    }
+                } 
+            }
+            
+            if ( e.clipboardData.files ) {
+                var items = e.clipboardData.files;
+                for (var i = 0; i < items.length; ++i) {
+                    if (items[i].type.indexOf('image/') !== -1) {
+
+                        if ( options.before ) options.before();
+
+                        // only paste 1 image at a time
+                        e.preventDefault();
+
+                        // uploads image on a server
+                        this.uploadImage({
+                            image: items[i],
+                            type: items[i].type,
+                            ref: 'clipboard'
+                        }, options);
+
+                        return;
+                    }
                 }
             }
         },
@@ -906,8 +771,22 @@ jQuery(document).ready(function($){
          * Creteats html for the preloader.
          */
         getPreloaderHtml: function() {
+            var id = this.generateId( 7 );
             var preloader = window.clipboardImagesAssets + "/img/circle-preloader.gif";
-            return "<p><img data-type='preloader' src='" + preloader + "' alt='' /></p>";
+            return "<p id='" + id + "'><img data-type='preloader' src='" + preloader + "' alt='' /></p>";
+        },
+
+        /**
+         * Generates a unique id.
+         */
+        generateId: function( length ) {
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+            for( var i=0; i < length; i++ )
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+            return text;
         },
        
         // --------------------------------------------------------------------------

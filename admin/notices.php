@@ -1,115 +1,46 @@
 <?php
 
-add_filter('factory_admin_notices-clipboard-images', 'imgevr_admin_notices', 10, 2);
+add_filter('factory_notices_clipboard-images', 'imgevr_admin_notices', 10, 2);
 
-function imgevr_admin_notices( $notices, $plugin ) {
-    if ( !$plugin->license || $plugin->build !== "free" ) return $notices;
-    $closed = get_option('fy_closed_notices', array());
-    if ( get_option('fy_trial_activated_' . $plugin->pluginName, false) ) return $notices;
+function imgevr_admin_notices( $notices ) {
+    global $clipImages;
+    $forceToShowNotices = defined('ONP_DEBUG_IMGEVR_OFFER_PREMIUM') && ONP_DEBUG_IMGEVR_OFFER_PREMIUM;
+
+    if ( ( !$clipImages->license || $clipImages->build !== "free" ) && !$forceToShowNotices ) return $notices;
     
-    // offer to try premium version after installation, it's shown once
-    if ( !isset( $closed['imgevr-trial-1'] ) ) {
+    $closed = get_option('factory_notices_closed', array());
+    
+    $lastCloase  = isset( $closed['imgevr-offer-to-purchase'] ) 
+        ? $closed['imgevr-offer-to-purchase']['time'] 
+        : 0;
+    
+    // shows every 7 days
+    if ( ( time() - $lastCloase > 60*60*7 ) || $forceToShowNotices ) {
         
         $notices[] = array(
-            'id'        => 'imgevr-trial-1',
-            'class'     => 'image-elevator',
-
-            // content and color
-            'type'      => 'offer',
-            'header'    => 'Do not Miss it',
-            'message'   => '- Try a premium version of <a target="_blank" href="' . $plugin->options['premium'] . '" class="highlighted">Image Elevator</a> 
-                            for 7-days trial period, get more features!
-                            Rename and compress images on the fly, drag & drop local files! Just click to activate! 
-                            <a target="_blank" href="' . $plugin->options['premium'] . '">Learn more</a>.',
+            'id'        => 'imgevr-offer-to-purchase',
+            
+            'class'     => 'call-to-action ',
+            'icon'      => 'fa fa-arrow-circle-o-up',
+            'header'    => '<span class="onp-hightlight">' . __('Explode your productivity with Image Elevator!', 'sociallocker') . '</span>',
+            'message'   => __('Rename images in the editor by a single click and compress large images on the fly! Upgrade your copy of the Image Elevator to get these features.', 'sociallocker'),   
+            'plugin'    => $clipImages->pluginName,
+            'where'     => array('plugins','dashboard', 'edit'),
 
             // buttons and links
             'buttons'   => array(
                 array(
-                    'title'     => 'No, thanks',
-                    'action'    => 'x'
-                ),  
+                    'title'     => '<i class="fa fa-arrow-circle-o-up"></i> Learn More & Upgrade',
+                    'class'     => 'button button-primary',
+                    'action'    => admin_url('admin.php') . '?page=how-to-use-clipboard-images&onp_sl_page=premium'
+                ),
                 array(
-                    'title'     => 'Yes, activate it now!',
-                    'class'     => 'primary',
-                    'action'    => onepress_get_link_license_manager('clipboard-images', 'activateTrial')
+                    'title'     => __('No, thanks', 'onepress-ru'),
+                    'class'     => 'button',
+                    'action'    => 'x'
                 )
             )
-        );
-    }
-    
-    // offer to try premium version after using the plugin during 1 day
-    if ( isset( $closed['imgevr-trial-1'] ) && !isset( $closed['imgevr-trial-2'] ) ) {
-
-        $time = $closed['imgevr-trial-1']['time'];
-
-        if ( $time + 60*60*24 <= time() ) {
-            
-            $notices[] = array(
-                'id'        => 'imgevr-trial-2',
-                'class'     => 'image-elevator',
-
-                // cotnent and color
-                'type'      => 'offer',
-                'header'    => 'Thank you!',
-                'message'   => 'You use <a target="_blank" href="' . $plugin->options['premium'] . '" class="highlighted">Image Elevator</a> already during a day. All right?
-                                May be would you like to get more features? Check out a <a target="_blank" href="' . $plugin->options['premium'] . '">premium version</a>.',
-
-                // buttons and links
-                'buttons'   => array(
-                    array(
-                        'title'     => 'No, thanks',
-                        'action'    => 'x'
-                    ),  
-                    array(
-                        'title'     => 'Activate trial for 7 days',
-                        'class'     => 'primary',
-                        'action'    => onepress_get_link_license_manager('clipboard-images', 'activateTrial')
-                    )
-                )
-            );
-        }
-    }
-    
-    // just remember about the premium version every week
-    if ( isset( $closed['imgevr-trial-2'] ) ) {
-        $time = $closed['imgevr-trial-2']['time'];
-        $never = false;
-        
-        if ( isset( $closed['imgevr-trial-3'] ) ) {
-            $time = $closed['imgevr-trial-3']['time'];
-            $never = $closed['imgevr-trial-3']['never'];
-        }
-
-        if ( !$never && ( $time + (60*60*24*5) <= time() ) ) {
-            
-            $notices[] = array(
-                'id'        => 'imgevr-trial-3',
-                'class'     => 'image-elevator',
-
-                // content and color
-                'type'      => 'offer',
-                'header'    => 'Do you remember...',
-                'message'   => 'that there\'s a premium version of <a target="_blank" href="' . $plugin->options['premium'] . '" class="highlighted">Image Elevator</a> plugin?
-                                Rename and compress images on the fly, drag & drop local files! <a target="_blank" href="' . $plugin->options['premium'] . '">Learn more</a>.',   
-
-                // buttons and links
-                'buttons'   => array(
-                    array(
-                        'title'     => 'Remind later',
-                        'action'    => 'x'
-                    ), 
-                    array(
-                        'title'     => 'Never show it',
-                        'action'    => 'xx'
-                    ),  
-                    array(
-                        'title'     => 'Activate trial now!',
-                        'class'     => 'primary',
-                        'action'    => onepress_get_link_license_manager('clipboard-images', 'activateTrial')
-                    )
-                )
-            );
-        }
+        ); 
     }
     
     return $notices;

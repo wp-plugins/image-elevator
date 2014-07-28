@@ -14,7 +14,7 @@
  * 
  * @since 1.0.0
  */
-class FactoryForms300_MoreLinkHolder extends FactoryForms300_ControlHolder {
+class FactoryForms323_MoreLinkHolder extends FactoryForms323_Holder {
     
     /**
      * A holder type.
@@ -37,9 +37,14 @@ class FactoryForms300_MoreLinkHolder extends FactoryForms300_ControlHolder {
         
         ?>
         <div <?php $this->attrs() ?>>
-            <a href="#<?php echo $id ?>" class="factory-more-link-show"><?php $this->title() ?> (<?php echo $count ?>)</a>
+            <div class="form-group">
+                <div class="control-label col-sm-2"></div>
+                <div class="control-group col-sm-10">
+                    <a href="#<?php echo $id ?>" class="factory-more-link-show"><?php $this->title() ?> (<?php echo $count ?>)</a>           
+                </div>
+            </div>
             <div class='factory-more-link-content' id="<?php echo $id ?>" style="display: none;">
-                <a href="#<?php echo $id ?>" class='factory-more-link-hide'>hide extra options</a>
+                <a href="#<?php echo $id ?>" class='factory-more-link-hide'><?php _e('hide extra options', 'factory'); ?></a>
         <?php
     }
     

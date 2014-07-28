@@ -1,6 +1,6 @@
 <?php
 
-class FactoryPages301_AdminPage extends FactoryPages301_Page {
+class FactoryPages320_AdminPage extends FactoryPages320_Page {
     
     /**
      * Visible page title.
@@ -51,6 +51,12 @@ class FactoryPages301_AdminPage extends FactoryPages301_Page {
     public $menuTarget = null;
     
     /**
+     * if true, then admin.php is used as a base url.
+     * @var bool 
+     */
+    public $customTarget = false;
+    
+    /**
      * Capabilities for roles that have access to work with this page.
      * Leave it empty to use inherited capabilities for custom post type menu.
      * @link http://codex.wordpress.org/Roles_and_Capabilities
@@ -60,12 +66,19 @@ class FactoryPages301_AdminPage extends FactoryPages301_Page {
     
     /**
      * If true, the page will not added to the admin menu.
-     * @var type 
+     * @var bool 
      */
     public $internal = false;
     
-
-    public function __construct(Factory300_Plugin $plugin) {
+    /**
+     * If true, the page will not be cretaed.
+     * 
+     * @since 3.0.6
+     * @var bool 
+     */
+    public $hidden = false;
+    
+    public function __construct($plugin) {
         parent::__construct($plugin);
         $this->configure();
 
@@ -78,12 +91,23 @@ class FactoryPages301_AdminPage extends FactoryPages301_Page {
     public function configure(){}
     
     /**
-     * Actions that includes registered fot this type scritps and styles.
-     * @global type $post
-     * @param type $hook
+     * Includes the Factory Bootstrap assets for a current page.
+     * 
+     * @param string $hook
+     * @return void
+     */
+    public function actionAdminBootstrapScripts( $hook ) {
+        $this->scripts->connect('bootstrap');
+        $this->styles->connect('bootstrap'); 
+    } 
+    
+    /**
+     * Includes the assets for a current page (all assets except Factory Bootstrap assets). 
+     * 
+     * @param string $hook
+     * @return void
      */
     public function actionAdminScripts( $hook ) {
-
         $this->scripts->connect();
         $this->styles->connect(); 
     }
@@ -96,6 +120,8 @@ class FactoryPages301_AdminPage extends FactoryPages301_Page {
      * Registers admin page for the admin menu.
      */
     public function connect() {
+        if ( $this->hidden ) return;
+        
         $resultId = $this->getResultId();
 
         // makes redirect to the page
@@ -136,10 +162,14 @@ class FactoryPages301_AdminPage extends FactoryPages301_Page {
             $this->result = ob_get_contents();
             ob_end_clean();
         }
-        
+   
         // calls scripts and styles, adds pages to menu
         if ( isset($_GET['page']) && $_GET['page'] == $resultId ) {
             $this->assets($this->scripts, $this->styles);
+
+            if ( !$this->scripts->isEmpty('bootstrap')|| !$this->styles->isEmpty('bootstrap') ) {
+                add_action('factory_bootstrap_enqueue_scripts_' . $this->plugin->pluginName, array($this, 'actionAdminBootstrapScripts'));
+            }
             
             // includes styles and scripts
             if ( !$this->scripts->isEmpty() || !$this->styles->isEmpty() ) {
@@ -150,13 +180,13 @@ class FactoryPages301_AdminPage extends FactoryPages301_Page {
         // if this page for a custom menu page
         if ( $this->menuPostType ) {
             $this->menuTarget = 'edit.php?post_type=' . $this->menuPostType;
-            if ( empty( $this->capabilities ) ) {
+            if ( empty( $this->capabilitiy ) ) {
                 $this->capabilitiy = 'edit_' . $this->menuPostType;
             }
         } 
 
         // sets default capabilities
-        if ( empty( $this->capabilities ) ) {
+        if ( empty( $this->capabilitiy ) ) {
             $this->capabilitiy = 'manage_options';
         }
 
@@ -210,6 +240,7 @@ class FactoryPages301_AdminPage extends FactoryPages301_Page {
     }
 
     protected function redirectToAction($action, $queryArgs = array()) {
+ 
         wp_redirect( $this->getActionUrl($action, $queryArgs) );     
         exit;
     }
@@ -220,15 +251,17 @@ class FactoryPages301_AdminPage extends FactoryPages301_Page {
     
     protected function getActionUrl($action = null, $queryArgs = array()) {
         $baseUrl = $this->getBaseUrl();
-        
+
         if ( !empty( $action )) $queryArgs['action'] = $action;
-        return add_query_arg($queryArgs, $baseUrl);    
+        $url = add_query_arg($queryArgs, $baseUrl);
+        return $url;
     }
     
     protected function getBaseUrl() {
         $resultId = $this->getResultId();
                 
         if ( $this->menuTarget ) {
+            if ( $this->customTarget ) return admin_url('admin.php') . '?page=' . $resultId;
             return $this->menuTarget . '&page=' . $resultId;     
         } else {
             return 'admin.php?&page=' . $resultId;     
@@ -241,17 +274,25 @@ class FactoryPages301_AdminPage extends FactoryPages301_Page {
         
         if (!empty($this->menuIcon))
             $iconUrl = str_replace('~/', $this->plugin->pluginUrl . '/', $this->menuIcon);   
-            
-        if ( FACTORY_FLAT_ADMIN_030800 ) {
+        
+        global $wp_version;
+        if ( version_compare( $wp_version, '3.7.3', '>'  ) ) {
         ?>
             <style type="text/css" media="screen">
+
+                <?php if ( !empty($iconUrl) ) { ?>
+
                 a.toplevel_page_<?php echo $resultId ?> .wp-menu-image {
                     background: url('<?php echo $iconUrl ?>') no-repeat 10px -30px !important;
                 }
+
+                <?php } ?>
+
                 a.toplevel_page_<?php echo $resultId ?> .wp-menu-image:before {
                     content: "" !important;
                 }
                 a.toplevel_page_<?php echo $resultId ?>:hover .wp-menu-image, 
+                a.toplevel_page_<?php echo $resultId ?>.wp-has-current-submenu .wp-menu-image,                 
                 a.toplevel_page_<?php echo $resultId ?>.current .wp-menu-image {
                     background-position:10px 2px !important;
                 }

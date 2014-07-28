@@ -4,20 +4,10 @@
 /**
  * Returns name suggestions for a given image in json format.
  */
-function imgevr_load_suggestions() {
-// Dear user, who's reading this text now, the condition below is responsible for checking a license key.
-// Sure you can change that and all features unlocked for free. Do it if you want.
-// But please keep in mind, we could encrypt the code better. There are two reasons why we did not make that.
-// The 1st reason is that the better encryption will slow the plugin.
-// We make plugins for the people and want our plugins to work ideally for you.
-// The 2nd reason is that we entrusted you, the user who're using our plugin, and we hope you will enjoy it.
-// Thank you! Yours faithfully, OnePress.
-// < condition start
-global $clipImages;
+function imgevr_load_suggestions() { global $clipImages;
 if ( in_array( $clipImages->license->type, array( 'free' ) ) ) {
  return; 
 }
-// condition end >
 
     
     // post id that the images is added to
@@ -44,7 +34,7 @@ if ( in_array( $clipImages->license->type, array( 'free' ) ) ) {
         // attachemnt title + image id
         $attachment = get_post($imgId);
         $attacmentTitle = trim( $attachment->post_title );
-        if ( !empty($attacmentTitle) && !factory_300_starts_with($attacmentTitle, 'img_') ) {
+        if ( !empty($attacmentTitle) && !factory_321_starts_with($attacmentTitle, 'img_') ) {
             $result[] = sanitize_title( $attacmentTitle ) . '-' . $imgId;
         };
         
@@ -90,20 +80,10 @@ if ( in_array( $clipImages->license->type, array( 'free' ) ) ) {
 /**
  * Renames the given image. May return a confirmation request.
  */
-function imgevr_rename_image() {
-// Dear user, who's reading this text now, the condition below is responsible for checking a license key.
-// Sure you can change that and all features unlocked for free. Do it if you want.
-// But please keep in mind, we could encrypt the code better. There are two reasons why we did not make that.
-// The 1st reason is that the better encryption will slow the plugin.
-// We make plugins for the people and want our plugins to work ideally for you.
-// The 2nd reason is that we entrusted you, the user who're using our plugin, and we hope you will enjoy it.
-// Thank you! Yours faithfully, OnePress.
-// < condition start
-global $clipImages;
+function imgevr_rename_image() { global $clipImages;
 if ( in_array( $clipImages->license->type, array( 'free' ) ) ) {
  return; 
 }
-// condition end >
 
     
     // value of the 'src' attribute of a given image
@@ -126,14 +106,14 @@ if ( in_array( $clipImages->license->type, array( 'free' ) ) ) {
     $partPos = strpos($imgUrl, $term);
     
     if ( $partPos === false ) 
-        factory_300_json_error('Sorry, the file for renaming has been not found on your server.');
+        factory_321_json_error('Sorry, the file for renaming has been not found on your server.');
     
     $relPath = substr($imgUrl, $partPos + strlen($term), strlen($imgUrl));
     $absPath = $uploadData['basedir'] . '/' . $relPath;
-    $orgData = factory_300_pathinfo($relPath);
+    $orgData = factory_321_pathinfo($relPath);
     
     if ( !is_file($absPath) ) 
-        factory_300_json_error('Sorry, the file for renaming is not found on your server.');
+        factory_321_json_error('Sorry, the file for renaming is not found on your server.');
     
     // if original file already has a given name
     if ( $orgData['basename'] == $imgName ) return;
@@ -173,7 +153,8 @@ if ( in_array( $clipImages->license->type, array( 'free' ) ) ) {
         $data = array(
             'ID' => $imgId,
             'guid' => $newAbsUrl,
-            'post_name' => $imgName
+            'post_name' => $imgName,
+            'post_title' => $imgName
         );
         wp_update_post( $data );
         $attach_data = wp_generate_attachment_metadata( $imgId, $newAbsPath );

@@ -14,7 +14,7 @@
  * 
  * @since 1.0.0
  */
-class FactoryForms300_FormGroupHolder extends FactoryForms300_ControlHolder {
+class FactoryForms323_FormGroupHolder extends FactoryForms323_Holder {
     
     /**
      * A holder type.

@@ -3,7 +3,7 @@ Contributors: OnePressMedia
 Donate link: http://onepress-media.com/portfolio
 Tags:productivity,image,clipboard,pasting,content,drag and drop,renaming,images,utilities,seo
 Requires at least: 3.2
-Tested up to 3.9.0
+Tested up to 3.9.1
 Stable tag: trunk
 License: GPLv2
 
@@ -14,31 +14,34 @@ Save your time, write with pleasure! Paste images from clipboard directly into t
 <strong>Save tons of time when adding images into your posts! Write with pleasure, fill your lovely website with quality content!</strong>
 
 Have you wondered how many steps you need to do for adding an image into a wordpress post? 
-For example, a screen snapshot? Or a selection area from Photoshop? Or a photo somewhere on your hard disk?
+For example, a screen snapshot? Or a region from Photoshop? Or a photo somewhere on your hard disk?
 
-We bet you could add images more often and make your content more attractive if it didn’t take so many time! 
-You should understand it if you write tutorials, reviews, news or just articles with a lot of photos.
+We bet you could add images more often and make your content more attractive if it doesn't take so many time! If you write tutorials, reviews, news or just articles with a lot of photos, the Image Elevator plugin has been made exactly made for you.
 
-Image Elevator for Wordpress allows you to paste images into the post editor directly from clipboard (or by dragging & dropping files)! 
-In other words, you can paste images directly from your favorite graphical editors or from any screen capture programs. 
+Image Elevator allows you to paste images into your posts directly from clipboard! 
+In other words, you can paste images directly from your favorite graphical editors or from any screen capture programs. Just copy & paste.
+
+- Paste Screenshots & Screen Clippings
+- Paste regions from your favorite Graphical Editor
+- Copy images from other websites
+- Paste local images stored on your PC (in Firefox only)
 
 *The plugin is a free edition of the premium 
 <a href="http://codecanyon.net/item/image-elevator-for-wordpress/4311188?ref=OnePress">Image Elevator</a> plugin 
-that provides more features: renaming images after pasting,
-compressing images on the fly, dragging and dropping local files.*
+that provides more features: renaming images after pasting and compressing images on the fly.*
 
 = How it works =
 
-View the demo video below to learn how the plugin can make your posting more easy.
+View the demo video below to learn how the plugin makes writing articles more easy.
 
 http://www.youtube.com/watch?v=ApcCCcsUoeo
 
 *The latest two features that are demonstrated in the video are available only in 
 the <a href="http://codecanyon.net/item/image-elevator-for-wordpress/4311188?ref=OnePress">premium version</a>.*
 
-= Compatible Browsers =
+= Browser Compatibility =
 
-It currently works in Chrome and the latest versions of Firefox, we expect that it will be available for other browsers soon.
+The most of the plugin features are available in all the major browsers (Chrome, Firefox, IE 11, Safary). Pasting local images stored on PC via clipboard is available in Firefox only.
 
 = Resources =
 
@@ -70,6 +73,18 @@ Also view the demo video below to learn how the plugin can make your posting mor
 http://www.youtube.com/watch?v=ApcCCcsUoeo
 
 == Changelog ==
+
+<strong>v.2.0.1 - 27 July 2014</strong><br />
+<ul>
+<li>ADDED: The "How to use?" section.</li>
+</ul>
+
+<strong>v.2.0.0 - 24 Jul 2014</strong><br />
+<ul>
+<li>FIXED: The issue of FireFox.</li>
+<li>ADDED: Support for direct copying & pasting files from PC in FireFox.</li>
+<li>ADDED: Support for IE11.</li>
+</ul>
 
 = 1.8.8 - 27 Jan 2014 =
 FIXED: The conflict of the Image Elevator plugin and the WordPress SEO Plugin by Yoast plugin.

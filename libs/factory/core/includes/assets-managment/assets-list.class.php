@@ -14,7 +14,7 @@
  * 
  * @since 1.0.0
  */
-class Factory300_AssetsList 
+class Factory321_AssetsList 
 {
     protected $all = array();
     public $headerPlace = array();
@@ -23,8 +23,9 @@ class Factory300_AssetsList
     
     protected $defaultPlace;
 
-    public function __construct( $defaultIsFooter = true ) {
-
+    public function __construct( $plugin, $defaultIsFooter = true ) {
+        $this->plugin = $plugin;
+        
         if ( $defaultIsFooter ) $this->defaultPlace = &$this->footerPlace;
         if ( !$defaultIsFooter ) $this->defaultPlace = &$this->headerPlace;
     }
@@ -73,9 +74,12 @@ class Factory300_AssetsList
     
     /**
      * Checks whether the collection is empty.
+     * 
+     * @param string $source if the 'bootstrap' specified, checks only whether the bootstrap assets were required.
      * @return boolean
      */
-    public function isEmpty() {
+    public function isEmpty( $source = 'wordpress' ) {
+        if ( 'bootstrap' === $source ) return empty( $this->required[$source] );
         return empty($this->all) && empty($this->required);
     }
     
@@ -91,14 +95,16 @@ class Factory300_AssetsList
      * Adds new items to the requried collection.
      * @param mixed
      */
-    public function request() {
+    public function request( $items, $source = 'wordpress' ) {
         
-        $bindTo = count( $this->all ) == 0 ? '_global_' : end( $this->all );
-        
-        foreach(func_get_args() as $item) {
-            $this->required[$bindTo][] = $item;
-        }       
-        
+        if ( is_array( $items ) ) {
+            foreach($items as $item) {
+                $this->required[$source][] = $item;
+            }  
+        } else {
+            $this->required[$source][] = $items;
+        }
+     
         return $this;
-    }    
+    }
 }

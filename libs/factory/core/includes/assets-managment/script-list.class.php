@@ -14,19 +14,22 @@
  * 
  * @since 1.0.0
  */
-class Factory300_ScriptList extends Factory300_AssetsList 
+class Factory321_ScriptList extends Factory321_AssetsList 
 {
     public $localizeData = array();
     public $useAjax = false;
     
-    public function connect() {
+    public function connect( $source = 'wordpress' ) {
 
         // register all global required scripts
-        if ( !empty( $this->required['_global_'] ) ) {
-            foreach ($this->required['_global_'] as $script) {
-                wp_enqueue_script( $script );
+        if ( !empty( $this->required[$source] ) ) {
+            foreach ($this->required[$source] as $script) {
+                if ( 'wordpress' === $source ) wp_enqueue_script( $script );
+                elseif ( 'bootstrap' === $source ) $this->plugin->bootstrap->enqueueScript( $script );
             }     
         }
+        
+        if ( $source == 'bootstrap' ) return;
         
         $isFirstScript = true;
         $isFooter = false;
@@ -36,9 +39,7 @@ class Factory300_ScriptList extends Factory300_AssetsList
             
             foreach($scriptPlace as $script) {
                 
-                $dep = !empty( $this->required[$script] ) ? $this->required[$script] : array();
-                
-                wp_register_script( $script, $script, $dep, false, $isFooter);  
+                wp_register_script( $script, $script, array(), false, $isFooter);  
 
                 if ( $isFirstScript && $this->useAjax ) {
                     wp_localize_script( $script, 'factory', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );

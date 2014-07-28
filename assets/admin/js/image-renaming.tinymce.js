@@ -125,7 +125,9 @@
             this.currentImage = target;
             
             // gets an iamge data
-            this.saveImageData( $(target) );
+            var result = this.saveImageData( $(target) );
+            if ( !result ) return;
+            
             this.imageNameHolder.text(this.imageData.fullName);
             this.imageNameHolder.css("width", "auto");
             this.imageNameHolder.removeClass("no-border-radius");       
@@ -204,7 +206,10 @@
         saveImageData: function( img ) {
             var src = img.attr('src');
             
-            var name = src.match(/([^\/]+)(?=\.\w+$)/)[0];
+            var matches = src.match(/([^\/]+)(?=\.\w+$)/);
+            if ( !matches || !matches[0] ) return;
+            
+            var name = matches[0];
             var fullNameIndex = src.lastIndexOf("/") + 1;
             var fullName = src.substr(fullNameIndex);
             

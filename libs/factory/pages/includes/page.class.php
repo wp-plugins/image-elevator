@@ -1,10 +1,10 @@
 <?php
 
-class FactoryPages301_Page {
+class FactoryPages320_Page {
     
     /**
      * Current Factory Plugin.
-     * @var Factory300_Plugin
+     * @var Factory321_Plugin
      */
     public $plugin;
     
@@ -14,10 +14,11 @@ class FactoryPages301_Page {
      */
     public $id;
     
-    public function __construct( $plugin = null ) {
+    public function __construct( $plugin ) {
         $this->plugin = $plugin;
-        $this->scripts = new Factory300_ScriptList( $plugin );
-        $this->styles = new Factory300_StyleList( $plugin ); 
+
+        $this->scripts = $this->plugin->newScriptList();
+        $this->styles = $this->plugin->newStyleList();
     }
 
     public function assets($scripts, $styles) {}

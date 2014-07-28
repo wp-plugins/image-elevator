@@ -2,43 +2,6 @@
     color: #ddd;
 }
 
-.onp-drag-and-drop-overlay {
-    position: absolute;
-    background-color: #333;
-    z-index: 16000;
-    border-radius: 3px;
-    display: none;
-    color: #ddd;
-    border: 5px solid #ddd;
-    
-    -moz-box-shadow: inset 0px 0px 6px #000;
-    -webkit-box-shadow: inset 0px 0px 6px #000;
-    box-shadow: inset 0px 0px 6px #000;    
-}
-.onp-drag-and-drop-overlay.onp-hover {
-    background-color: #222; 
-}
-.onp-drag-and-drop-text {
-    position: absolute;
-    top: 50%;
-    margin-top: -20px;
-    height: 40px;
-    font-family: Arial, sans-serif;
-    width: 100%;
-    text-align: center;
-}
-.onp-drag-and-drop-text strong {
-    font-size: 24px;
-    font-weight: bold;
-    display: block;
-}
-.onp-drag-and-drop-text em {
-    font-size: 14px;
-    display: block;
-    font-style: normal;
-    margin-top: 6px;
-}
-
 .button.image-insert-controller {
     vertical-align: bottom;
     padding: 0px;
@@ -250,11 +213,14 @@
     margin: 10px 0;
 }
 
-#imgelv-settings .btn.active {
-    background: #278ab7 !important;
-    color: #fff !important;
-    
-    -webkit-text-shadow: none !important; 
-    -moz-text-shadow: none !important; 
-    text-shadow: none !important;
+.settings_page_imgevr_settings .btn-group {
+    border: 0px !important;
+}
+.button.imgevr-get-premium {
+    font-weight: bold;
+    background: #fffaea;
+    padding: 0px;
+    border-radius: 4px;
+    outline: none;
+    box-shadow: 0 0 8px #fddf67;
 }

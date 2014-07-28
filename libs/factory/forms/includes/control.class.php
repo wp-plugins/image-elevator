@@ -14,7 +14,7 @@
  * 
  * @since 1.0.0
  */
-abstract class FactoryForms300_Control extends FactoryForms300_FormElement {
+abstract class FactoryForms323_Control extends FactoryForms323_FormElement {
     
     /**
      * Is this element a control?
@@ -23,6 +23,14 @@ abstract class FactoryForms300_Control extends FactoryForms300_FormElement {
      * @var bool 
      */
     public $isControl = true;
+    
+    /**
+     * Is this element a complex control?
+     * 
+     * @since 1.0.0
+     * @var bool 
+     */
+    public $isComplexControl = false;
     
     /**
      * A provider that is used to get values.
@@ -47,7 +55,7 @@ abstract class FactoryForms300_Control extends FactoryForms300_FormElement {
      * Sets a provider for the control.
      * 
      * @since 1.0.0
-     * @param IFactoryForms300_ValueProvider $provider
+     * @param IFactoryForms323_ValueProvider $provider
      * @return void
      */
     public function setProvider( $provider ) {
@@ -106,10 +114,10 @@ abstract class FactoryForms300_Control extends FactoryForms300_FormElement {
      * @since 1.0.0
      * @return string|null A control name on a form.
      */
-    public function getNameOnForm() 
+    public function getNameOnForm( $name = null ) 
     {
         $scope = $this->getScope();
-        $name = $this->getName();
+        $name =  !$name ? $this->getName() : $name;
         
         if ( is_array( $name ) ) {
             $names = array();
@@ -138,23 +146,47 @@ abstract class FactoryForms300_Control extends FactoryForms300_FormElement {
     }
     
     /**
-     * Returns a value of the control got after submitting a form.
+     * Returns a submit value of the control by a given name.
      * 
      * @since 1.0.0
-     * @return mixed;
+     * @return mixed
      */
-    public function getSubmitValue() {
-        $nameOnForm = $this->getNameOnForm();
+    public function getSubmitValue( $name, $subName ) {
+        $nameOnForm = $this->getNameOnForm( $name );
+        return isset( $_POST[$nameOnForm] ) ? $_POST[$nameOnForm] : null;
+    }
+    
+    /**
+     * Returns an array of value to save received after submission of a form.
+     * 
+     * @see getSubmitValue
+     * 
+     * The array has the following format:
+     * array(
+     *    'control-name1' => 'value1',
+     *    'control-name2__sub-name1' => 'value2'
+     *    'control-name2__sub-name2' => 'value3'
+     * )
+     * 
+     * @since 3.1.0
+     * @return mixed[]
+     */
+    public function getValuesToSave() {
+        $name = $this->getName();
         
-        if (is_array($nameOnForm)) {
-            $values = array();
-            foreach($nameOnForm as $item) {
-                $values[] = isset( $_POST[$item] ) ? $_POST[$item] : null;
+        if ( is_array( $name ) ) {
+            $i = 0;
+            
+            foreach($name as $singleName) {
+                $subName = $this->getSubName( $singleName );
+                if ( !$subName ) { $subName = $i; $i++; }
+                $values[$singleName] = $this->getSubmitValue( $singleName, $subName );
             }
             return $values; 
-        }
+        } 
         
-        return isset( $_POST[$nameOnForm] ) ? $_POST[$nameOnForm] : null;
+        $values[$name] = $this->getSubmitValue( $name, null );
+        return $values;
     }
     
     /**
@@ -164,7 +196,6 @@ abstract class FactoryForms300_Control extends FactoryForms300_FormElement {
      * @return mixed;
      */
     public function getValue( $index = null ) {
-        
         if ( isset( $this->options['value'] ) ) {
             if ( is_array( $this->options['value'] ) ) {
                 if ( $index !== null ) return $this->options['value'][$index];
@@ -185,12 +216,27 @@ abstract class FactoryForms300_Control extends FactoryForms300_FormElement {
         } 
         
         if ( $this->provider ) {
-            $value = $this->provider->getValue( $this->getName(), $default );
-            if ( is_array($value) && $index !== null ) return $value[$index];
-            return $value;
+            $name = $this->getName();
+       
+            if ( is_array( $name )) {
+                
+                $values = array();
+                $i = 0;
+                
+                foreach($name as $singleName) {
+                    $subName = $this->getSubName( $singleName );
+                    if ( !$subName ) { $subName = $i; $i++; }
+                    $values[$subName] = $this->provider->getValue( $singleName, isset( $default[$subName] ) ? $default[$subName] : null ); 
+                }
+                
+                if ( $index !== null ) return $values[$index];
+                return $values;
+            } else {
+                return $this->provider->getValue( $this->getName(), $default );  
+            }
         }
         
-        return null;
+        return $default;
     }
     
     /**
@@ -200,11 +246,20 @@ abstract class FactoryForms300_Control extends FactoryForms300_FormElement {
      * @return void
      */
     public function render() {
-        $this->addCssClass('factory-from-control-' . $this->type);
+        $this->addCssClass('factory-from-control-' . $this->type);     
+        $isActive = $this->provider->getValue( $this->getOption('name') . '_is_active', $this->getOption('isActive', 1) );
+        
+        // if the control is off, then ignore it
+        $off = $this->getOption('off', false);
+        if ( $off ) return;
+        
+        ?>
+        <input type="hidden" class="factory-control-is-active" name="<?php echo $this->getOption('name') ?>_is_active" value="<?php echo $isActive ?>" />
+        <?php
         
         $this->beforeHtml();
         $this->html();
-        $this->afterHtml(); 
+        $this->afterHtml();
     }
     
     /**
@@ -229,7 +284,7 @@ abstract class FactoryForms300_Control extends FactoryForms300_FormElement {
      * @since 1.0.0
      * @return void
      */
-    public abstract function html();
+    public function html(){}
     
     /**
      * Returns a layout option.
@@ -243,5 +298,22 @@ abstract class FactoryForms300_Control extends FactoryForms300_FormElement {
         if ( !isset( $this->options['layout'] ) ) return $default;
         if ( !isset( $this->options['layout'][$optionName] ) ) return $default;
         return $this->options['layout'][$optionName];
+    }
+    
+    /**
+     * Splits the control name by '__' and return the right part.
+     * 
+     * For example, if the $controlName is 'control__color', then returns 'color'.
+     * Throws an error if the control name cannot be splitted.
+     * 
+     * @since 3.1.0
+     * @param string $controlName
+     * @return string 
+     */
+    protected function getSubName( $controlName ) {
+        
+        $parts = explode('__', $controlName, 2 );
+        if ( !isset( $parts[1] )) return null;
+        return $parts[1];
     }
 }
