@@ -1,7 +1,7 @@
 === OnePress Image Elevator ===
 Contributors: OnePressMedia
 Donate link: http://onepress-media.com/portfolio
-Tags:productivity,image,clipboard,pasting,content,drag and drop,renaming,images,utilities,seo
+Tags:productivity,image,clipboard,pasting,content,copy image,copy paste,ctrl-v,image paste,paste,paste image
 Requires at least: 3.2
 Tested up to 3.9.1
 Stable tag: trunk
@@ -48,7 +48,7 @@ The most of the plugin features are available in all the major browsers (Chrome,
 * Check out OnePress <a href="http://onepress-media.com/portfolio" target="_blank">portfolio</a>.  
 * Visit OnePress <a href="http://support.onepress-media.com/" target="_blank">help desk</a>.  
 * Follow OnePress on <a title="Follow OnePress on Facebook" href="http://www.facebook.com/OnePressMedia" target="_blank">Facebook</a> and 
-<a title="Follow OnePress on Twitter" href="http://twitter.com/OnePressMedia" target="_blank">Twitter</a>  
+<a title="Follow OnePress on Twitter" href="http://twitter.com/byonepress" target="_blank">Twitter</a>  
 
 = Need Support, We Got You Covered =
 
