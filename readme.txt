@@ -1,7 +1,7 @@
 === OnePress Image Elevator ===
 Contributors: OnePressMedia
 Donate link: http://onepress-media.com/portfolio
-Tags:productivity,image,clipboard,pasting,content,copy image,copy paste,ctrl-v,image paste,paste,paste image
+Tags:productivity,images,clipboard,pasting,copy paste,ctrl-v,paste,paste image
 Requires at least: 3.2
 Tested up to 3.9.1
 Stable tag: trunk
