@@ -384,7 +384,7 @@ class OnpImgEvr_HowToUsePage extends FactoryPages320_AdminPage  {
                         <td></td>
                         <td></td>
                         <td class="onp-imgevr-premium">
-                            <a class="button button-primary" href="<?php echo onp_licensing_323_get_purchase_url( $this->plugin ) ?>">Upgrade for $18</a>
+                            <a class="button button-primary" href="<?php echo onp_licensing_323_get_purchase_url( $this->plugin ) ?>">Upgrade for $13 only!</a>
                         </td>   
                     </tr>     
                 </tbody>

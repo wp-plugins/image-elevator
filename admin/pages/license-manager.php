@@ -6,7 +6,7 @@
 class OnpImgEvr_LicesenceManager extends OnpLicensing323_LicenseManagerPage  {
  
     public $purchaseUrl = 'http://codecanyon.net/item/image-elevator-for-wordpress/4311188/?ref=OnePress';
-    public $purchasePrice = '$18';
+    public $purchasePrice = '$13';
     public $customTarget = true;
     
     public function configure() {

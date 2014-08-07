@@ -3,7 +3,7 @@ Contributors: OnePressMedia
 Donate link: http://onepress-media.com/portfolio
 Tags:productivity,images,clipboard,pasting,copy paste,ctrl-v,paste,paste image
 Requires at least: 3.2
-Tested up to 3.9.1
+Tested up to 3.9.2
 Stable tag: trunk
 License: GPLv2
 
@@ -73,6 +73,11 @@ Also view the demo video below to learn how the plugin can make your posting mor
 http://www.youtube.com/watch?v=ApcCCcsUoeo
 
 == Changelog ==
+
+<strong>v.2.0.2 - 7 Aug 2014</strong><br />
+<ul>
+<li>FIXED: Minor CSS issues.</li>
+</ul>
 
 <strong>v.2.0.1 - 27 July 2014</strong><br />
 <ul>
