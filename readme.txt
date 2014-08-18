@@ -74,6 +74,13 @@ http://www.youtube.com/watch?v=ApcCCcsUoeo
 
 == Changelog ==
 
+<strong>v.2.5.0 - 18 Aug 2014</strong><br />
+<ul>
+<li>NEW: A new cute menu for quick changing the options of pasting images from clipboard (click the plugin icon above the post editor to open it).</li>
+<li>NEW: Options to add links and extra CSS classes.</li>
+<li>NEW: The plugin automatically adds the support of pasting images from clipboard for all wp editors on any page (including editors of content builder plugins).</li>
+</ul>
+
 <strong>v.2.0.2 - 7 Aug 2014</strong><br />
 <ul>
 <li>FIXED: Minor CSS issues.</li>

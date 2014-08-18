@@ -42,6 +42,7 @@ function imgevr_upload_image(){
         
         $source = $_FILES['file']['tmp_name'];
         move_uploaded_file($source, $target);
+        
     } else {
         if ( preg_match('/base64,(.*)/', $_POST['file'], $matches) ) {
             $img = str_replace(' ', '+', $matches[1]);
@@ -54,26 +55,60 @@ function imgevr_upload_image(){
         }
     }
     
-    $attachment = array(
+    $media = array();
+    $media['base'] = array(
         'guid' => $uploadInfo['url'] . '/' . $imageName . '.' . $ext,
-        'post_mime_type' => $mime,
-        'post_title' => $imageName,
-        'post_name' => $imageName,
-        'post_content' => '',
-        'post_status' => 'inherit',
+        'path' => $target,
+        'name' => $imageName
     );
+        
+        $resizingEnabled = false;
+        $compressionEnabled = false;
+    
 
-    $id = wp_insert_attachment( $attachment, $target, $parentId );
-
+    
     // for the function wp_generate_attachment_metadata() to work
     require_once(ABSPATH . 'wp-admin/includes/image.php');
+    
+    foreach( $media as $key => $item ) {
+        
+        $attachment = array(
+            'guid' => $item['guid'],
+            'post_mime_type' => $mime,
+            'post_title' => $item['name'],
+            'post_name' => $item['name'],
+            'post_content' => '',
+            'post_status' => 'inherit',
+        );
 
-    $attach_data = wp_generate_attachment_metadata( $id, $target );
-    wp_update_attachment_metadata( $id, $attach_data );
+        $media[$key]['id'] = wp_insert_attachment( $attachment, $item['path'], $parentId );
+                
+        $attach_data = wp_generate_attachment_metadata( $media[$key]['id'], $item['path'] );
+        wp_update_attachment_metadata( $media[$key]['id'], $attach_data );     
+    }
+    
+    $id = $media['base']['id'];
+    $cssClasses = ' ' . trim( get_option( 'imgevr_css_class', '' ) );
+    
+    if ( !empty( $id ) ) {
+        $html = "<img alt='' class='alignnone size-full wp-image-" . $id . $cssClasses . "' src='" . $media['base']['guid'] . "' />";   
+    } else {
+        $html = "<img alt='' class='alignnone size-full" . $cssClasses . "' src='" . $media['base']['guid'] . "' />";  
+    }
+
+    $linksEnabled = get_option( 'imgevr_links_enable', false );
+    if ( $linksEnabled ) {
+        $saveOriginal = get_option('imgevr_resizing_save_original', false);
+            
+        if ( $resizingEnabled && $saveOriginal ) {
+            $html = "<a href='" . $media['original']['guid'] . "'>" . $html . '</a>';
+        } else {
+            $html = "<a href='" . $media['base']['guid'] . "'>" . $html . '</a>';
+        }
+    }
 
     $result = array(
-        'url' => $uploadInfo['url'] . '/' . $imageName . '.' . $ext,
-        'id' => $id
+        'html' => $html
     );
     
     echo json_encode($result);

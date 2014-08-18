@@ -28,20 +28,20 @@
 
             editor.getDoc().onpaste = function (e) {
 
-                if ( !clipboardContext.isClipboardActive() ) return;
+                if ( !imgevr.context.isClipboardActive() ) return;
                 
                 // if a browser supports clipboard data
                 if ( e.clipboardData && ( e.clipboardData.items || e.clipboardData.files.length > 0 ) ) {
 
-                    clipboardContext.uploadFromClipboard(e, {
+                    imgevr.context.uploadFromClipboard(e, {
                         before: function(){
-                            editor.selection.setContent(clipboardContext.getPreloaderHtml());
+                            editor.selection.setContent(imgevr.context.getPreloaderHtml());
                         },
                         success: function(html){
-                            clipboardContext.insertImageHtml(editor, html);
+                            imgevr.context.insertImageHtml(editor, html);
                         },
                         error: function() {
-                            clipboardContext.removePlaceholder(editor);
+                            imgevr.context.removePlaceholder(editor);
                         }
                     });
 
@@ -60,11 +60,11 @@
                             images.each(function(){
                                 var image = jQuery(this);
 
-                                var preloader = jQuery(clipboardContext.getPreloaderHtml());                           
+                                var preloader = jQuery(imgevr.context.getPreloaderHtml());                           
                                 image.before(jQuery("<p></p>").append(preloader));
                                 image.remove();
 
-                                clipboardContext.uploadImage(
+                                imgevr.context.uploadImage(
                                     {
                                         image: image.attr('src'),
                                         type: null
@@ -76,7 +76,7 @@
                                             count--;
                                         }, 
                                         error: function() {
-                                            clipboardContext.removePlaceholder(editor);
+                                            imgevr.context.removePlaceholder(editor);
                                             count--;
                                         }
                                     }

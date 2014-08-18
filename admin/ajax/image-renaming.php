@@ -147,7 +147,7 @@ if ( in_array( $clipImages->license->type, array( 'free' ) ) ) {
     
     // renames the file
     rename($absPath, $newAbsPath);
-    
+
     // updates attachemnt data if the image id is specified
     if ( !empty($imgId) ) { 
         $data = array(

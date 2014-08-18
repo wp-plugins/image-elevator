@@ -299,7 +299,7 @@
          */
         onShowRenamingDialog: function() {
             var self = this;
-            if ( clipboardContext ) clipboardContext.disabled = true;
+            if ( window.imgevr.context ) window.imgevr.context.disabled = true;
             
             if ( !this.renamingDialogInited ) {
                 this.renamingDialogInited = true;
@@ -339,7 +339,7 @@
         },
         
         onHideRenamingDialog: function() {
-            if ( clipboardContext ) clipboardContext.disabled = false;
+            if ( window.imgevr.context ) window.imgevr.context.disabled = false;
         },
         
         /**

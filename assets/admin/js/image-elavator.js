@@ -71,8 +71,9 @@
 
 })();
 
+
 /**
-* Image Elevator
+* Image Elevator (pasting images)
 * 
 * Copyright 2014, OnePress, http://onepress-media.com/portfolio
 * Help Desk: http://support.onepress-media.com/
@@ -80,33 +81,21 @@
 
 jQuery(document).ready(function($){
 
-    window.clipboardContext = {
-        
-        supportClipboardAPI: false,
+    if ( !window.imgevr ) window.imgevr = {};
+    window.imgevr.context = {
         
         init: function() {
-            var self = this;
+            this.contentWrap = $("#wp-content-wrap");
             this.disabled = false;
             
-            this.editorHolder = $("#postdivrich");
-            this.contentWrap = $("#wp-content-wrap");
-            
             this.initClipboardEvents();
-            
-            if ( !this.isActive() ) $(".image-insert-controller").addClass("disabled");
-            $(".image-insert-controller").click(function(){
-                self.setState( $(this).is(".disabled") );
-                return false;
-            });
-                
-            this.createControllerTooltip();
         },
 
         /**
          * Inits the clipboard evetns for editors on the page.
          */
         initClipboardEvents: function(){
-            if ( $(".wp-editor-area").length == 0 ) return;
+            if ( $(".wp-editor-area").length === 0 ) return;
 
             var self = this;
  
@@ -244,8 +233,7 @@ jQuery(document).ready(function($){
          * Is the plugin is active now?
          */
         isActive: function() {
-            if ( this.editorHolder.length == 0 ) return false;
-            if ( this.isDisabled() ) return false;
+            if ( this.disabled ) return false;
             
             if ( window.localStorage ) {
                 value = localStorage.getItem('insertimage-state');
@@ -254,11 +242,7 @@ jQuery(document).ready(function($){
             
             return true;
         },
-        
-        isDisabled: function() {
-            return this.disabled;
-        },
-        
+
         isClipboardActive: function() {
             if ( !this.isActive() ) return false;
             if ( !window.imgevr_clipboard_active ) return false;
@@ -277,40 +261,42 @@ jQuery(document).ready(function($){
          * Sets state a set the working Clipboard Images
          */
         setState: function( state, message ) {
-            var buttons = $(".image-insert-controller");
+            var buttons = $(".imgevr-controller");
 
-            if ( state == "error" ) {
+            if ( "error" === state ) {
                 
-                buttons.addClass("disabled");   
+                buttons.addClass("imgevr-disabled");   
                 if ( window.localStorage ) localStorage.setItem('insertimage-state', "no");
 
                 $(".insertimage-status")
                     .addClass('insertimage-status-disabled')
                     .removeClass('insertimage-status-enabled');
-                    
+            
+                $("#imgevr-btn-manage").removeClass("imgevr-active");
+                
                 this.showErrorState(message ? message : "Image Elevator <strong>deactivated</strong>.");
                 
             } else if ( state ) {
                 
-                buttons.removeClass("disabled");
+                buttons.removeClass("imgevr-disabled");
                 if ( window.localStorage ) localStorage.setItem('insertimage-state', "yes");
 
                 $(".insertimage-status")
                     .addClass('insertimage-status-enabled')
                     .removeClass('insertimage-status-disabled');    
-                    
-                this.showActiveState(message ? message : "Image Elevator <strong>activated</strong>.");
+
+                $("#imgevr-btn-manage").addClass("imgevr-active");
                 
             } else {
                 
-                buttons.addClass("disabled");   
+                buttons.addClass("imgevr-disabled");   
                 if ( window.localStorage ) localStorage.setItem('insertimage-state', "no");
 
                 $(".insertimage-status")
                     .addClass('insertimage-status-disabled')
                     .removeClass('insertimage-status-enabled');
                     
-                this.showDeactiveState(message ? message : "Image Elevator <strong>deactivated</strong>.");
+                $("#imgevr-btn-manage").removeClass("imgevr-active");
             }
         },
         
@@ -321,7 +307,7 @@ jQuery(document).ready(function($){
                 position: {
                     my: !leftPosition ? 'bottom center' : 'top left',
                     at: !leftPosition ? 'top center' : 'bottom center',
-                    target: $(".image-insert-controller")
+                    target: $(".imgevr-controller")
                 },
                 show: {
                     event: null,
@@ -369,8 +355,8 @@ jQuery(document).ready(function($){
         
         showErrorState: function( message ) {
             var tooltip = $("#qtip2-error-state");
-            
-            if ( tooltip.length == 0 ) {
+
+            if ( tooltip.length === 0 ) {
                 tooltip = $("<div id='qtip2-error-state'></div>").appendTo("body");
                 var options = this.getTooltipOptions("qtip2-red clipboad-images-error-state", true);
                 tooltip.qtip2(options);
@@ -394,34 +380,7 @@ jQuery(document).ready(function($){
                 }
             }
         },
-        
-        createControllerTooltip: function() {
-            if ( !window['clipboard-images-build'] || window['clipboard-images-build'] == 'free' ) return;
-                        
-            this.controllerTooltip = $("<div>").appendTo("body").qtip2({
-                content: {
-                    text: '<p>Click to activate/deactivate.</p><p>Also visit the <a href="options-general.php?page=imgevr_settings">settings page</a></p>'
-                },
-                position: {
-                    my: 'left center',
-                    at: 'right center',
-                    target: $(".image-insert-controller")
-                },
-                show: {
-                    solo: true,
-                    target: $(".image-insert-controller")
-                },
-                hide: {
-                    event: "unfocus",
-                    target: $(".image-insert-controller"),
-                    inactive: 2000 
-                },
-                style: {
-                    classes: 'qtip2-light qtip2-shadow qtip2-rounded clipboad-images-hint-state'
-                }
-            });
-        },
-        
+
         // --------------------------------------------------------------------------
         // Methods for uploading
         // --------------------------------------------------------------------------
@@ -575,10 +534,8 @@ jQuery(document).ready(function($){
                             return;
                         }
 
-                        var html = self.getHtmlCodeToInsert(response);
                         self.unlockTabs();
-                        
-                        options.success(html, response);
+                        options.success(response.html, response);
                         return;
                     }
 
@@ -639,17 +596,7 @@ jQuery(document).ready(function($){
         // --------------------------------------------------------------------------
         // Methods for working with textarea
         // --------------------------------------------------------------------------
-        
-        /**
-         * Returns html code of image to insert.
-         */
-        getHtmlCodeToInsert: function(data) {
-            if ( data.id  ) {
-                return "<img alt='' class='alignnone size-full wp-image-" + data.id + "' src='" + data.url + "' />";   
-            }
-            return "<img alt='' class='alignnone size-full' src='" + data.url + "' />";
-        },
-        
+
         /**
          * Sets a loading label into a current textarea of the editor.
          */
@@ -772,7 +719,7 @@ jQuery(document).ready(function($){
          */
         getPreloaderHtml: function() {
             var id = this.generateId( 7 );
-            var preloader = window.clipboardImagesAssets + "/img/circle-preloader.gif";
+            var preloader = window.imgevr.assetsUrl + "/img/circle-preloader.gif";
             return "<p id='" + id + "'><img data-type='preloader' src='" + preloader + "' alt='' /></p>";
         },
 
@@ -802,6 +749,245 @@ jQuery(document).ready(function($){
     };
     
     $(function(){
-        clipboardContext.init();
+        window.imgevr.context.init();
     });
 });
+
+/**
+* Image Elevator (quick settings)
+* 
+* Copyright 2014, OnePress, http://onepress-media.com/portfolio
+* Help Desk: http://support.onepress-media.com/
+*/
+
+(function($){
+    
+    if ( !window.imgevr ) window.imgevr = {};
+    window.imgevr.quickSettings = {
+        
+        init: function() {
+            var self = this;
+            this.$settings = $("#imgevr-quick-settings");
+            this.$corner = $("#imgevr-quick-settings-corner");            
+            
+            $("body").on('click', '.imgevr-controller', function(){
+                
+                if ( self._active ) {
+                    self.hide();
+                } else {
+                    self.show( $(this) );
+                }
+
+                return false;
+            });
+                        
+            if ( !imgevr.context.isActive() ) {
+                $('.imgevr-controller').addClass("imgevr-disabled");
+                $("#imgevr-btn-manage").removeClass("imgevr-active");
+            }
+
+            $(window).resize(function(){
+                self.updatePosition();
+            });
+            
+            $(window).scroll(function(){
+                self.updatePosition();
+            });
+            
+            $("#imgevr-ctrl-resizing").change(function(){
+                if ( $(this).is(":checked") ) {
+                    self.$settings.find(".imgevr-resizing-options").fadeIn(300);
+                    self.$settings.find("label[for=imgevr-ctrl-resizing]").addClass('imgevr-active');
+                } else {
+                    self.$settings.find(".imgevr-resizing-options").fadeOut(100);
+                    self.$settings.find("label[for=imgevr-ctrl-resizing]").removeClass('imgevr-active');
+                }
+                
+                setTimeout(function(){
+                    self.updatePosition();
+                }, 350);
+            });
+            
+            $("#imgevr-ctrl-compression").change(function(){
+                if ( $(this).is(":checked") ) {
+                    self.$settings.find(".imgevr-compression-options").fadeIn(300);
+                    self.$settings.find("label[for=imgevr-ctrl-compression]").addClass('imgevr-active');
+                } else {
+                    self.$settings.find(".imgevr-compression-options").fadeOut(100);
+                    self.$settings.find("label[for=imgevr-ctrl-compression]").removeClass('imgevr-active');
+                }
+                
+                setTimeout(function(){
+                    self.updatePosition();
+                }, 350);
+            });
+            
+            $("#imgevr-btn-update-rules").click(function(){
+                self.save();
+                return false;
+            });
+            
+            $("#imgevr-btn-cancel").click(function(){
+                self.hide();
+                return false;
+            });
+            
+            $("#imgevr-btn-manage").click(function(){
+                if ( imgevr.context.isActive() ) imgevr.context.setState(false);
+                else imgevr.context.setState(true);
+                return false;
+            });
+        },
+        
+        show: function( $btn ) {
+            var self = this;
+            this._active = true;
+            
+            if ( !$("#imgevr-ctrl-resizing").is(":checked") ) {
+                this.$settings.find(".imgevr-resizing-options").hide();
+            }
+            
+            if ( !$("#imgevr-ctrl-compression").is(":checked") ) {
+                this.$settings.find(".imgevr-compression-options").hide();
+            }
+            
+            this.$settings.data('imgevr-btn', $btn);
+            this.updatePosition();
+            
+            this.$settings.hide();
+            this.$settings.addClass('imgevr-visible');
+            this.$settings.fadeIn(200, function(){
+               self.$settings.addClass('imgevr-transition'); 
+            });
+            
+            this.$corner.fadeIn(200);
+        },
+        
+        hide: function(callback) {
+            var self = this;
+
+            this.$settings.fadeOut(200, function(){
+                self.$settings.removeClass('imgevr-visible');
+                self.$settings.removeClass('imgevr-transition');
+                self._active = false;
+                callback && callback();
+            });
+            
+            this.$corner.fadeOut(200);
+        },
+        
+        updatePosition: function() {
+    
+            var $btn = this.$settings.data('imgevr-btn');
+            if ( !$btn ) return;
+
+            var btnOffset = $btn.offset();
+            var btnWidth = $btn.innerWidth();
+            var btnHeight = $btn.innerHeight();
+            
+            var htmlTopPadding = parseInt( $('html').css('paddingTop') );
+            btnOffset.top -= htmlTopPadding;
+
+            var settingsWidth = this.$settings.innerWidth();
+            var settingsHeight = this.$settings.innerHeight();
+            
+            var top = Math.round( btnOffset.top  + ( btnHeight - settingsHeight ) / 2 );
+            var left = btnOffset.left + btnWidth;
+
+            var scrollTop = $(window).scrollTop();
+            var minTopMargin = 20;
+            
+            if ( top < scrollTop + minTopMargin ) {
+                top = scrollTop + minTopMargin;
+            }
+            
+            if ( top > btnOffset.top ) {
+                top = btnOffset.top; 
+            }
+
+            this.$settings.css({
+                'top': top + 'px',
+                'left': left  + 'px'
+            });
+            
+            this.$corner.css({
+                'top': btnOffset.top + Math.round( ( btnHeight - 20 ) / 2 ) + 'px',
+                'left': btnOffset.left + btnWidth - 7 + 'px'
+            });
+        },
+        
+        save: function() {
+            var self = this;
+            
+            var btnTitle = $("#imgevr-btn-update-rules").text();
+            
+            var data = {
+                'action': 'imgevr_save_quick_settings',
+                'imgevr_links_enable': $("#imgevr-ctrl-links").is(":checked") ? 1 : 0,
+                'imgevr_css_class': $("#imgevr-ctrl-css-class").val(),
+                'imgevr_resizing_enable': $("#imgevr-ctrl-resizing").is(":checked") ? 1 : 0,
+                'imgevr_resizing_max_width': $("#imgevr-ctrl-max-width").val(),
+                'imgevr_resizing_max_height': $("#imgevr-ctrl-max-height").val(),
+                'imgevr_resizing_crop_mode': $("#imgevr-ctrl-crop-mode").is(":checked") ? 1 : 0,
+                'imgevr_resizing_save_original': $("#imgevr-ctrl-save-original").is(":checked") ? 1 : 0,         
+                'imgevr_compression_enable': $("#imgevr-ctrl-compression").is(":checked") ? 1 : 0,
+                'imgevr_compression_size': $("#imgevr-ctrl-compression-size").val(),
+                'imgevr_compression_jpeg_quality': $("#imgevr-ctrl-jpeg-quality").val()   
+            };
+            
+            console.log(data);
+ 
+            $("#imgevr-btn-update-rules")
+                .text('Saving ...')
+                .addClass('disabled');
+            
+            var req = $.ajax({
+                url: window.imgevr.ajaxurl,
+                data: data,
+                type: 'post',
+                dataType: 'json',
+                success: function(data) {
+
+                    $("#imgevr-btn-update-rules")
+                        .text('Done!')
+                        .removeClass('disabled');
+                
+                    if ( data.success ) {
+                        $("#imgevr-ctrl-css-class").val(data.imgevr_css_class);
+                        $("#imgevr-ctrl-max-width").val(data.imgevr_resizing_max_width);
+                        $("#imgevr-ctrl-max-height").val(data.imgevr_resizing_max_height);
+                        $("#imgevr-ctrl-compression-size").val(data.imgevr_compression_size);
+                        $("#imgevr-ctrl-jpeg-quality").val(data.imgevr_compression_jpeg_quality);
+                    } else {   
+                        console && console.log && console.log(req.responseText);
+                        imgevr.context.showErrorState('[#err-1] Unable to save new rules for the Image Elevator.<br />Please contact OnePress support to fix this issue.');
+                    }
+            
+                    setTimeout(function(){
+                        self.hide(function(){ 
+                            $("#imgevr-btn-update-rules").text(btnTitle);
+                        });
+                    }, 500);
+                },
+                error: function() {
+                    console && console.log && console.log(req.responseText);
+                    imgevr.context.showErrorState('[#err-2] Unable to save new rules for the Image Elevator.<br />Please contact OnePress support to fix this issue.');
+
+                    $("#imgevr-btn-update-rules")
+                        .removeClass('disabled')
+                        .text(btnTitle);
+                
+                    self.hide();
+                },
+                complete: function() {
+          
+                }
+            });
+        }
+    };  
+    
+    $(function(){
+        window.imgevr.quickSettings.init();
+    });
+    
+})(jQuery);

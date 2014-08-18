@@ -334,7 +334,7 @@ class OnpImgEvr_HowToUsePage extends FactoryPages320_AdminPage  {
             </p>
             <p class='onp-remark'>
                 <span class="onp-inner-wrap">
-                The premium version provides more features improving your productivity when you're working with images, allows to rename images after pasting and compress them on the fly.
+                The premium version provides more features improving your productivity when you're working with images, allows you to rename images after pasting, resize and compress them on the fly.
                 </span>
             </p>
         </div>
@@ -361,12 +361,17 @@ class OnpImgEvr_HowToUsePage extends FactoryPages320_AdminPage  {
                         <td class="onp-imgevr-yes onp-imgevr-premium">yes</td>   
                     </tr>
                     <tr>
-                        <td class="onp-imgevr-title">Renaming images</td>
+                        <td class="onp-imgevr-title">Renaming any images</td>
                         <td class="onp-imgevr-no">no</td>
                         <td class="onp-imgevr-yes onp-imgevr-premium"><strong>yes</strong></td>   
                     </tr>
                     <tr>
-                        <td class="onp-imgevr-title">Compressing images</td>
+                        <td class="onp-imgevr-title">Resizing images on the fly (<strong>new!</strong>)</td>
+                        <td class="onp-imgevr-no">no</td>
+                        <td class="onp-imgevr-yes onp-imgevr-premium"><strong>yes</strong></td>   
+                    </tr>              
+                    <tr>
+                        <td class="onp-imgevr-title">Compressing images on the fly</td>
                         <td class="onp-imgevr-no">no</td>
                         <td class="onp-imgevr-yes onp-imgevr-premium"><strong>yes</strong></td>   
                     </tr> 
@@ -394,16 +399,25 @@ class OnpImgEvr_HowToUsePage extends FactoryPages320_AdminPage  {
         <div class="onp-help-section">
             <h2><i class="fa fa-star-o"></i> Rename images and improve SEO</h2>
             <p>By default Wordpress doesn't allow to change file names of the images in your posts. But the relevant filename is good for SEO as well as the relevant headline.</p>
-            <p>The premium version of the Image Elevator allows you to rename easily images.</p>
+            <p>The premium version of the Image Elevator allows you to rename images easily.</p>
             <p class='onp-img'>
                 <img src='<?php echo IMGEVR_PLUGIN_URL . '/assets/admin/img/how-to-use/renaming-feature.gif' ?>' />
             </p>
         </div>
 
         <div class="onp-help-section">
+            <h2><i class="fa fa-star-o"></i> Resize images on the fly</h2>
+            <p>Do you want all pasted images to match a format of your blog? Or want to quickly generate thumbnails for pasted images keeping the original images available at a click?</p>
+            <p>Turn of the resizing feature in the premium version in order to resize all pasted images automatically and effortlessly.</p>
+            <p class='onp-img'>
+                <img src='<?php echo IMGEVR_PLUGIN_URL . '/assets/admin/img/how-to-use/resizing.png' ?>' />
+            </p>
+        </div>
+
+        <div class="onp-help-section">
             <h2><i class="fa fa-star-o"></i> Compress images on the fly</h2>
             <p>When you paste images, especially photos, they can be quite large and add extra loads on your website.</p>
-            <p>Turn on the compression feature in the premium version, set the max allowed size for pasted images and forget  about this problem. Your images will be automatically converted to jpeg with specified the quality value.</p>
+            <p>Turn on the compression feature in the premium version, set the max allowed size for pasted images and this problem is over. Your images will be automatically converted to jpeg with specified the quality value.</p>
             <p class='onp-img'>
                 <img src='<?php echo IMGEVR_PLUGIN_URL . '/assets/admin/img/how-to-use/compression.png' ?>' />
             </p>
