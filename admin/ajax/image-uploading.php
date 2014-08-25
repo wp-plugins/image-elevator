@@ -25,7 +25,7 @@ function imgevr_upload_image(){
     // check the path to upload
     $uploadInfo = wp_upload_dir();
     $targetPath = $uploadInfo['path'];
-    if ( !is_dir($targetPath) ) mdir($targetPath, 0777, true);
+    if ( !is_dir($targetPath) ) mkdir($targetPath, 0777, true);
 
     // move the uploaded file to the upload path
     $imageName = ( !empty($name) && $name !== 'undefined' ) 
