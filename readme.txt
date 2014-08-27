@@ -74,6 +74,11 @@ http://www.youtube.com/watch?v=ApcCCcsUoeo
 
 == Changelog ==
 
+<strong>v.2.5.2 - 27 Aug 2014</strong><br />
+<ul>
+<li>FIXED: Minor CSS issues.</li>
+</ul>
+
 <strong>v.2.5.1 - 25 Aug 2014</strong><br />
 <ul>
 <li>FIXED: 'Fatal error: Call to undefined function mdir()'. Thanks to Bhrat Brij.</li>

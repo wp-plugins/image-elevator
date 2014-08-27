@@ -25,6 +25,14 @@
     margin-left: -3px;
 }
 
+@media screen and (max-width: 782px) {
+    
+    .imgevr-controller span {
+        position: relative;
+        top: 6px;
+    }
+}
+
 /**
 * Dialogs
 */
