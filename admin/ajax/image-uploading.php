@@ -14,7 +14,7 @@ function imgevr_upload_image(){
         if ( !empty( $_POST['file'] ) && preg_match('/image\/[a-z0-9]+/', $_POST['file'], $matches) ) {
             $mime = $matches[0];
         } else {
-            factory_321_json_error('Unable to get mime type of the file.');
+            factory_324_json_error('Unable to get mime type of the file.');
         }
     }
 
@@ -29,7 +29,7 @@ function imgevr_upload_image(){
 
     // move the uploaded file to the upload path
     $imageName = ( !empty($name) && $name !== 'undefined' ) 
-                    ? factory_321_filename_without_ext($name) 
+                    ? factory_324_filename_without_ext($name) 
                     : 'img_' . uniqid();
     
     $target = $targetPath . '/' . $imageName . '.' . $ext;
@@ -37,7 +37,7 @@ function imgevr_upload_image(){
     if ( isset( $_FILES['file'] ) ) {
 
         if ( empty( $_FILES['file']['size'] ) ) {
-            factory_321_json_error('Sorry, the error of reading image data occured. May be the image is empty of has incorrect format.');
+            factory_324_json_error('Sorry, the error of reading image data occured. May be the image is empty of has incorrect format.');
         }
         
         $source = $_FILES['file']['tmp_name'];
@@ -49,9 +49,9 @@ function imgevr_upload_image(){
             $data = base64_decode($img);
             $success = file_put_contents($target, $data);
 
-            if ( !$success ) factory_321_json_error('Unable to save the image.');
+            if ( !$success ) factory_324_json_error('Unable to save the image.');
         } else {
-            factory_321_json_error('Incorrect file format (base64).');
+            factory_324_json_error('Incorrect file format (base64).');
         }
     }
     

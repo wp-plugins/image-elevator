@@ -59,7 +59,7 @@
     overflow: hidden;
     
     direction: ltr;
-    z-index: 20;
+    z-index: 9998;
 }
 .imgevr-dialog.imgevr-visible {
     visibility: visible;
@@ -205,7 +205,7 @@
     border-right: 10px solid #fff;
     display: none;
     position: absolute;
-    z-index: 21;
+    z-index: 9999;
 }
 
 .qtip2.clipboad-images-error-state {

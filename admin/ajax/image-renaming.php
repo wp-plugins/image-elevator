@@ -34,7 +34,7 @@ if ( in_array( $clipImages->license->type, array( 'free' ) ) ) {
         // attachemnt title + image id
         $attachment = get_post($imgId);
         $attacmentTitle = trim( $attachment->post_title );
-        if ( !empty($attacmentTitle) && !factory_321_starts_with($attacmentTitle, 'img_') ) {
+        if ( !empty($attacmentTitle) && !factory_324_starts_with($attacmentTitle, 'img_') ) {
             $result[] = sanitize_title( $attacmentTitle ) . '-' . $imgId;
         };
         
@@ -106,14 +106,14 @@ if ( in_array( $clipImages->license->type, array( 'free' ) ) ) {
     $partPos = strpos($imgUrl, $term);
     
     if ( $partPos === false ) 
-        factory_321_json_error('Sorry, the file for renaming has been not found on your server.');
+        factory_324_json_error('Sorry, the file for renaming has been not found on your server.');
     
     $relPath = substr($imgUrl, $partPos + strlen($term), strlen($imgUrl));
     $absPath = $uploadData['basedir'] . '/' . $relPath;
-    $orgData = factory_321_pathinfo($relPath);
+    $orgData = factory_324_pathinfo($relPath);
     
     if ( !is_file($absPath) ) 
-        factory_321_json_error('Sorry, the file for renaming is not found on your server.');
+        factory_324_json_error('Sorry, the file for renaming is not found on your server.');
     
     // if original file already has a given name
     if ( $orgData['basename'] == $imgName ) return;

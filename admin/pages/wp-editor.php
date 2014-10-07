@@ -9,7 +9,7 @@ $imgevr_quick_settings_created = false;
 function imgevr_media_buttons() {
   
     wp_enqueue_script('image-elavator', IMGEVR_PLUGIN_URL . '/assets/admin/js/image-elavator.js', array('jquery'));
-    wp_enqueue_style('image-elevator', IMGEVR_PLUGIN_URL . '/assets/admin/css/image-elevator.css' );
+    wp_enqueue_style('image-elevator', IMGEVR_PLUGIN_URL . '/assets/admin/css/image-elevator.020503.css' );
 
     wp_enqueue_style('jquery-qtip-2', IMGEVR_PLUGIN_URL . '/assets/admin/css/jquery.qtip.min.css');
     wp_enqueue_script('jquery-qtip-2', IMGEVR_PLUGIN_URL . '/assets/admin/js/jquery.qtip.min.js', array('jquery'));

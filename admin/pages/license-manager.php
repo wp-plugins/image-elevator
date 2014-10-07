@@ -3,7 +3,7 @@
 /**
  * License page is a place where a user can check updated and manage the license.
  */
-class OnpImgEvr_LicesenceManager extends OnpLicensing323_LicenseManagerPage  {
+class OnpImgEvr_LicesenceManager extends OnpLicensing324_LicenseManagerPage  {
  
     public $purchaseUrl = 'http://codecanyon.net/item/image-elevator-for-wordpress/4311188/?ref=OnePress';
     public $purchasePrice = '$13';
