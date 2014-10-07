@@ -76,7 +76,7 @@ http://www.youtube.com/watch?v=ApcCCcsUoeo
 
 <strong>v.2.5.3 - 7 Oct 2014</strong><br />
 <ul>
-<li>FIXED: The Image Elevator dialog was overlapped by the TinyMCE editor in WP 4.0.</li>
+<li>FIXED: The Image Elevator dialog was overlapped by the toolbar editor in WP 4.0.</li>
 </ul>
 
 <strong>v.2.5.2 - 27 Aug 2014</strong><br />
