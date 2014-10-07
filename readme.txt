@@ -3,7 +3,7 @@ Contributors: OnePressMedia
 Donate link: http://onepress-media.com/portfolio
 Tags:productivity,images,clipboard,pasting,copy paste,ctrl-v,paste,paste image
 Requires at least: 3.2
-Tested up to 3.9.2
+Tested up to 4.0.0
 Stable tag: trunk
 License: GPLv2
 
@@ -73,6 +73,11 @@ Also view the demo video below to learn how the plugin can make your posting mor
 http://www.youtube.com/watch?v=ApcCCcsUoeo
 
 == Changelog ==
+
+<strong>v.2.5.3 - 7 Oct 2014</strong><br />
+<ul>
+<li>FIXED: The Image Elevator dialog was overlapped by the TinyMCE editor in WP 4.0.</li>
+</ul>
 
 <strong>v.2.5.2 - 27 Aug 2014</strong><br />
 <ul>
