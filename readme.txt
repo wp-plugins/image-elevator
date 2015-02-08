@@ -3,7 +3,7 @@ Contributors: OnePressMedia
 Donate link: http://onepress-media.com/portfolio
 Tags:productivity,images,clipboard,pasting,copy paste,ctrl-v,paste,paste image
 Requires at least: 3.2
-Tested up to 4.0.0
+Tested up to 4.1.0
 Stable tag: trunk
 License: GPLv2
 
