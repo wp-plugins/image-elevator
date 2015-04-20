@@ -14,7 +14,7 @@
  * 
  * @since 1.0.0
  */
-class FactoryForms324_MoreLinkHolder extends FactoryForms324_Holder {
+class FactoryForms328_MoreLinkHolder extends FactoryForms328_Holder {
     
     /**
      * A holder type.

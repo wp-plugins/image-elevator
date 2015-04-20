@@ -1,6 +1,11 @@
 /**
 * jQuery Control gropup holder
 */
+
+.factory-control-group .factory-header {
+    margin-bottom: 7px;
+    display: block;
+}
 .factory-control-group-nav {
      width:284px;
      margin:10px 8px;

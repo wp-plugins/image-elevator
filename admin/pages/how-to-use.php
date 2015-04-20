@@ -12,11 +12,11 @@
 /**
  * Common Settings
  */
-class OnpImgEvr_HowToUsePage extends FactoryPages320_AdminPage  {
+class OnpImgEvr_HowToUsePage extends FactoryPages321_AdminPage  {
 
     public $id = "how-to-use";
     
-    public function __construct(Factory324_Plugin $plugin) {   
+    public function __construct(Factory325_Plugin $plugin) {   
         parent::__construct($plugin);
 
         $this->menuTitle = __('Image Elevator', 'sociallocker');
@@ -100,7 +100,7 @@ class OnpImgEvr_HowToUsePage extends FactoryPages320_AdminPage  {
         
         ?>
         
-        <div class="wrap factory-bootstrap-325 factory-fontawesome-320">
+        <div class="wrap factory-bootstrap-329 factory-fontawesome-320">
             <?php $this->showNav('getting-started') ?>
             <div class="onp-help-content">
                 
@@ -330,7 +330,7 @@ class OnpImgEvr_HowToUsePage extends FactoryPages320_AdminPage  {
             <h1><?php _e('Upgrade to Premium!', 'sociallocker'); ?></h1>
 
             <p>
-                The plugin you're using is a free edition of the premium plugin <a href="<?php echo onp_licensing_324_get_purchase_url( $this->plugin ) ?>">Image Elevator</a> sold on CodeCanyon. 
+                The plugin you're using is a free edition of the premium plugin <a href="<?php echo onp_licensing_325_get_purchase_url( $this->plugin ) ?>">Image Elevator</a> sold on CodeCanyon. 
             </p>
             <p class='onp-remark'>
                 <span class="onp-inner-wrap">
@@ -389,7 +389,7 @@ class OnpImgEvr_HowToUsePage extends FactoryPages320_AdminPage  {
                         <td></td>
                         <td></td>
                         <td class="onp-imgevr-premium">
-                            <a class="button button-primary" href="<?php echo onp_licensing_324_get_purchase_url( $this->plugin ) ?>">Upgrade for $13 only!</a>
+                            <a class="button button-primary" href="<?php echo onp_licensing_325_get_purchase_url( $this->plugin ) ?>">Upgrade for $13 only!</a>
                         </td>   
                     </tr>     
                 </tbody>
@@ -430,4 +430,4 @@ class OnpImgEvr_HowToUsePage extends FactoryPages320_AdminPage  {
     }    
 }
 
-FactoryPages320::register($clipImages, 'OnpImgEvr_HowToUsePage');
+FactoryPages321::register($clipImages, 'OnpImgEvr_HowToUsePage');

@@ -3,7 +3,7 @@
  * Paddings Control
  */
 
-class FactoryForms324_PaddingsEditorControl extends FactoryForms324_Control 
+class FactoryForms328_PaddingsEditorControl extends FactoryForms328_Control 
 {
     public $type = 'paddings-editor';
   
@@ -48,7 +48,7 @@ class FactoryForms324_PaddingsEditorControl extends FactoryForms324_Control
             <div class="factory-slider-container">
                 
                 <label class="factory-title">
-                    <?php _e('Select a side and move the slider to set up:','factory_forms_324') ?>
+                    <?php _e('Select a side and move the slider to set up:','factory_forms_328') ?>
                 </label>
                 
                 <div class="factory-slider">

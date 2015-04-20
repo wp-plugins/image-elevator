@@ -14,7 +14,7 @@
  * 
  * @since 1.0.0
  */
-abstract class FactoryForms324_ComplexControl extends FactoryForms324_Control {
+abstract class FactoryForms328_ComplexControl extends FactoryForms328_Control {
     
     /**
      * Is this element a complex control?
@@ -28,7 +28,7 @@ abstract class FactoryForms324_ComplexControl extends FactoryForms324_Control {
      * Contains a set of internal controls.
      * 
      * @since 1.0.0
-     * @var FactoryForms324_Control[]
+     * @var FactoryForms328_Control[]
      */
     public $innerControls = array();
     
@@ -36,7 +36,7 @@ abstract class FactoryForms324_ComplexControl extends FactoryForms324_Control {
      * Sets a provider for the control.
      * 
      * @since 1.0.0
-     * @param IFactoryForms324_ValueProvider $provider
+     * @param IFactoryForms328_ValueProvider $provider
      * @return void
      */
     public function setProvider( $provider ) {
@@ -101,7 +101,7 @@ abstract class FactoryForms324_ComplexControl extends FactoryForms324_Control {
      * @since 1.0.0
      * @return mixed;
      */
-    public function getValue( $index = null ) {
+    public function getValue( $index = null, $multiple = false ) {
         
         $values = array();
         foreach( $this->innerControls as $control ) {

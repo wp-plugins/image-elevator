@@ -14,7 +14,7 @@
  * 
  * @since 1.0.0
  */
-class Factory324_AssetsList 
+class Factory325_AssetsList 
 {
     protected $all = array();
     public $headerPlace = array();
@@ -23,7 +23,7 @@ class Factory324_AssetsList
     
     protected $defaultPlace;
 
-    public function __construct( $plugin, $defaultIsFooter = true ) {
+    public function __construct( $plugin = null, $defaultIsFooter = true ) {
         $this->plugin = $plugin;
         
         if ( $defaultIsFooter ) $this->defaultPlace = &$this->footerPlace;

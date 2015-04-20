@@ -14,7 +14,7 @@
  * 
  * @since 1.0.0
  */
-class Factory324_ScriptList extends Factory324_AssetsList 
+class Factory325_ScriptList extends Factory325_AssetsList 
 {
     public $localizeData = array();
     public $useAjax = false;

@@ -162,20 +162,24 @@
             
             var imgWidth = img.width();
             var imgHeight = img.height();
-            
+
             var tootlipWidth = this.imageNameHolder.innerWidth();
             var tootlipHeight = this.imageNameHolder.innerHeight();
-            
+
             var vp = ed.dom.getViewPort(ed.getWin());
+  
+            var $iframe = $(ed.iframeElement);
+            var iframeOffset = $iframe.offset();
+                
             var p1 = DOM.getPos(ed.getContentAreaContainer());
             var p2 = ed.dom.getPos(img[0]);
- 
-            x = p2.x - vp.x + p1.x;
-            y = p2.y - vp.y + p1.y;
+            
+            x = p2.x - vp.x + iframeOffset.left;
+            y = p2.y - vp.y + iframeOffset.top;
 
             y = y + imgHeight - tootlipHeight;
 
-            if ( y + tootlipHeight > p1.y + vp.h) return null;
+            if ( y + tootlipHeight > iframeOffset.top + vp.h) return null;
             
             if ( tootlipWidth < imgWidth ) {
                 x = x + imgWidth - tootlipWidth;
@@ -183,7 +187,7 @@
                 width = imgWidth;
                 hoverWidth = tootlipWidth;
             }
-            
+
             return {
                 x: x,
                 y: y,
@@ -267,7 +271,7 @@
                     modal: true
                 },
                 hide: false,
-                style: 'qtip2-light qtip2-rounded',
+                style: 'qtip2-light qtip2-rounded onp-imevr-renaming-dialog',
                 events: {
                     show: function() {
                         self.onShowRenamingDialog();

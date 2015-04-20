@@ -14,7 +14,7 @@
  * @since 1.0.0
  */
 
-class FactoryForms324_ColorAndOpacityControl extends FactoryForms324_ComplexControl 
+class FactoryForms328_ColorAndOpacityControl extends FactoryForms328_ComplexControl 
 {
     public $type = 'color-and-opacity';
     
@@ -37,8 +37,8 @@ class FactoryForms324_ColorAndOpacityControl extends FactoryForms324_ComplexCont
             'way' => 'slider'
         ));
         
-        $this->color = new FactoryForms324_ColorControl( $options['color'], $form, $provider );
-        $this->opacity = new FactoryForms324_IntegerControl( $options['opacity'], $form, $provider );
+        $this->color = new FactoryForms328_ColorControl( $options['color'], $form, $provider );
+        $this->opacity = new FactoryForms328_IntegerControl( $options['opacity'], $form, $provider );
         
         $this->innerControls = array( $this->color, $this->opacity );
     }

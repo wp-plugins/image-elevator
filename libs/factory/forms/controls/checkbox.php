@@ -14,7 +14,7 @@
  * @since 1.0.0
  */
 
-class FactoryForms324_CheckboxControl extends FactoryForms324_Control 
+class FactoryForms328_CheckboxControl extends FactoryForms328_Control 
 {
     public $type = 'checkbox';
     
@@ -50,12 +50,34 @@ class FactoryForms324_CheckboxControl extends FactoryForms324_Control
         $this->addCssClass('factory-buttons-way');
         $this->addCssClass('btn-group');        
         
+        if ( $this->getOption('tumbler', false ) ) {
+            $this->addCssClass('factory-tumbler');
+        }
+        
+        $tumblerFunction = $this->getOption('tumblerFunction', false );
+        if ( $tumblerFunction ) $this->addHtmlData('tumbler-function', $tumblerFunction );
+        
+        if ( $this->getOption('tumblerHint', false ) ) {
+            $this->addCssClass('factory-has-tumbler-hint');
+            
+            $delay = $this->getOption('tumblerDelay', 3000);
+            $this->addHtmlData('tumbler-delay', $delay);
+        } 
+       
+        
         ?>
         <div <?php $this->attrs() ?>>
-            <button type="button" class="btn btn-default btn-small btn-sm factory-on <?php if ( $value ) { echo 'active'; } ?>"><?php _e('On', 'factory_forms_324') ?></button>
-            <button type="button" class="btn btn-default btn-small btn-sm factory-off <?php if ( !$value ) { echo 'active'; } ?>" data-value="0"><?php _e('Off', 'factory_forms_324') ?></button>
+            <button type="button" class="btn btn-default btn-small btn-sm factory-on <?php if ( $value ) { echo 'active'; } ?>"><?php _e('On', 'factory_forms_328') ?></button>
+            <button type="button" class="btn btn-default btn-small btn-sm factory-off <?php if ( !$value ) { echo 'active'; } ?>" data-value="0"><?php _e('Off', 'factory_forms_328') ?></button>
             <input type="checkbox" style="display: none" id="<?php echo $nameOnForm ?>" class="factory-result" name="<?php echo $nameOnForm ?>" value="1" <?php if ( $value ) { echo 'checked="checked"'; } ?>" />
         </div>
+        <?php if ( $this->getOption('tumblerHint', false )) { ?>
+        <div class="factory-checkbox-tumbler-hint factory-tumbler-hint" style="display: none;">
+            <div class="factory-tumbler-content">
+                <?php echo $this->getOption('tumblerHint') ?>
+            </div>
+        </div>
+        <?php } ?>
         <?php
     }
     

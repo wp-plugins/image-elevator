@@ -4,7 +4,7 @@ Plugin Name: OnePress Image Elevator
 Plugin URI: http://onepress-media.com/portfolio
 Description: Save tons of time, when adding images into your posts! Paste images from clipboard directly into the post editor! Write articles, tutorials, reviews, news with pleasure by using Image Elevator!
 Author: OnePress
-Version: 2.5.3
+Version: 2.5.7
 Author URI: http://onepress-media.com/portfolio
 */
 
@@ -17,10 +17,10 @@ define('IMGEVR_PLUGIN_URL', plugins_url( null, __FILE__ ));
 
 require('libs/factory/core/boot.php');
 global $clipImages;
-$clipImages = new Factory324_Plugin(__FILE__, array(
+$clipImages = new Factory325_Plugin(__FILE__, array(
     'name'      => 'clipboard-images',
     'title'     => 'Image Elevator',
-    'version'   => '2.5.3',
+    'version'   => '2.5.7',
     'assembly'  => 'free',
     'api'       => 'http://api.byonepress.com/1.1/',
     'premium'   => 'http://api.byonepress.com/public/1.0/get/?product=clipboard-images',
@@ -31,14 +31,14 @@ $clipImages = new Factory324_Plugin(__FILE__, array(
 
 // requires factory modules
 $clipImages->load(array(
-    array( 'libs/factory/bootstrap', 'factory_bootstrap_325', 'admin' ),
+    array( 'libs/factory/bootstrap', 'factory_bootstrap_329', 'admin' ),
     array( 'libs/factory/font-awesome', 'factory_fontawesome_320', 'admin' ),
-    array( 'libs/factory/forms', 'factory_forms_324', 'admin' ),
-    array( 'libs/factory/notices', 'factory_notices_322', 'admin' ),
-    array( 'libs/factory/pages', 'factory_pages_320', 'admin' ),
+    array( 'libs/factory/forms', 'factory_forms_328', 'admin' ),
+    array( 'libs/factory/notices', 'factory_notices_323', 'admin' ),
+    array( 'libs/factory/pages', 'factory_pages_321', 'admin' ),
     array( 'libs/onepress/api', 'onp_api_320' ),
-    array( 'libs/onepress/licensing', 'onp_licensing_324' ),
-    array( 'libs/onepress/updates', 'onp_updates_323' )
+    array( 'libs/onepress/licensing', 'onp_licensing_325' ),
+    array( 'libs/onepress/updates', 'onp_updates_324' )
 ));
 
 // Loads rest of code that is created manually via the standard wordpress plugin api.

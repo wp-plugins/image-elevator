@@ -17,7 +17,7 @@
  * 
  * @since 1.0.0
  */
-class FactoryForms324_MetaValueProvider implements IFactoryForms324_ValueProvider 
+class FactoryForms328_MetaValueProvider implements IFactoryForms328_ValueProvider 
 {
     /**
      * Values to save $metaName => $metaValue
@@ -123,13 +123,19 @@ class FactoryForms324_MetaValueProvider implements IFactoryForms324_ValueProvide
         $rows = array();
 
         foreach($this->values as $metaKey=>$metaValue) {
-            $rows[] = $wpdb->prepare( '(%d,%s,%s)' , $this->postId, $metaKey, $metaValue );
+            if ( is_array( $metaValue ) ) {
+                foreach( $metaValue as $value ) {
+                    $rows[] = $wpdb->prepare( '(%d,%s,%s)' , $this->postId, $metaKey, $value );  
+                }
+            } else {
+                $rows[] = $wpdb->prepare( '(%d,%s,%s)' , $this->postId, $metaKey, $metaValue );
+            }
         }
         $sql = $sql . implode( ',', $rows );
         $wpdb->query($sql);
     }
 
-    public function getValue($name, $default = null) {
+    public function getValue($name, $default = null, $multiple = false ) {
         
         if ( is_array( $name ) ) {
        
@@ -140,19 +146,20 @@ class FactoryForms324_MetaValueProvider implements IFactoryForms324_ValueProvide
                 $itemDefault = ( $default && is_array($default) && isset($default[$index]) )
                                     ? $default[$index] : null;
                 
-                $values[] = $this->getValueBySingleName($item, $itemDefault);
+                $values[] = $this->getValueBySingleName($item, $itemDefault, $multiple);
                 $index++;
             }
             return $values;
         }
         
-        $value = $this->getValueBySingleName($name, $default);
+        $value = $this->getValueBySingleName($name, $default, $multiple);
         return $value;
     }
     
-    protected function getValueBySingleName( $singleName, $default = null ) {
+    protected function getValueBySingleName( $singleName, $default = null, $multiple = false ) {
+
         $value = isset( $this->meta[$this->scope . '_' . $singleName] ) 
-                ? $this->meta[$this->scope . '_' . $singleName][0] 
+                ? ( $multiple ) ? $this->meta[$this->scope . '_' . $singleName] : $this->meta[$this->scope . '_' . $singleName][0] 
                 : $default;
         
         if ($value === 'true') $value = 1;
@@ -183,7 +190,20 @@ class FactoryForms324_MetaValueProvider implements IFactoryForms324_ValueProvide
     
     protected function setValueBySingleName( $singleName, $singeValue ) {
         $name = $this->scope . '_' . $singleName;
-        $value = empty( $singeValue ) ? $singeValue : stripslashes ( $singeValue );
+        
+        if ( is_array( $singeValue ) ) {
+            
+            foreach ($singeValue as $index => $value) {
+                
+                $singeValue[$index] = empty( $singeValue[$index] ) 
+                    ? $singeValue[$index] 
+                    : stripslashes ( $singeValue[$index] );
+            }
+            
+            $value = $singeValue;
+        } else {
+            $value = empty( $singeValue ) ? $singeValue : stripslashes ( $singeValue ); 
+        }
 
         $this->values[$name] = $value;
         $this->keys[] = $name; 

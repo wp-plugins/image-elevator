@@ -16,7 +16,7 @@
  * 
  * @since 1.0.0
  */
-interface IFactoryForms324_ValueProvider {
+interface IFactoryForms328_ValueProvider {
     
     /**
      * Inits a form a provider to get data from a storage.
@@ -42,7 +42,7 @@ interface IFactoryForms324_ValueProvider {
      * @param mixed $default A default to return if a given name doesn't exist.
      * @return mixed
      */
-    public function getValue( $name, $default = null );
+    public function getValue( $name, $default = null, $multiple = false );
     
     /**
      * Sets a value by its name.

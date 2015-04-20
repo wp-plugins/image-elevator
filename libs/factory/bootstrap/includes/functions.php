@@ -10,9 +10,9 @@
  * @since 1.0.0
  */
 
-add_action('factory_bootstrap_325_plugin_created', 'factory_bootstrap_325_plugin_created');
-function factory_bootstrap_325_plugin_created( $plugin ) {
-    $manager = new FactoryBootstrap325_Manager( $plugin );
+add_action('factory_bootstrap_329_plugin_created', 'factory_bootstrap_329_plugin_created');
+function factory_bootstrap_329_plugin_created( $plugin ) {
+    $manager = new FactoryBootstrap329_Manager( $plugin );
     $plugin->bootstrap = $manager;
 }
 
@@ -21,13 +21,13 @@ function factory_bootstrap_325_plugin_created( $plugin ) {
  * 
  * @since 3.2.0
  */
-class FactoryBootstrap325_Manager {
+class FactoryBootstrap329_Manager {
     
     /**
      * A plugin for which the manager was created.
      * 
      * @since 3.2.0
-     * @var Factory324_Plugin
+     * @var Factory325_Plugin
      */
     public $plugin;
     
@@ -136,7 +136,7 @@ class FactoryBootstrap325_Manager {
             update_option('factory_wp_content_access_tested', true );
 
             if ( function_exists('wp_remote_get') ) {
-                $result = wp_remote_get(FACTORY_BOOTSTRAP_325_URL . '/includes/load-scripts.php?test=1');
+                $result = wp_remote_get(FACTORY_BOOTSTRAP_329_URL . '/includes/load-scripts.php?test=1');
                 if ( !is_wp_error($result ) && $result && isset( $result['body'] ) && $result['body'] == 'success' ) {
                     update_option('factory_css_js_compression', true );
                 }  
@@ -147,16 +147,16 @@ class FactoryBootstrap325_Manager {
 
         if ( !$compression ) {
 
-            $id = md5(FACTORY_BOOTSTRAP_325_VERSION);
+            $id = md5(FACTORY_BOOTSTRAP_329_VERSION);
 
             $isFirst = true;
             foreach($this->scripts as $scriptToLoad) {
-                wp_enqueue_script($scriptToLoad . '-' . $id, FACTORY_BOOTSTRAP_325_URL . "/assets/js/$scriptToLoad.js", $isFirst ? $dependencies : false);
+                wp_enqueue_script($scriptToLoad . '-' . $id, FACTORY_BOOTSTRAP_329_URL . "/assets/js/$scriptToLoad.js", $isFirst ? $dependencies : false);
                 $isFirst = false;            
             }
 
             foreach($this->styles as $styleToLoad) {
-                wp_enqueue_style($styleToLoad . '-' . $id, FACTORY_BOOTSTRAP_325_URL . "/assets/flat/css/$styleToLoad.css" );       
+                wp_enqueue_style($styleToLoad . '-' . $id, FACTORY_BOOTSTRAP_329_URL . "/assets/flat/css/$styleToLoad.css" );       
             }
 
         // - //
@@ -172,13 +172,13 @@ class FactoryBootstrap325_Manager {
             }
 
             if ( !empty( $this->styles ) ) {
-                $id = md5($loadStylesOut . FACTORY_BOOTSTRAP_325_VERSION);
-                wp_enqueue_style('factory-bootstrap-325-' . $id, FACTORY_BOOTSTRAP_325_URL . '/includes/load-styles.php?c=1&folder=flat&load='.$loadStylesOut, array(), FACTORY_BOOTSTRAP_325_VERSION); 
+                $id = md5($loadStylesOut . FACTORY_BOOTSTRAP_329_VERSION);
+                wp_enqueue_style('factory-bootstrap-329-' . $id, FACTORY_BOOTSTRAP_329_URL . '/includes/load-styles.php?c=1&folder=flat&load='.$loadStylesOut, array(), FACTORY_BOOTSTRAP_329_VERSION); 
             }
 
             if ( !empty( $this->scripts ) ) {
-                $id = md5($loadScriptsOut . FACTORY_BOOTSTRAP_325_VERSION);
-                wp_enqueue_script('factory-bootstrap-325-' . $id, FACTORY_BOOTSTRAP_325_URL . '/includes/load-scripts.php?c=1&load='.$loadScriptsOut, $dependencies, FACTORY_BOOTSTRAP_325_VERSION); 
+                $id = md5($loadScriptsOut . FACTORY_BOOTSTRAP_329_VERSION);
+                wp_enqueue_script('factory-bootstrap-329-' . $id, FACTORY_BOOTSTRAP_329_URL . '/includes/load-scripts.php?c=1&load='.$loadScriptsOut, $dependencies, FACTORY_BOOTSTRAP_329_VERSION); 
             } 
 
         
@@ -194,7 +194,7 @@ class FactoryBootstrap325_Manager {
         $colorName = get_user_meta($userId, 'admin_color', true);
 
         if ( $colorName !== 'fresh' ) {       
-            wp_enqueue_style('factory-bootstrap-325-colors', FACTORY_BOOTSTRAP_325_URL . '/assets/flat/css/bootstrap.' . $colorName . '.css');
+            wp_enqueue_style('factory-bootstrap-329-colors', FACTORY_BOOTSTRAP_329_URL . '/assets/flat/css/bootstrap.' . $colorName . '.css');
         }
 
         if ( $colorName == 'light' ) {
@@ -226,9 +226,9 @@ class FactoryBootstrap325_Manager {
         ?>
 
         <script>
-            if ( !window.onpsl ) window.onpsl = {};
-            if ( !window.onpsl.factoryBootstrap325 ) window.onpsl.factoryBootstrap325 = {}; 
-            window.onpsl.factoryBootstrap325.colors = {
+            if ( !window.factory ) window.factory = {};
+            if ( !window.factory.factoryBootstrap329 ) window.factory.factoryBootstrap329 = {}; 
+            window.factory.factoryBootstrap329.colors = {
                 primaryDark: '<?php echo $primaryDark ?>',
                 primaryLight: '<?php echo $primaryLight ?>'
             };
@@ -246,7 +246,7 @@ class FactoryBootstrap325_Manager {
      * @return void
      */
     public function testKeepingArgsInPaths( $src, $handle ) {
-        if ( substr($handle, 0, 22) !== 'factory-bootstrap-325-') return $src;
+        if ( substr($handle, 0, 22) !== 'factory-bootstrap-329-') return $src;
         
         $parts = explode( '?', $src );
         if ( count( $parts ) > 1 ) return $src;

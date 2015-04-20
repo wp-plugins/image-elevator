@@ -3,7 +3,7 @@
  * Url Control
  * 
  * Main options:
- *  @see FactoryForms324_TextboxControl
+ *  @see FactoryForms328_TextboxControl
  * 
  * @author Paul Kashtanoff <paul@byonepress.com>
  * @copyright (c) 2013, OnePress Ltd
@@ -12,7 +12,7 @@
  * @since 1.0.0
  */
 
-class FactoryForms324_UrlControl extends FactoryForms324_TextboxControl 
+class FactoryForms328_UrlControl extends FactoryForms328_TextboxControl 
 {
     public $type = 'url';
     

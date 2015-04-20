@@ -1,6 +1,6 @@
 <?php
 
-class FactoryPages320_AdminPage extends FactoryPages320_Page {
+class FactoryPages321_AdminPage extends FactoryPages321_Page {
     
     /**
      * Visible page title.
@@ -79,7 +79,7 @@ class FactoryPages320_AdminPage extends FactoryPages320_Page {
      */
     public $hidden = false;
     
-    public function __construct($plugin) {
+    public function __construct($plugin = null) {
         parent::__construct($plugin);
         $this->configure();
 
@@ -114,17 +114,25 @@ class FactoryPages320_AdminPage extends FactoryPages320_Page {
     }
     
     public function getResultId() {
-        return $this->id . '-' . $this->plugin->pluginName;
+        if ( $this->plugin ) return $this->id . '-' . $this->plugin->pluginName;
+        return $this->id;
     }
     
     /**
      * Registers admin page for the admin menu.
      */
     public function connect() {
-        if ( $this->hidden ) return;
-        
         $resultId = $this->getResultId();
+        
+        $this->hidden = apply_filters('factory_page_is_hidden_' . $resultId, $this->hidden);
+        if ( $this->hidden ) return;
 
+        $this->internal = apply_filters('factory_page_is_internal_' . $resultId, $this->internal);
+        if ( $this->internal ) {
+            $this->menuTarget = null;
+            $this->menuPostType = null;
+        }
+        
         // makes redirect to the page
         $controller = isset( $_GET['fy_page'] ) ? $_GET['fy_page'] : null;
         if ( $controller && $controller == $this->id ) {
@@ -193,7 +201,10 @@ class FactoryPages320_AdminPage extends FactoryPages320_Page {
 
         $this->pageTitle = !$this->pageTitle ? $this->menuTitle : $this->pageTitle;
         $this->menuTitle = !$this->menuTitle ? $this->pageTitle : $this->menuTitle;
-
+        
+        $this->pageTitle = apply_filters( 'factory_page_title_' .$resultId , $this->pageTitle ) ;
+        $this->menuTitle = apply_filters( 'factory_menu_title_' .$resultId , $this->menuTitle ) ;
+        
         // submenu
         if ( $this->menuTarget ) {
 
@@ -246,11 +257,11 @@ class FactoryPages320_AdminPage extends FactoryPages320_Page {
         exit;
     }
     
-    protected function actionUrl($action = null, $queryArgs = array()) {
+    public function actionUrl($action = null, $queryArgs = array()) {
         echo $this->getActionUrl($action, $queryArgs); 
     }
     
-    protected function getActionUrl($action = null, $queryArgs = array()) {
+    public function getActionUrl($action = null, $queryArgs = array()) {
         $baseUrl = $this->getBaseUrl();
 
         if ( !empty( $action )) $queryArgs['action'] = $action;

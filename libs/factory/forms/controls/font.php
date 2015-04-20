@@ -15,7 +15,7 @@
  * @since 1.0.0
  */
 
-class FactoryForms324_FontControl extends FactoryForms324_ComplexControl 
+class FactoryForms328_FontControl extends FactoryForms328_ComplexControl 
 {
     public $type = 'font';
     
@@ -27,12 +27,43 @@ class FactoryForms324_FontControl extends FactoryForms324_ComplexControl
             'units' => $this->options['units'],
             'default' => isset( $this->options['default'] ) ? $this->options['default']['size'] : null            
         );
-            
+
+        $optionFontFamily = array(
+            'name' => $this->options['name'] . '__family',
+            'data' => $this->getFonts(),
+            'default' => isset( $this->options['default'] ) ? $this->options['default']['family'] : null            
+        );        
+        
+        $optionFontColor = array(
+            'name' => $this->options['name'] . '__color',           
+            'default' => isset( $this->options['default'] ) ? $this->options['default']['color'] : null,
+            'pickerTarget' => '.factory-control-' . $this->options['name'] . ' .factory-picker-target'
+        );
+        
+        $this->size = new FactoryForms328_IntegerControl( $optionFontSize, $form, $provider );
+        $this->family = new FactoryForms328_DropdownControl( $optionFontFamily, $form, $provider );
+        $this->color = new FactoryForms328_ColorControl( $optionFontColor, $form, $provider );
+        
+        $this->innerControls = array( $this->family, $this->size, $this->color );   
+    }
+    
+    public function getFonts() {
+         
+        $fonts = $this->getDefaultFonts();
+        
+        $fonts = apply_filters('factory_forms_328_fonts', $fonts);
+        $fonts = apply_filters('factory_forms_328_fonts-' . $this->options['name'], $fonts);
+        
+        return $fonts;
+    }
+    
+    public function getDefaultFonts() {
+        
         $fonts = array(
  
-            array( 'inherit', __( '(use default website font)', 'factory_forms_324' ) ),
+            array( 'inherit', __( '(use default website font)', 'factory_forms_328' ) ),
             
-            array( 'group', __('Sans Serif:', 'factory_forms_324'), array(
+            array( 'group', __('Sans Serif:', 'factory_forms_328'), array(
                 array( 'Arial, "Helvetica Neue", Helvetica, sans-serif', 'Arial' ),
                 array( '"Arial Black", "Arial Bold", Gadget, sans-serif', 'Arial Black' ), 
                 array( '"Arial Narrow", Arial, sans-serif', 'Arial Narrow' ),
@@ -55,7 +86,7 @@ class FactoryForms324_FontControl extends FactoryForms324_ComplexControl
                 array( 'Verdana, Geneva, sans-serif', 'Verdana' ),        
             )),
             
-            array( 'group', __('Serif:', 'factory_forms_324'), array(
+            array( 'group', __('Serif:', 'factory_forms_328'), array(
                 array( 'Baskerville, "Baskerville Old Face", "Hoefler Text", Garamond, "Times New Roman", serif', 'Baskerville' ),
                 array( '"Big Caslon", "Book Antiqua", "Palatino Linotype", Georgia, serif', 'Big Caslon' ), 
                 array( '"Bodoni MT", Didot, "Didot LT STD", "Hoefler Text", Garamond, "Times New Roman", serif', 'Bodoni MT' ),
@@ -75,7 +106,7 @@ class FactoryForms324_FontControl extends FactoryForms324_ComplexControl
                 array( 'TimesNewRoman, "Times New Roman", Times, Baskerville, Georgia, serif', 'Times New Roman' )
             )),
             
-            array( 'group', __('Monospaced:', 'factory_forms_324'), array(
+            array( 'group', __('Monospaced:', 'factory_forms_328'), array(
                 array( '"Andale Mono", AndaleMono, monospace', 'Andale Mono' ),
                 array( 'Consolas, monaco, monospace', 'Consolas' ), 
                 array( '"Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace', 'Courier New' ),
@@ -84,28 +115,9 @@ class FactoryForms324_FontControl extends FactoryForms324_ComplexControl
                 array( 'Monaco, Consolas, "Lucida Console", monospace', 'Monaco' )
             ))
 
-        );
+        ); 
         
-        $fonts = apply_filters('factory_forms_324_fonts', $fonts);
-        $fonts = apply_filters('factory_forms_324_fonts-' . $this->options['name'], $fonts);
-        
-        $optionFontFamily = array(
-            'name' => $this->options['name'] . '__family',
-            'data' => $fonts,
-            'default' => isset( $this->options['default'] ) ? $this->options['default']['family'] : null            
-        );        
-        
-        $optionFontColor = array(
-            'name' => $this->options['name'] . '__color',           
-            'default' => isset( $this->options['default'] ) ? $this->options['default']['color'] : null,
-            'pickerTarget' => '.factory-control-' . $this->options['name'] . ' .factory-picker-target'
-        );
-        
-        $this->size = new FactoryForms324_IntegerControl( $optionFontSize, $form, $provider );
-        $this->family = new FactoryForms324_DropdownControl( $optionFontFamily, $form, $provider );
-        $this->color = new FactoryForms324_ColorControl( $optionFontColor, $form, $provider );
-        
-        $this->innerControls = array( $this->family, $this->size, $this->color );   
+        return $fonts;
     }
     
     /**
@@ -123,6 +135,9 @@ class FactoryForms324_FontControl extends FactoryForms324_ComplexControl
         return $values;
     }
     
+    public function beforeControlsHtml() {}
+    public function afterControlsHtml() {}
+    
     /**
      * Shows the html markup of the control.
      * 
@@ -132,16 +147,20 @@ class FactoryForms324_FontControl extends FactoryForms324_ComplexControl
     public function html( ) {           
     ?>         
      <div <?php $this->attrs() ?>>
-        <div class="factory-control-row">     
-             <div class="factory-family-wrap">
-                    <?php $this->family->html() ?>
-             </div>  
-             <div class="factory-size-wrap">
-                    <?php $this->size->html() ?>
-             </div>   
-             <div class="factory-color-wrap">
-                    <?php $this->color->html() ?>
-             </div>
+        <div class="factory-control-row">  
+            <?php $this->beforeControlsHtml() ?>
+            
+            <div class="factory-family-wrap">
+                <?php $this->family->html() ?>
+            </div>  
+            <div class="factory-size-wrap">
+                <?php $this->size->html() ?>
+            </div>   
+            <div class="factory-color-wrap">
+                <?php $this->color->html() ?>
+            </div>
+            
+            <?php $this->afterControlsHtml() ?>
         </div>
         <div class="factory-picker-target"></div>
      </div>

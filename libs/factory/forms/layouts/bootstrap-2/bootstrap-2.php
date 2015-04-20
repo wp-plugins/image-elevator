@@ -12,7 +12,7 @@
 /**
  * A form layout based on Twitter Bootstrap 2
  */
-class FactoryForms324_Bootstrap2FormLayout extends FactoryForms324_FormLayout {
+class FactoryForms328_Bootstrap2FormLayout extends FactoryForms328_FormLayout {
     
     public $name = 'default';
     
@@ -21,11 +21,11 @@ class FactoryForms324_Bootstrap2FormLayout extends FactoryForms324_FormLayout {
      * 
      * @since 1.0.0
      * @param mixed[] $options A holder options.
-     * @param FactoryForms324_Form $form A parent form.
+     * @param FactoryForms328_Form $form A parent form.
      */
     public function __construct($options, $form) {
         parent::__construct($options, $form);
-        $this->addCssClass('factory-bootstrap-325');
+        $this->addCssClass('factory-bootstrap-329');
     }
     
     /**

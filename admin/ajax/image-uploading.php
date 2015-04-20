@@ -6,7 +6,11 @@
 function imgevr_upload_image(){
 
     $mime = !empty( $_POST['imgMime'] ) ? $_POST['imgMime'] : null;
+    if ( 'null' === $mime ) $mime = null;
+    
     $name = !empty( $_POST['imgName'] ) ? $_POST['imgName'] : null;
+    if ( 'null' === $name ) $name = null;
+    
     $parentId = isset( $_POST['imgParent'] ) ? intval($_POST['imgParent']) : 0;
     $ref = isset( $_POST['imgRef'] ) ? $_POST['imgRef'] : false;    
 
@@ -14,7 +18,7 @@ function imgevr_upload_image(){
         if ( !empty( $_POST['file'] ) && preg_match('/image\/[a-z0-9]+/', $_POST['file'], $matches) ) {
             $mime = $matches[0];
         } else {
-            factory_324_json_error('Unable to get mime type of the file.');
+            factory_325_json_error('Unable to get mime type of the file.');
         }
     }
 
@@ -29,7 +33,7 @@ function imgevr_upload_image(){
 
     // move the uploaded file to the upload path
     $imageName = ( !empty($name) && $name !== 'undefined' ) 
-                    ? factory_324_filename_without_ext($name) 
+                    ? factory_325_filename_without_ext($name) 
                     : 'img_' . uniqid();
     
     $target = $targetPath . '/' . $imageName . '.' . $ext;
@@ -37,7 +41,7 @@ function imgevr_upload_image(){
     if ( isset( $_FILES['file'] ) ) {
 
         if ( empty( $_FILES['file']['size'] ) ) {
-            factory_324_json_error('Sorry, the error of reading image data occured. May be the image is empty of has incorrect format.');
+            factory_325_json_error('Sorry, the error of reading image data occured. May be the image is empty of has incorrect format.');
         }
         
         $source = $_FILES['file']['tmp_name'];
@@ -49,9 +53,9 @@ function imgevr_upload_image(){
             $data = base64_decode($img);
             $success = file_put_contents($target, $data);
 
-            if ( !$success ) factory_324_json_error('Unable to save the image.');
+            if ( !$success ) factory_325_json_error('Unable to save the image.');
         } else {
-            factory_324_json_error('Incorrect file format (base64).');
+            factory_325_json_error('Incorrect file format (base64).');
         }
     }
     
@@ -80,7 +84,7 @@ function imgevr_upload_image(){
             'post_content' => '',
             'post_status' => 'inherit',
         );
-
+        
         $media[$key]['id'] = wp_insert_attachment( $attachment, $item['path'], $parentId );
                 
         $attach_data = wp_generate_attachment_metadata( $media[$key]['id'], $item['path'] );

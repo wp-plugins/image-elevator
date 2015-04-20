@@ -1,10 +1,10 @@
 <?php
 
-class FactoryPages320_Page {
+class FactoryPages321_Page {
     
     /**
      * Current Factory Plugin.
-     * @var Factory324_Plugin
+     * @var Factory325_Plugin
      */
     public $plugin;
     
@@ -14,11 +14,23 @@ class FactoryPages320_Page {
      */
     public $id;
     
-    public function __construct( $plugin ) {
+    public function __construct( $plugin = null ) {
         $this->plugin = $plugin;
-
-        $this->scripts = $this->plugin->newScriptList();
-        $this->styles = $this->plugin->newStyleList();
+        
+        if ( $plugin ) {
+            $this->scripts = $this->plugin->newScriptList();
+            $this->styles = $this->plugin->newStyleList();    
+        } else {
+         
+            $coreVersion = isset( $this->deps['factory_core'] ) ? $this->deps['factory_core'] : null;
+            if ( empty( $coreVersion ) ) throw new Exception ("The version of the 'factory_core' is not specified in the var \$deps for the page '{$this->id}'.");
+        
+            $scriptsClass = 'Factory' . $coreVersion . '_ScriptList';
+            $stylesClass = 'Factory' . $coreVersion . '_StyleList';
+            
+            $this->scripts = new $scriptsClass();
+            $this->styles = new $stylesClass();
+        }
     }
 
     public function assets($scripts, $styles) {}

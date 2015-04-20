@@ -1,6 +1,6 @@
 <?php
 
-class ImageElevatorActivate extends Factory324_Activator {
+class ImageElevatorActivate extends Factory325_Activator {
     
     public function activate() {
 

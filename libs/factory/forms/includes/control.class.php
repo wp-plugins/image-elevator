@@ -14,7 +14,7 @@
  * 
  * @since 1.0.0
  */
-abstract class FactoryForms324_Control extends FactoryForms324_FormElement {
+abstract class FactoryForms328_Control extends FactoryForms328_FormElement {
     
     /**
      * Is this element a control?
@@ -55,7 +55,7 @@ abstract class FactoryForms324_Control extends FactoryForms324_FormElement {
      * Sets a provider for the control.
      * 
      * @since 1.0.0
-     * @param IFactoryForms324_ValueProvider $provider
+     * @param IFactoryForms328_ValueProvider $provider
      * @return void
      */
     public function setProvider( $provider ) {
@@ -153,7 +153,9 @@ abstract class FactoryForms324_Control extends FactoryForms324_FormElement {
      */
     public function getSubmitValue( $name, $subName ) {
         $nameOnForm = $this->getNameOnForm( $name );
-        return isset( $_POST[$nameOnForm] ) ? $_POST[$nameOnForm] : null;
+        $value = isset( $_POST[$nameOnForm] ) ? $_POST[$nameOnForm] : null;
+        if ( is_array( $value ) ) $value = implode (',', $value);
+        return $value;
     }
     
     /**
@@ -195,7 +197,7 @@ abstract class FactoryForms324_Control extends FactoryForms324_FormElement {
      * @since 1.0.0
      * @return mixed;
      */
-    public function getValue( $index = null ) {
+    public function getValue( $index = null, $multiple = false ) {
         if ( isset( $this->options['value'] ) ) {
             if ( is_array( $this->options['value'] ) ) {
                 if ( $index !== null ) return $this->options['value'][$index];
@@ -232,7 +234,7 @@ abstract class FactoryForms324_Control extends FactoryForms324_FormElement {
                 if ( $index !== null ) return $values[$index];
                 return $values;
             } else {
-                return $this->provider->getValue( $this->getName(), $default );  
+                return $this->provider->getValue( $this->getName(), $default, $multiple );  
             }
         }
         

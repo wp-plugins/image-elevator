@@ -9,7 +9,7 @@
  * @since 1.0.0
  */
 
-class FactoryForms324_Html extends FactoryForms324_CustomElement
+class FactoryForms328_Html extends FactoryForms328_CustomElement
 {
     public $type = 'html';
     
@@ -24,9 +24,9 @@ class FactoryForms324_Html extends FactoryForms324_CustomElement
 
         // if the data options is a valid callback for an object method
         if (
-            is_array($html) && 
+            ( is_array($html) && 
             count($html) == 2 && 
-            gettype($html[0]) == 'object' ) {
+            gettype($html[0]) == 'object' ) || function_exists( $html ) ) {
             
             call_user_func($html);
             return;

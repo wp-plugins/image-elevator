@@ -9,14 +9,14 @@
  * @since 1.0.0
  */
 
-add_action('admin_menu', 'FactoryPages320::actionAdminMenu');
+add_action('admin_menu', 'FactoryPages321::actionAdminMenu');
 
 /**
  * A base class to manage pages. 
  * 
  * @since 1.0.0
  */
-class FactoryPages320 {
+class FactoryPages321 {
 
     private static $pages = array();
 
@@ -44,6 +44,6 @@ class FactoryPages320 {
     }
 }
 
-function factory_pages_320_get_page_id( $plugin, $pureId ) {
+function factory_pages_321_get_page_id( $plugin, $pureId ) {
     return $pureId . '-' . $plugin->pluginName;
 }

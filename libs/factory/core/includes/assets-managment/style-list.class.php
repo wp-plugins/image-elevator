@@ -14,7 +14,7 @@
  * 
  * @since 1.0.0
  */
-class Factory324_StyleList extends Factory324_AssetsList 
+class Factory325_StyleList extends Factory325_AssetsList 
 {
     public function connect( $source = 'wordpress' ) {
    

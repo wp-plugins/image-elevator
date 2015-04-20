@@ -16,7 +16,7 @@
  * 
  * @since 1.0.0
  */
-class FactoryForms324_OptionsValueProvider implements IFactoryForms324_ValueProvider 
+class FactoryForms328_OptionsValueProvider implements IFactoryForms328_ValueProvider 
 {
     /**
      * Values to save $optionName => $optionValue
@@ -55,7 +55,7 @@ class FactoryForms324_OptionsValueProvider implements IFactoryForms324_ValueProv
         // nothing to do
     }
     
-    public function getValue($name, $default = null) {
+    public function getValue($name, $default = null, $multiple = false ) {
         $name = ( !empty( $this->scope ) ) ? $this->scope . '_' . $name : $name;
         $value = get_option($name, $default);
         

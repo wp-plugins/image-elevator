@@ -34,7 +34,7 @@ if ( in_array( $clipImages->license->type, array( 'free' ) ) ) {
         // attachemnt title + image id
         $attachment = get_post($imgId);
         $attacmentTitle = trim( $attachment->post_title );
-        if ( !empty($attacmentTitle) && !factory_324_starts_with($attacmentTitle, 'img_') ) {
+        if ( !empty($attacmentTitle) && !factory_325_starts_with($attacmentTitle, 'img_') ) {
             $result[] = sanitize_title( $attacmentTitle ) . '-' . $imgId;
         };
         
@@ -77,6 +77,7 @@ if ( in_array( $clipImages->license->type, array( 'free' ) ) ) {
     exit;
 }
 
+ 
 /**
  * Renames the given image. May return a confirmation request.
  */
@@ -98,22 +99,24 @@ if ( in_array( $clipImages->license->type, array( 'free' ) ) ) {
     $overwrite = ( isset( $_POST['imgOverwrite'] ) && $_POST['imgOverwrite'] ) ? true : false;   
     
     if ( empty($imgUrl) || empty($imgName) ) exit;
-    
-    $uploadData = wp_upload_dir();
-    
+        
     // extracts relative image path from url
-    $term = 'wp-content/uploads/';
-    $partPos = strpos($imgUrl, $term);
+    $uploadData = wp_upload_dir();
+    $siteUrl = trailingslashit( site_url() );
     
+    // default 'wp-content/uploads/'
+    $term = trailingslashit( str_replace($siteUrl, '', $uploadData['baseurl']) );
+    $partPos = strpos($imgUrl, $term);
+
     if ( $partPos === false ) 
-        factory_324_json_error('Sorry, the file for renaming has been not found on your server.');
+        factory_325_json_error('Sorry, the file for renaming has been not found on your server.');
     
     $relPath = substr($imgUrl, $partPos + strlen($term), strlen($imgUrl));
     $absPath = $uploadData['basedir'] . '/' . $relPath;
-    $orgData = factory_324_pathinfo($relPath);
+    $orgData = factory_325_pathinfo($relPath);
     
     if ( !is_file($absPath) ) 
-        factory_324_json_error('Sorry, the file for renaming is not found on your server.');
+        factory_325_json_error('Sorry, the file for renaming is not found on your server.');
     
     // if original file already has a given name
     if ( $orgData['basename'] == $imgName ) return;

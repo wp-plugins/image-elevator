@@ -7,8 +7,8 @@
  *  checkbox     => Указывается если, 'way' имеет значение 'checkbox-slider'
  *                  Пример:
  *                      array(
- *                          'on'  => __('Show shadow', 'sociallocker'),
- *                          'off' => __('Hide shadow', 'sociallocker'),
+ *                          'on'  => __('Show shadow', 'optinpanda'),
+ *                          'off' => __('Hide shadow', 'optinpanda'),
  *                      )
  *  title        => Заголовок контрола
  *  slider-title => Заголовок слайдера( Только если 'way' имеет значение 'checkbox-slider' )
@@ -26,7 +26,7 @@
  * @since 1.0.0
  */
 
-class FactoryForms324_IntegerControl extends FactoryForms324_Control 
+class FactoryForms328_IntegerControl extends FactoryForms328_Control 
 {
     public $type = 'integer';
   

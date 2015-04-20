@@ -14,15 +14,15 @@
  * 
  * @since 1.0.0
  */
-abstract class Factory324_Activator {
+abstract class Factory325_Activator {
     
     /**
      * Curent plugin.
-     * @var Factory324_Plugin
+     * @var Factory325_Plugin
      */
     public $plugin;
     
-    public function __construct(Factory324_Plugin $plugin) {
+    public function __construct(Factory325_Plugin $plugin) {
         $this->plugin = $plugin;
     }
     
@@ -38,7 +38,7 @@ abstract class Factory324_Activator {
      * Adds post on activation.
      * @return array Post info.
      */
-    protected function addPost() {
+    public function addPost() {
         
         $argsCount = func_num_args();
         
@@ -75,7 +75,7 @@ abstract class Factory324_Activator {
     /**
      * Adds a page on activation.
      */
-    protected function addPage() {
+    public function addPage() {
         $argsCount = func_num_args();
 
         $optionName = func_get_arg(0);
@@ -97,7 +97,7 @@ abstract class Factory324_Activator {
      * @param type $optionName
      * @return interger
      */
-    private function createPost( $postInfo, $metaInfo, $optionName ) {
+    public function createPost( $postInfo, $metaInfo, $optionName ) {
         global $wpdb;
 
         $slug = $postInfo['post_name'];

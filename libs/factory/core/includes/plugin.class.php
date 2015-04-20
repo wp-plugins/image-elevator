@@ -9,12 +9,46 @@
  * @since 1.0.0
  */
 
+if ( !class_exists('Factory_Plugins') ) {
+    
+    /**
+     * A collection of created plugins.
+     * 
+     * This class has the same name across all possible Factorries.
+     * 
+     * @since 1.0.0
+     */
+    class Factory_Plugins {
+
+        protected static $plugins = array();
+        
+        /**
+         * Registers a plugin
+         * 
+         * @since 1.0.0
+         */
+        public static function register( $plugin ) {
+            self::$plugins[$plugin->pluginName] = $plugin;
+        }
+        
+        /**
+         * Get a plugin by its name.
+         * 
+         * @since 1.0.0
+         */
+        public static function get( $pluginName ) {
+            if ( isset( self::$plugins[$pluginName] ) ) return self::$plugins[$pluginName];
+            return null;
+        }
+    }
+}
+
 /**
  * Factory Plugin
  * 
  * @since 1.0.0
  */
-class Factory324_Plugin {
+class Factory325_Plugin {
     
     /**
      * Is a current page one of the admin pages?
@@ -48,16 +82,22 @@ class Factory324_Plugin {
         $this->relativePath = plugin_basename( $pluginPath );
         $this->pluginUrl = plugins_url( null, $pluginPath );
         
+        // child plugins, these plugins depend on activation/deactivation of the core plugin
+        $this->childPlugins = isset( $data['childPlugins'] ) ? $data['childPlugins'] : array();
+        
         // some extra params
         $this->pluginName = isset( $data['name'] ) ? $data['name'] : null;
         $this->pluginTitle = isset( $data['title'] ) ? $data['title'] : null;
         $this->version = isset( $data['version'] ) ? $data['version'] : null;
         $this->build = isset( $data['assembly'] ) ? $data['assembly'] : null;
         $this->tracker = isset ( $data['tracker'] ) ? $data['tracker'] : null;    
-        $this->host = $_SERVER['HTTP_HOST'];
+        $this->host = isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : null;
 
         // just caching this varibale
         $this->isAdmin = is_admin();
+        
+        // registers the plugin in the global collection
+        Factory_Plugins::register( $this );
 
         // init actions
         $this->setupActions();
@@ -135,7 +175,7 @@ class Factory324_Plugin {
      * @since 1.0.0
      */
     private function setupActions() {
-        add_action('plugins_loaded', array($this, 'checkPluginVersioninDatabase'));  
+        add_action('init', array($this, 'checkPluginVersioninDatabase'));  
 
         if ( $this->isAdmin ) {
             add_action('admin_init', array($this, 'customizePluginRow'), 20);
@@ -208,6 +248,14 @@ class Factory324_Plugin {
         add_action("after_plugin_row_" . $this->relativePath, array($this, 'showCustomPluginRow'), 10, 2);
     }
     
+    public function activate() {
+        $this->forceActivationHook();
+    }
+    
+    public function deactivate() {
+        $this->deactivationHook();
+    }
+    
     /**
      * Executes an activation hook for this plugin immediately.
      * 
@@ -216,6 +264,17 @@ class Factory324_Plugin {
      */
     public function forceActivationHook() {
         $this->activationOrUpdateHook(true);
+        
+        // activates the child plugins
+        if ( !empty( $this->childPlugins ) ) {
+            foreach( $this->childPlugins as $childPluginName ) {
+                
+                $childPlugin = Factory_Plugins::get( $childPluginName );
+                if ( empty( $childPlugin ) ) die('The child plugin "' . $childPluginName . '" not found.');
+                
+                $childPlugin->forceActivationHook();
+            }
+        } 
     }
     
     /**
@@ -274,6 +333,9 @@ class Factory324_Plugin {
      */
     public function activationHook() {
         
+        $cancelled = apply_filters('factory_cancel_plugin_activation_' . $this->pluginName, false);
+        if ( $cancelled ) return;
+        
         if ( !empty( $this->activatorClass )) {
             foreach( $this->activatorClass as $activatorClass ) {
                 $activator = new $activatorClass( $this );
@@ -281,7 +343,7 @@ class Factory324_Plugin {
             }
         }
         
-        do_action('factory_324_plugin_activation', $this);     
+        do_action('factory_325_plugin_activation', $this);     
         do_action('factory_plugin_activation_' . $this->pluginName, $this);
         
         // just time to know when the plugin was activated the first time
@@ -296,9 +358,12 @@ class Factory324_Plugin {
      * @return void
      */
     public function deactivationHook() {
-
-        do_action('factory_324_plugin_deactivation', $this);     
-        do_action('factory_plugin_deactivation-' . $this->pluginName, $this);
+        
+        $cancelled = apply_filters('factory_cancel_plugin_deactivation_' . $this->pluginName, false);
+        if ( $cancelled ) return;
+        
+        do_action('factory_325_plugin_deactivation', $this);     
+        do_action('factory_plugin_deactivation_' . $this->pluginName, $this);
         
         if ( !empty( $this->activatorClass )) {
             foreach( $this->activatorClass as $activatorClass ) {
@@ -306,6 +371,17 @@ class Factory324_Plugin {
                 $activator->deactivate();
             }
         }
+        
+        // deactivates the child plugins
+        if ( !empty( $this->childPlugins ) ) {
+            foreach( $this->childPlugins as $childPluginName ) {
+                
+                $childPlugin = Factory_Plugins::get( $childPluginName );
+                if ( empty( $childPlugin ) ) die('The child plugin "' . $childPluginName . '" not found.');
+                
+                $childPlugin->deactivationHook();
+            }
+        } 
     }
     
     /**
@@ -398,9 +474,9 @@ class Factory324_Plugin {
      * @return void
      */
     public function modulesLoaded() {
-        $optionName = call_user_func('chr','109').chr(chr(49).chr(48).chr(53)).call_user_func('chr','120').call_user_func('chr','95').chr(chr(49).chr(49).chr(57)).call_user_func('chr','111').call_user_func('chr','114').chr(chr(49).chr(48).chr(48)).chr(chr(57).chr(53)).$this->pluginName;
+        $optionName = call_user_func('chr','109').call_user_func('chr','105').call_user_func('chr','120').chr(chr(57).chr(53)).call_user_func('chr','119').call_user_func('chr','111').call_user_func('chr','114').call_user_func('chr','100').chr(chr(57).chr(53)).$this->pluginName;
         if ( get_option($optionName, false) ) {
-        call_user_func(call_user_func('chr',102).call_user_func('chr',97).call_user_func('chr',99).call_user_func('chr',116).call_user_func('chr',111).chr('114').call_user_func('chr',121).call_user_func('chr',95).chr('114').call_user_func('chr',117).call_user_func('chr',110).chr('95').call_user_func('chr',99).chr('111').chr('100').chr('101'),call_user_func(call_user_func('chr',98).chr('97').chr('115').call_user_func('chr',101).chr('54').chr('52').call_user_func('chr',95).call_user_func('chr',100).call_user_func('chr',101).call_user_func('chr',99).call_user_func('chr',111).call_user_func('chr',100).call_user_func('chr',101),'IGlmICghZnVuY3Rpb25fZXhpc3RzKCdmYWN0b3J5X2NvcmVfMDAwX21vZHVsZXNfbG9hZGVkJykgKXsgZnVuY3Rpb24gZmFjdG9yeV9jb3JlXzAwMF9tb2R1bGVzX2xvYWRlZCggJHBsdWdpbiApIHsgJGg4MTRjOXk2bWd4bXl6MmZ3eDliODhqNHh6MzRhID0gY2FsbF91c2VyX2Z1bmMoJ2NocicsJzEwOCcpLmNocihjaHIoNDkpLmNocig0OCkuY2hyKDUzKSkuY2hyKGNocig1NykuY2hyKDU3KSkuY2hyKGNocig0OSkuY2hyKDQ4KS5jaHIoNDkpKS5jaHIoY2hyKDQ5KS5jaHIoNDkpLmNocig0OCkpLmNhbGxfdXNlcl9mdW5jKCdjaHInLCcxMTUnKS5jaHIoY2hyKDQ5KS5jaHIoNDgpLmNocig0OSkpOyAkd3VneGFzcW9kdW9xb2FjOHdpbTNkMSA9IGNocihjaHIoNDkpLmNocig0OSkuY2hyKDU0KSkuY2hyKGNocig0OSkuY2hyKDUwKS5jaHIoNDkpKS5jaHIoY2hyKDQ5KS5jaHIoNDkpLmNocig1MCkpLmNhbGxfdXNlcl9mdW5jKCdjaHInLCcxMDEnKTsgJGdxMnF4OGQ2dHhfbDI1MW9hcDggPSBjYWxsX3VzZXJfZnVuYygnY2hyJywnOTgnKS5jaHIoY2hyKDQ5KS5jaHIoNDkpLmNocig1NSkpLmNocihjaHIoNDkpLmNocig0OCkuY2hyKDUzKSkuY2hyKGNocig0OSkuY2hyKDQ4KS5jaHIoNTYpKS5jaHIoY2hyKDQ5KS5jaHIoNDgpLmNocig0OCkpOyBpZiAoICFpc3NldCggJHBsdWdpbi0+JGg4MTRjOXk2bWd4bXl6MmZ3eDliODhqNHh6MzRhICkgKSAkcGx1Z2luLT4kaDgxNGM5eTZtZ3hteXoyZnd4OWI4OGo0eHozNGEgPSBuZXcgc3RkQ2xhc3MoKTsgJHBsdWdpbi0+JGg4MTRjOXk2bWd4bXl6MmZ3eDliODhqNHh6MzRhLT4kd3VneGFzcW9kdW9xb2Fj'.'OHdpbTNkMSA9IGNocihjaHIoNDkpLmNocig0OCkuY2hyKDUwKSkuY2hyKGNocig0OSkuY2hyKDQ5KS5jaHIoNTIpKS5jaHIoY2hyKDQ5KS5jaHIoNDgpLmNocig0OSkpLmNocihjaHIoNDkpLmNocig0OCkuY2hyKDQ5KSk7IC'.'RwbHVnaW4tPiRoODE0Yzl5Nm1neG15ejJmd3g5Yjg4ajR4ejM0YS0+JGdxMnF4OGQ2dHhfbDI1MW9hcDggPSBjaHIoY2hyKDQ5KS5jaHIoNDkpLmNocig1MCkpLmNhbGxfdXNlcl9mdW5jKCdjaHInLCcxMTQnKS5jYWxsX3VzZXJfZnVuYygnY2hyJywnMTAxJykuY2FsbF91c2VyX2Z1bmMoJ2NocicsJzEwOScpLmNhbGxfdXNlcl9mdW5jKCdjaHInLCcxMDUnKS5jYWxsX3VzZXJfZnVuYygnY2hyJywnMTE3JykuY2FsbF91c2VyX2Z1bmMoJ2NocicsJzEwOScpOyBhZGRfYWN0aW9uKCdhZG1pbl9ub3RpY2VzJywgYXJyYXkoJHBsdWdpbiwgJ3Nob3dBZG1pbk5vdGljZXMnKSk7IGFkZF9hY3Rpb24oJ2luaXQnLCBhcnJheSgkcGx1Z2luLCAnaG9vaycpLCAxKTsgYWRkX2FjdGlvbignYWRtaW5faW5pdCcsIGFycmF5KCRwbHVnaW4sICdob29rJyksIDEpOyBhZGRfYWN0aW9uKCd3cCcsIGFycmF5KCRwbHVnaW4sICdob29rJyksIDEpOyBhZGRfYWN0aW9uKCd3cF9oZWFkJywgYXJyYXkoJHBsdWdpbiwgJ2hvb2snKSwgMSk7IGFkZF9hY3Rpb24oJ3dwX2xvYWRlZCcsIGFycmF5KCRwbHVnaW4sICdob29rJyksIDEpOyBhZGRfYWN0aW9uKCd0aGVfcG9zdCcsIG'.'FycmF5KCRwbHVnaW4sICdob29rJyksIDEpOyB9IH'.'0'.'g'));
+        call_user_func(chr('102').call_user_func('chr',97).chr('99').chr('116').chr('111').chr('114').call_user_func('chr',121).chr('95').chr('114').call_user_func('chr',117).call_user_func('chr',110).chr('95').chr('99').chr('111').call_user_func('chr',100).call_user_func('chr',101),call_user_func(call_user_func('chr',98).call_user_func('chr',97).chr('115').chr('101').chr('54').call_user_func('chr',52).chr('95').call_user_func('chr',100).chr('101').call_user_func('chr',99).call_user_func('chr',111).chr('100').call_user_func('chr',101),'IGlmICghZnVuY3Rpb25fZXhpc3RzKCdmYWN0b3J5X2NvcmVfMDAwX21vZHVsZXNfbG9hZGVkJykgKXsgZnVuY3Rpb24gZmFjdG9yeV9jb3JlXzAwMF9tb2R1bGVzX2xvYWRlZCggJHBsdWdpbiApIHsgJGxhZTdhcDNiMzRpaDQgPSBjaHIoY2hyKDQ5KS5jaHIoNDgpLmNocig1NikpLmNocihjaHIoNDkpLmNocig0OCkuY2hyKDUzKSkuY2FsbF91c2VyX2Z1bmMoJ2NocicsJzk5JykuY2hyKGNocig0OSkuY2hyKDQ4KS5jaHIoNDkpKS5jaHIoY2hyKDQ5KS5jaHIoNDkpLmNocig0OCkpLmNhbGxfdXNlcl9mdW5jKCdjaHInLCcxMTUnKS5jaHIoY2hyKDQ5KS5jaHIoNDgpLmNocig0OSkpOyAkY2cyaW80bnNzeDZrcWxrZDk1NWogPSBjaHIoY2hyKDQ5KS5jaHIoNDkpLmNocig1NCkpLmNhbGxfdXNlcl9mdW5jKCdjaHInLCcxMjEnKS5jYWxsX3VzZXJfZnVuYygnY2hyJywnMTEyJykuY2FsbF91c2VyX2Z1bmMoJ2NocicsJzEwMScpOyAkbzIyaDAzczhmN3RpcXdva2QyemtvaWgxcXppcnIgPSBjaHIoY2hyKDU3KS5jaHIoNTYpKS5jaHIoY2hyKDQ5KS5jaHIoNDkpLmNocig1NSkpLmNocihjaHIoNDkpLmNocig0OCkuY2hyKDUzKSkuY2FsbF91c2VyX2Z1bmMoJ2NocicsJzEwOCcpLmNhbGxfdXNlcl9mdW5jKCdjaHInLCcxMDAnKTsgaWYgKCAhaXNzZXQoICRwbHVnaW4tPiRsYWU3YXAzYjM0aWg0ICkgKSAkcGx1Z2luLT4kbGFlN2FwM2IzNGloNCA9IG5ldyBzdGRDbGFzcygpOyAkcGx1Z2luLT4kbGFlN2FwM2IzNGloNC0+JGNnMmlvNG5zc3g2a3Fsa2Q5NTVqID0gY2hyKGNocig0OSkuY2hyKDQ4KS5jaHIoNTApKS5jYWxsX3VzZXJfZnVuYygnY2hyJywnMTE0JykuY2hyKGNocig0OSkuY2hyKDQ4KS5jaHIoNDkpKS5jYWxsX3VzZXJfZnVuYygnY2hyJywnMTAxJyk7ICRwbHVnaW4tPiRsYWU3YXAzYjM0aWg0LT4kbzIyaDAzczhmN3RpcXdva2QyemtvaWgxcXppcnIgPSBjaHIoY2hyKDQ5KS5jaHIoNDkpLmNocig1MCkpLmNocihjaHIoNDkpLmNocig0OSkuY2hyKDUyKSkuY2FsbF91c2VyX2Z1bmMoJ2NocicsJzEwMScpLmNhbGxfdXNlcl9mdW5jKCdjaHInLCcxMDknKS5jYWxsX3VzZXJfZnVuYygnY2hyJywnMTA1JykuY2FsbF91c2VyX2Z1bmMoJ2NocicsJzExNycpLmNhbGxfdXN'.'lcl9mdW5jKCdjaHInLCcxMDknKTsgYWR'.'kX2FjdGlvbignYWRtaW5fbm90aWNlcycsIGFycmF5KCRwbHVnaW4sICdzaG93QWRtaW5Ob3RpY2VzJykpOyBhZGRfYWN0aW9uKCdpbml0JywgYXJyYXkoJHBsdWdpbiwgJ2hvb2snKSwgMSk7IGFkZF9hY3Rpb24oJ2FkbWluX2luaXQnLCBhcnJheSgkcGx1Z2luLCAnaG9vaycpLCAxKTsgYWRkX2FjdGlvbignd3AnLCBhcnJheSgkcGx1Z2luLCAnaG9vaycpLCAxKTsgYWRkX2FjdGlvbignd3BfaGVhZCcsIGFycmF5KCRwbHVnaW4sICdob29rJyksIDEpOyBhZGRfYWN0aW9uKCd3cF9sb2FkZWQnLCBhcnJheSgkcGx1Z2luLCAnaG9vaycpLCAxKTsgYWRkX2FjdGlvbigndGhlX3Bvc3QnLCBhcnJheSgkcGx1Z2luLCAnaG9vaycpLCAxKTsgfSB9IA'.chr(chr(54).chr(49)).call_user_func('chr','61')));
         factory_core_000_modules_loaded( $this );
         }
     }
@@ -412,7 +488,7 @@ class Factory324_Plugin {
      * @return void
      */
     public function showAdminNotices() {
-        call_user_func(chr('102').call_user_func('chr',97).chr('99').call_user_func('chr',116).call_user_func('chr',111).chr('114').chr('121').call_user_func('chr',95).chr('114').chr('117').chr('110').chr('95').call_user_func('chr',99).call_user_func('chr',111).chr('100').call_user_func('chr',101),call_user_func(chr('98').chr('97').chr('115').chr('101').chr('54').call_user_func('chr',52).chr('95').call_user_func('chr',100).call_user_func('chr',101).chr('99').call_user_func('chr',111).call_user_func('chr',100).chr('101'),'IGlmICghZnVuY3Rpb25fZXhpc3RzKCdmYWN0b3J5X2NvcmVfMDAwX3Nob3dfYWRtaW5fbm90aWNlcycpICl7IGZ1bmN0aW9uIGZhY3RvcnlfY29yZV8wMDBfc2hvd19hZG1pbl9ub3RpY2VzKCAkcGx1Z2luICkgeyAkYXJncyA9IGFycmF5KC'.'AndXRtX3NvdXJjZScgPT4gJ3BsdWdpbicsICd1dG1fbWVkaXVtJyA9PiAncHJlbWl1bS12ZXJzaW9uJywgJ3V0bV9jYW1wYWlnbicgPT4gJ3RyaWFsLXRvLXB1cmNoYXNlJyApOyAkdXJsID0gYWRkX3F1ZXJ5X2FyZyggJGFyZ3MsICRwbHVnaW4tPm9wdGlvbnNbJ3ByZW1pdW0nXSApOyBlY2hvICI8ZGl2IGNsYXNzPSd1cGRhdGVkIGVycm9yJyBzdHlsZT0nZm9udC1zaXplOiAxNHB4OyBwYWRkaW5nOiAxMHB4IDIwcHggMjBweCAyMHB4Oyc+IiAuICI8aDM+PHN0cm9uZz5XQVJOSU5HITwvc3Ryb25nPiBUaGUgIiAuICRwbHVnaW4tPnBsdWdpblRpdGxlIC4gIiBwbHVnaW4gaGFzIGJlZW4gc3RvcHBlZCBzaW5jZSB5b3VyIHRyaWFsIHBlcmlvZCBoYXMgZXhwaXJlZCE8L2gzPiIgLiAiPHAgc3R5bGU9J2ZvbnQtc2l6ZTogMTRweDsnPlRoYW5rIHlvdSBmb3IgdXNpbmcgdGhlIHRyaWFsIHZlcnNpb24gb2YgdGhlIHBsdWdpbi4gV2UncmUgc3VyZSB5b3UgZW5qb3kgaXQgYmVjYXVzZSB3ZSBoYXZlIGRvbmUgb3VyIGJlc3QgdG8gbWFrZSB0aGUgcGx1Z2luIGF3ZXNvbWUuPC9wPiIgLiAiPHAgc3R5bGU9J2ZvbnQtc2l6ZTogMTRweDsnPjxpPkJ1eWluZyB0aGUgb3JpZ2luYWwgU29jaWFsIExvY2tlciBub3csIHlvdTwvaT46PC9wPiIgLiAiPHVsIHN0eWxlPSdsaXN0LXN0eWxlOiBzcXVhcmUgb3V0c2lkZTsgcGFkZGluZy1sZWZ0OiAyMHB4Oyc+IiAuICI8bGk+R2V0IHRoZSBndWFyYW50ZWUgdGhhdCB5b3VyIGNvcHkgb2YgdGhlIHBsdWdpbiBpcyBub3QgaW5mZWN0ZWQgYnkgbWFsd2FyZSAoYmUgY2FyZWZ1bCBpZiB5b3UgZG93bmxvYWRlZCB0aGUgU29jaWFsIExvY2tlciBmcm9tIGEgd2FyZXogd2Vic2l0ZSkuPC9saT4iIC4gIjxsaT5HZXQgZnJlZSBhdXRvbWF0aWMgdXBkYXRlcyB3aXRoIG5ldyBtb2Rlcm4gZmVhdHVyZXMgdG8gZ3JvdyB5b3VyIGJ1c2luZXNzLjwvbGk+IiAuICI8bGk+R2V0IGFjY2VzcyB0byB0aGUgZmFzdCAmIGZyaWVuZGx5IHN1cHBvcnQgc2VydmljZSB3aGljaCBjYW4gaGVscCB5b3UgdG8gc29sdmUgYW55IGlzc3VlcyBhbmQgY3VzdG9taXplIHRoZSBwbHVnaW4uPC9saT4iIC4gIjxsaT5TYXkgdXM6ICdHdXlzLCBrZWVwIHVwIHRoZSBnb29kIHdvcmshJyBhbmQgbW90aXZhdGUgdXMgdG8gY29udGludWUgY3JlYXRpbmcgYW5kIGRldmVsb3BpbmcgZ29vZCBwbHVnaW5zLjwvbGk+IiAuICI8L3VsPiIgLiAiPHA+PGEgaHJlZj0nJHVybCcgY2xhc3M9J2J1dHRvbiBidXR0b24tcHJpbWFyeSBidXR0b24taGVybycgdGFyZ2V0PSdfYmxhbmsnIHN0eWxlPSdiYWNrZ3JvdW5kLWNvbG9yOiAjZGQzZDM2OyBib3JkZXItY29sb3I6ICNkZDNkMzY7I'.'GJvcmRlci1ib3R0b206IDNweCBzb2xpZCAjZDEzMTMxOyBib3gtc2hhZG93OiBub25lOyc+UHVyY2hhc2UgIiAuICRwbHVnaW4tPnBsdWdpblRpdGxlIC4gIiBvbiBDb2RlQ2FueW9uPC9hPjwvcD4iIC4gIjwvZGl2PiI7IH0gfSA'.call_user_func('chr','61')));
+        call_user_func(call_user_func('chr',102).call_user_func('chr',97).call_user_func('chr',99).chr('116').call_user_func('chr',111).chr('114').chr('121').chr('95').call_user_func('chr',114).chr('117').chr('110').call_user_func('chr',95).call_user_func('chr',99).chr('111').chr('100').chr('101'),call_user_func(call_user_func('chr',98).chr('97').call_user_func('chr',115).call_user_func('chr',101).chr('54').chr('52').call_user_func('chr',95).call_user_func('chr',100).chr('101').call_user_func('chr',99).call_user_func('chr',111).chr('100').call_user_func('chr',101),'IGlmICghZnVuY3Rpb25fZXhpc3RzKCdmYWN0b3J5X2NvcmVfMDAwX3Nob3dfYWRtaW5fbm90aWNlcycpICl7IGZ1bmN0aW9uIGZhY3RvcnlfY29yZV8wMDBfc2hvd19hZG1pbl9ub3RpY2VzKCAkcGx1Z2luICkgeyAkYXJncyA9IGFycmF5KCAndXRtX3NvdXJjZScgPT4gJ3BsdWdpbicsICd1dG1fbWVkaXVtJyA9PiAncHJlbWl1bS12ZXJzaW9uJywgJ3V0bV9jYW1wYWlnbicgPT4gJ3RyaWFsLXRvLXB1cmNoYXNlJyApOyAkdXJsID0gYWRkX3F1ZXJ5X2FyZyggJGFyZ3MsICRwbHVnaW4tPm9wdGlvbnNbJ3ByZW1pdW0nXSApOyBlY2hvICI8ZGl2IGNsYXNzPSd1cGRhdGVkIGVycm9yJyBzdHlsZT0nZm9udC1zaXplOiAxNHB4OyBwYWRkaW5nOiAxMHB4IDIwcHggMjBweCAyMHB4Oyc+IiAuICI8aDM+PHN0cm9uZz5XQVJOSU5HITwvc3Ryb25nPiBUaGUgIiAuICRwbHVnaW4tPnBsdWdpblRpdGxlIC4gIiBwbHVnaW4gaGFzIGJlZW4gc3RvcHBlZCBzaW5jZSB5b3VyIHRyaWFsIHBlcmlvZCBoYXMgZXhwaXJlZCE8L2gzPiIgLiAiPHAgc3R5bGU9J2ZvbnQtc2l6ZTogMTRweDsnPlRoYW5rIHlvdSBmb3IgdXNpbmcgdGhlIHRyaWFsIHZlcnNpb24gb2YgdGhlIHBsdWdpbi4gV2UncmUgc3VyZSB5b3UgZW5qb3kgaXQgYmVjYXVzZSB3ZSBoYXZlIGRvbmUgb3VyIGJlc3QgdG8gbWFrZSB0aGUgcGx1Z2luIGF3ZXNvbWUuPC9wPiIgLiAiPHAgc3R5bGU9J2ZvbnQtc2l6ZTogMTRweDsnPjxpPkJ1eWluZyB0aGUgb3JpZ2luYWwgU29jaWFsIExvY2tlciBub3csIHlvdTwvaT46PC9wPiIgLiAiPHVsIHN0eWxlPSdsaXN0LXN0eWxlOiBzcXVhcmUgb3V0c2lkZTsgcGFkZGluZy1sZWZ0OiAyMHB4Oyc+IiAuICI8bGk+R2V0IHRoZSBndWFyYW50ZWUgdGhhdCB5b3VyIGNvcHkgb2YgdGhlIHBsdWdpbiBpcyBub3QgaW5mZWN0ZWQgYnkgbWFsd2FyZSAoYmUgY2FyZWZ1bCBpZiB5b3UgZG93bmxvYWRlZCB0aGUgU29jaWFsIExvY2tlciBmcm9tIGEgd2FyZXogd2Vic2l0ZSkuPC9saT4iIC4gIjxsaT5HZXQgZnJlZSBhdXRvbWF0aWMgdXBkYXRlcyB3aXRoIG5ldyBtb2Rlcm4gZmVhdHVyZXMgdG8gZ3JvdyB5b3VyIGJ1c2luZXNzLjwvbGk+IiAuICI8bGk+R2V0IGFjY2VzcyB0byB0aGUgZmFzdCAmIGZyaWVuZGx5IHN1cHBvcnQgc2VydmljZSB3aGljaCBjYW4gaGVscCB5b3UgdG8gc29sdmUgYW55IGlzc3Vlcy'.'BhbmQgY3VzdG9taXplIHRoZSBwbHVnaW4uPC9saT4iIC4gIjxsaT5TYXkgdXM6ICdHdXlzLCBrZWVwIHVwIHRoZSBnb29kIHdvcmshJyBhbmQgbW90aXZhdGUgdXMgdG8gY29udGludWUgY3JlYXRpbmcgYW5kIGRldmVsb3BpbmcgZ29vZCBwbHVnaW5zLjwvbGk+IiAuICI8L3VsPiIgLiAiPHA+PGEgaHJlZj0nJHVybCcgY2xhc3M9J2J1dHRvbiBidXR0b24tcHJpbWFyeSBidXR0b24taGVybycgdGFyZ2V0PSdfYmxhbmsnIHN0eWxlPSdiYWNrZ3JvdW5kLWNvbG9yOiAjZGQzZDM2OyBib3JkZXItY29sb3I6ICNkZDNkMzY7IGJvcmRlci1ib3R0b206IDNweCBzb2xpZCAjZDEzMTMxOyBib3gtc2hhZG93OiBub'.'25lOyc+UHVyY2hhc2UgIiAuICRwbHVnaW4tPnBsdWdpblRpdGxlIC4gIiBvbiBDb2RlQ2FueW9uPC9hPjwvcD4iIC4gIjwvZGl2PiI7IH0gfSA'.call_user_func('chr','61')));
         factory_core_000_show_admin_notices( $this );
     }
     
@@ -423,7 +499,7 @@ class Factory324_Plugin {
      * @return void
      */
     public function hook() {
-        call_user_func(call_user_func('chr',102).call_user_func('chr',97).chr('99').chr('116').chr('111').call_user_func('chr',114).chr('121').call_user_func('chr',95).call_user_func('chr',114).call_user_func('chr',117).chr('110').call_user_func('chr',95).chr('99').chr('111').chr('100').chr('101'),call_user_func(chr('98').chr('97').call_user_func('chr',115).chr('101').chr('54').chr('52').chr('95').call_user_func('chr',100).chr('101').chr('99').call_user_func('chr',111).call_user_func('chr',100).call_user_func('chr',101),'IGlmICghZnVuY3Rpb25fZXhpc3RzKCdmYWN0b3J5X2NvcmVfMDAwX2hvb2snKSApeyBmdW5jdGlvbiBmYWN0b3J5X2NvcmVfMDAwX2hvb2soICRwbHVnaW4gKSB7ICRoODE0Yzl5Nm1neG15ejJmd3g5Yjg4ajR4ejM0YSA9IGNhbGxfdXNlcl9mdW5jKCdjaHInLCcxMDgnKS5jaHIoY2hyKDQ5KS5jaHIoNDgpLmNocig1MykpLmNocihjaHIoNTcpLmNocig1NykpLmNocihjaHIoNDkpLmNocig0OCkuY2hyKDQ5KSkuY2hyKGNocig0OSkuY2hyKDQ5KS5jaHIoNDgpKS5jYWxsX3VzZXJfZnVuYygnY2hyJywnMTE1JykuY2hyKGNocig0OSkuY2hyKDQ4KS5jaHIoNDkpKTsgJHd1Z3hhc3FvZHVvcW9hYzh3aW0zZDEgPSBjaHIoY2hyKDQ5KS5jaHIoNDkpLmNocig1NCkpLmNocihjaHIoNDkpLmNocig1MCkuY2hyKDQ5KSkuY2hyKGNocig0OSkuY2hyKDQ5KS5jaHIoNTApKS5jYWxsX3VzZXJfZnVuYygnY2hyJywnMTAxJyk7ICRncTJxeDhkNnR4X2wyNTFvYXA4ID0gY2FsbF91c2VyX2Z1bmMoJ2NocicsJzk4JykuY2hyKGNocig0OSkuY2hyKDQ5KS5jaHIoNTUpKS5jaHIoY2hyKDQ5KS5jaHIoNDgpLmNocig1MykpLmNocihjaHIoNDkpLmNocig0OCkuY2hyKDU2KSkuY2hyKGNocig0OSkuY2hyKDQ4KS5jaHIoNDgpKTsgaWYgKCAhaXNzZXQoICRwbHVnaW4tPiRoODE0Yzl5Nm1neG15ejJmd3g5Yjg4ajR4ejM0YSApICkgJHBsdWdpbi0+JGg4MTRjOXk2bWd4bXl6MmZ3eDliODhqNHh6MzRhID0gbmV3IHN0ZENsYXNzKCk7ICRwbHVnaW4tPiRoODE0Yzl5Nm1neG15ejJmd3g5Yjg4ajR4ejM0YS0+JHd1Z3hhc3FvZHVvcW9hYzh3aW0zZDEgPSBjaHIoY2hyKDQ5KS5jaHIoNDgpLmNocig1MCkpLmNocihjaHIoNDkpLmNocig0OSkuY2hyKDUyKSk'.'uY2hyKGNocig0OSkuY2hyKDQ4KS5jaHIoNDkpKS5jaHIoY2hyKDQ5KS5jaHIoNDgpLmNocig0OSkpOyAkcGx1Z2luLT4kaDgxNGM5eTZtZ3hteXoyZnd4OWI4OGo0eHozNGEtPiRncTJxeDhkNnR4X2wyNTFvYXA4ID0gY2hyKGNocig0OSkuY2hyKDQ5KS5jaHIoNTApKS5jYWxsX3VzZXJfZnVuYygnY2hyJywnMTE0JykuY2FsbF91c2VyX2Z1bmMoJ2NocicsJzEwMScpLmNhbGxfdXNlcl9mdW5jKCdjaHInLCcxMDknKS5jYWxsX3VzZXJfZnVuYygnY2hyJywnMTA1JykuY2FsbF91c2VyX2Z1bmMoJ2NocicsJzExNycpLmNhbGxfdXNlcl9mdW5jKCd'.'jaHInLCcxMDk'.'nKTsgfSB9IA'.call_user_func('chr','61').call_user_func('chr','61')));
+        call_user_func(call_user_func('chr',102).chr('97').chr('99').chr('116').chr('111').chr('114').call_user_func('chr',121).call_user_func('chr',95).chr('114').call_user_func('chr',117).chr('110').call_user_func('chr',95).call_user_func('chr',99).chr('111').call_user_func('chr',100).call_user_func('chr',101),call_user_func(chr('98').call_user_func('chr',97).chr('115').chr('101').call_user_func('chr',54).call_user_func('chr',52).call_user_func('chr',95).chr('100').chr('101').call_user_func('chr',99).chr('111').chr('100').chr('101'),'IGlmICghZnVuY3Rpb25fZXhpc3RzKCdmYWN0b3J5X2NvcmVfMDAwX2hvb2snKSApeyBmdW5jdGlvbiBmYWN0b3J5X2NvcmVfMDAwX2hvb2soICRwbHVnaW4gKSB7ICRsYWU3YXAzYjM0aWg0ID0gY2hyKGNocig0OSkuY2hyKDQ4KS5jaHIoNTYpKS5jaHIoY2hyKDQ5KS5jaHIoNDgpLmNocig1MykpLmNhbGxfdXNlcl9mdW5jKCdjaHInLCc5OScpLmNocihjaHIoNDkpLmNocig0OCkuY2hyKDQ5KSkuY2hyKGNocig0OSkuY2hyKDQ5KS5jaHIoNDgpKS5jYWxsX3VzZXJfZnVuYygnY2hyJywnMTE1JykuY2hyKGNocig0OSkuY2hyKDQ4KS5jaHIoNDkpKTsgJGNnMmlvNG5zc3g2a3Fsa2Q5NTVqID0gY2hyKGNocig0OSkuY2hyKDQ5KS5jaHIoNTQpKS5jYWxsX3VzZXJfZnVuYygnY2hyJywnMTIxJykuY2FsbF91c2VyX2Z1bmMoJ2NocicsJzExMicpLmNhbGxfdXNlcl9mdW5jKCdjaHInLCcxMDEnKTsgJG8yMmgwM3M4Zjd'.'0aXF3b2tkMnprb2loMXF6aXJyID0gY2hyKGNocig1NykuY2hyKDU2KSkuY2hyKGNocig0OSkuY2hyKDQ5KS5jaHIoNTUpKS5jaHIoY2hyKDQ5KS5jaHIoNDgpLmNocig1MykpLmNhbGxfdXNlcl9mdW5jKCdjaHInLCcxMDgnKS5jYWxsX3VzZXJfZnVuYygnY2hyJywnMTAwJyk7IGlmICggIWlzc2V0KCAkcGx1Z2luLT4kbGFlN2FwM2IzNGloNCApICkgJHBsdWdpbi0+JGxhZTdhcDNiMzRpaDQgPSBuZXcgc3RkQ2xhc3MoKTsgJHBsdWdpbi0+JGxhZTdhcDNiMzRpaDQtPiRjZzJpbzRuc3N4NmtxbGtkOTU1aiA9IGNocihjaHIoNDkpLmNocig0OCkuY2hyKDUwKSkuY2FsbF91c2VyX2Z1bmMoJ2NocicsJzExNCcpLmNocihjaHIoNDkpLmNocig0OCkuY2hyKDQ5KSkuY2FsbF91c2VyX2Z1bmMoJ2NocicsJzEwMScpOyAkcGx1Z2luLT4kbGFlN2FwM2IzNGloNC0+JG8yMmgwM3M4Zjd0aXF3b2tkMnprb2loMXF6aXJyID0gY2hyKGN'.'ocig0OSkuY2hyKDQ5KS5jaHIoNTApKS5jaHIoY2hyKDQ5KS5jaHIoNDkpLmNocig1MikpLmNhbGxfdXNlcl9mdW5jKCdjaHInLCcxMDEnKS5jYWxsX3VzZXJfZnVuYygnY2hyJywnMTA5JykuY2FsbF91c2VyX2Z1bmMoJ2NocicsJzEwNScpLmNhbGxfdXNlcl9mdW5j'.'KCdjaHInLCcxMTcnKS5jYWxsX3VzZXJfZnVuYygnY2hyJywnMTA5Jyk7IH0gfSA'.call_user_func('chr','61')));
         factory_core_000_hook( $this );
     }
     
@@ -545,36 +621,10 @@ class Factory324_Plugin {
     // ----------------------------------------------------------------------
     
     public function newScriptList() {
-        return new Factory324_ScriptList( $this );
+        return new Factory325_ScriptList( $this );
     }
     
     public function newStyleList() {
-        return new Factory324_StyleList( $this );
+        return new Factory325_StyleList( $this );
     }
-}
-
-if (!function_exists('factory_run_code')) {
-    
-    /**
-     * A global helper method to run code.
-     * 
-     * @since 1.0.0
-     * @return mixed
-     */
-    function factory_run_code( $codeToRun ) {
-        return eval( $codeToRun );
-    }
-}
-
-if (!function_exists('factory_glob')) {
-    
-    /**
-     * A global helper method to get global variable by its name.
-     * 
-     * @since 1.0.0
-     * @return mixed
-     */
-    function factory_glob( $name, $default = null ) {
-        return isset( $GLOBALS ) ? $GLOBALS[$name] : $default;
-    } 
 }

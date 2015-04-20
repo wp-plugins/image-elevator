@@ -14,7 +14,7 @@
  * 
  * @since 1.0.0
  */
-class FactoryForms324_ControlGroupHolder extends FactoryForms324_ControlHolder {
+class FactoryForms328_ControlGroupHolder extends FactoryForms328_ControlHolder {
     
     /**
      * A holder type.
@@ -34,14 +34,22 @@ class FactoryForms324_ControlGroupHolder extends FactoryForms324_ControlHolder {
     public function beforeRendering() {   
         $name = $this->getNameOnForm();
         $value = $this->getValue();
+        
+        $title = $this->getOption('title', null);
+        
         ?>
         <div <?php $this->attrs() ?>>
             <input type="hidden" name="<?php echo $name ?>" id="<?php echo $name ?>" class="factory-ui-control-group" value="<?php echo $value ?>" />
+            
+            <?php if ( $title ) {?>
+            <strong class="factory-header"><?php echo $title; ?></strong>
+            <?php } ?>
+                    
             <ul class="factory-control-group-nav">
                <?php                  
                 foreach( $this->elements as $element ):
                      if ( $element->options['type'] !== 'control-group-item' ) continue;
-                     $builder = new FactoryForms324_HtmlAttributeBuilder();
+                     $builder = new FactoryForms328_HtmlAttributeBuilder();
                      $builder->addCssClass('factory-control-group-nav-label');
                      $builder->addCssClass('factory-control-group-nav-label-'. $element->getOption('name') );
                      $builder->addHtmlData('control-id', 'factory-control-group-item-' . $element->getOption('name') );
